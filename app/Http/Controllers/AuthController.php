@@ -16,6 +16,7 @@ class AuthController extends Controller
     {
         $this->userService = $userService;
     }
+
     public function showLoginForm()
     {
         return view('login');
