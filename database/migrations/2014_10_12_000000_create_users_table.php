@@ -16,7 +16,7 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('password');
-            $table->timestamp('last_login');
+            $table->timestamp('last_login')->nullable();
             $table->boolean('is_superuser')->nullable();
             $table->string('username');
             $table->string('first_name')->nullable();
@@ -29,7 +29,7 @@ class CreateUsersTable extends Migration
             $table->string('address')->nullable();
             $table->date('birth_date')->nullable();
             $table->string('phone_number')->nullable();
-            $table->string('avatar');
+            $table->string('avatar')->nullable();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->nullable()->useCurrentOnUpdate();
             $table->timestamp('deleted_at')->nullable();
