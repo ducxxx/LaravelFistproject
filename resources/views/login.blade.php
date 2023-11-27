@@ -60,17 +60,32 @@
         @csrf
 
         <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
+        <input type="text" id="username" name="username"{{ $errors->has('username') ? '' : old('username') }}"{{ $errors->has('username') ? ' autofocus' : '' }}>
+
+        @error('username')
+        <span class="error-message">{{ $message }}</span>
+        @enderror
 
         <br>
 
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required>
 
+        @error('password')
+        <span class="error-message">{{ $message }}</span>
+        @enderror
+
         <br>
 
         <button type="submit">Login</button>
     </form>
+    @if(session('error') && ! $errors->has('username'))
+        <!-- Show a specific error message only if it's not related to the username field -->
+        <div class="alert alert-danger">
+            <p style="color: red;">Username or password incorrect</p>
+        </div>
+    @endif
+    <p>Don't have an account? <a href="{{ route('register') }}">Register here</a></p>
 </div>
 </body>
 </html>
