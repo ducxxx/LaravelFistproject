@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserRequest;
 use App\Rules\ValidFullName;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -11,35 +12,15 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
+    public function showRegisterForm()
+    {
+        return view('register');
+    }
     public function register(Request $request)
     {
-//       dd($request->all());
-//       dd($request->input('phoneNumber'));
-
-//
-//         Validate the request
-//        $request->validate([
-//            'username' => 'required|unique:users',
-//            'fullName' => 'required',
-//            'email' => 'required|email|unique:users',
-//            'phoneNumber' => 'required',
-//            'password' => 'required|confirmed',
-//        ]);
-// Validation rules
-        $rules = [
-            'username' => 'required|unique:users',
-            'fullName' => ['required', 'valid_full_name'],
-            'email' => 'required|email|unique:users',
-            'phoneNumber' => 'required',
-            'password' => 'required',
-        ];
-        $messages = [
-            'fullName.valid_full_name' => 'The full name field is not contain special characters.',
-        ];
-        // Validation messages
-
-        // Validate the request
-        $validator = Validator::make($request->all(), $rules, $messages);
+//        // Validate the request
+        $userRequest = new UserRequest();
+        $validator = $userRequest->validation($request);
 
         // Check if validation fails
         if ($validator->fails()) {

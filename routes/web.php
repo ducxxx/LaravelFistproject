@@ -18,10 +18,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/register', function () {
-    //return view('welcome');
-    return view('register');
-});
+Route::get('/register', [UserController::class, 'showRegisterForm'])->name('register');
 
-Route::post('user/register', [UserController::class, 'register']);
+Route::post('/register', [UserController::class, 'register']);
+
+
 

@@ -57,65 +57,38 @@
     </style>
 </head>
 <body>
-<form id="registrationForm" method="post" action="/user/register">
+<form id="registrationForm" method="post" action="{{ route('register')}}">
     @csrf
     <label for="username">Username:</label>
-    <input type="text" id="username" name="username" required class="@error('username') error-input @enderror">
+    <input type="text" id="username" name="username" value="{{ $errors->has('username') ? '' : old('username') }}" {{ $errors->has('username') ? ' autofocus' : '' }} class="@error('username') error-input @enderror">
     @error('username')
     <p style="color: red;">{{ $message }}</p>
     @enderror
 
     <label for="fullName">Full Name:</label>
-    <input type="text" id="fullName" name="fullName" required class="@error('fullName') error-input @enderror">
+    <input type="text" id="fullName" name="fullName" value="{{ $errors->has('fullName') ? '' : old('fullName') }}" {{ $errors->has('fullName') ? ' autofocus' : '' }} class="@error('fullName') error-input @enderror">
     @error('fullName')
     <p style="color: red;">{{ $message }}</p>
     @enderror
 
     <label for="email">E-Mail:</label>
-    <input type="email" id="email" name="email" required class="@error('email') error-input @enderror">
+    <input type="email" id="email" name="email" value="{{ $errors->has('email') ? '' : old('email') }}" {{ $errors->has('email') ? ' autofocus' : '' }} class="@error('email') error-input @enderror">
     @error('email')
     <p style="color: red;">{{ $message }}</p>
     @enderror
 
     <label for="phoneNumber">Phone Number:</label>
-    <input type="tel" id="phoneNumber" name="phoneNumber" required class="@error('phoneNumber') error-input @enderror">
+    <input type="tel" id="phoneNumber" name="phoneNumber" value="{{ $errors->has('phoneNumber') ? '' : old('phoneNumber') }}" {{ $errors->has('phoneNumber') ? ' autofocus' : '' }} class="@error('phoneNumber') error-input @enderror">
     @error('phoneNumber')
     <p style="color: red;">{{ $message }}</p>
     @enderror
 
     <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required class="@error('password') error-input @enderror">
+    <input type="password" id="password" name="password" value="{{ $errors->has('password') ? '' : old('password') }}" {{ $errors->has('password') ? ' autofocus' : '' }} class="@error('password') error-input @enderror">
     @error('password')
     <p style="color: red;">{{ $message }}</p>
     @enderror
-
-{{--    <label for="password_confirmation">Confirm Password:</label>--}}
-{{--    <input type="password" id="password_confirmation" name="password_confirmation" required>--}}
-
     <button type="submit" >Submit</button>
 </form>
-
-{{--<script>--}}
-{{--    function submitForm() {--}}
-{{--        var username = document.getElementById('username').value;--}}
-{{--        var fullName = document.getElementById('fullName').value;--}}
-{{--        var email = document.getElementById('email').value;--}}
-{{--        var phoneNumber = document.getElementById('phoneNumber').value;--}}
-{{--        var password = document.getElementById('password').value;--}}
-{{--        var confirmPassword = document.getElementById('confirmPassword').value;--}}
-
-{{--        // Perform validation and registration logic here--}}
-{{--        // You can use AJAX to send this data to the server for processing--}}
-
-{{--        // For demonstration purposes, let's just log the values to the console--}}
-{{--        console.log('Username:', username);--}}
-{{--        console.log('Full Name:', fullName);--}}
-{{--        console.log('E-Mail:', email);--}}
-{{--        console.log('Phone Number:', phoneNumber);--}}
-{{--        console.log('Password:', password);--}}
-{{--        console.log('Confirm Password:', confirmPassword);--}}
-{{--    }--}}
-{{--</script>--}}
-
 </body>
 </html>
