@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,10 +19,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/unicode', function () {
-    //return view('welcome');
-    return view('home');
-});
+Route::get('/register', [UserController::class, 'showRegisterForm'])->name('register');
+
+Route::post('/register', [UserController::class, 'register'])->name('user.register');
+
+
 
 // routes/web.php
 
