@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AuthRequest;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 
 class AuthController extends Controller
 {
@@ -18,23 +20,27 @@ class AuthController extends Controller
     {
         return view('login');
     }
+
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'username' => 'required',
-            'password' => 'required',
-        ]);
+        $loginRequest = new AuthRequest();
+        $validator = $loginRequest->validation($request);
 
-        $user = $this->userService->login($credentials['username'], $credentials['password']);
+        // Check if validation fails
+        if ($validator->fails()) {
+            return Redirect::route('login')->withErrors($validator->errors())->withInput();
+        }
+
+        $user = $this->userService->login($request['username'], $request['password']);
 
         if ($user) {
             // Authentication successful
             // You can customize the response as needed
-            return response()->json(['message' => 'Login successful']);
+            return redirect(route('homepage'))->with('success', 'Login successful');
         } else {
             // Authentication failed
             // You can customize the response as needed
-            return redirect('/login')->with('error', 'Username or password incorrect')->withInput();
+            return redirect(route('user.login'))->with('error', 'Username or password incorrect')->withInput();
         }
     }
 }

@@ -56,23 +56,23 @@
 <div>
     <h2>Login</h2>
 
-    <form method="POST" action="{{ route('login') }}">
+    <form method="POST" action="{{ route('user.login') }}">
         @csrf
 
         <label for="username">Username:</label>
         <input type="text" id="username" name="username"{{ $errors->has('username') ? '' : old('username') }}"{{ $errors->has('username') ? ' autofocus' : '' }}>
 
         @error('username')
-        <span class="error-message">{{ $message }}</span>
+        <span class="error-message" style="color: red">{{ $message }}</span>
         @enderror
 
         <br>
 
         <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
+        <input type="password" id="password" name="password">
 
         @error('password')
-        <span class="error-message">{{ $message }}</span>
+        <span class="error-message" style="color: red">{{ $message }}</span>
         @enderror
 
         <br>
