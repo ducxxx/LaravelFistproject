@@ -20,7 +20,7 @@ Route::get('/', function () {
 
 Route::get('/register', [UserController::class, 'showRegisterForm'])->name('register');
 
-Route::post('/register', [UserController::class, 'register']);
+Route::post('/register', [UserController::class, 'register'])->name('user/register');
 
 
 

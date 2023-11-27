@@ -57,7 +57,7 @@
     </style>
 </head>
 <body>
-<form id="registrationForm" method="post" action="{{ route('register')}}">
+<form id="registrationForm" method="post" action="{{ route('user/register')}}">
     @csrf
     <label for="username">Username:</label>
     <input type="text" id="username" name="username" value="{{ $errors->has('username') ? '' : old('username') }}" {{ $errors->has('username') ? ' autofocus' : '' }} class="@error('username') error-input @enderror">
