@@ -50,27 +50,47 @@
             background-color: #45a049;
         }
     </style>
+    <style>
+        .error-input {
+            border: 1px solid red;
+        }
+    </style>
 </head>
 <body>
-
-<form id="registrationForm" method="post" action="/register">
+<form id="registrationForm" method="post" action="/user/register">
+    @csrf
     <label for="username">Username:</label>
-    <input type="text" id="username" name="username" required>
+    <input type="text" id="username" name="username" required class="@error('username') error-input @enderror">
+    @error('username')
+    <p style="color: red;">{{ $message }}</p>
+    @enderror
 
     <label for="fullName">Full Name:</label>
-    <input type="text" id="fullName" name="fullName" required>
+    <input type="text" id="fullName" name="fullName" required class="@error('fullName') error-input @enderror">
+    @error('fullName')
+    <p style="color: red;">{{ $message }}</p>
+    @enderror
 
     <label for="email">E-Mail:</label>
-    <input type="email" id="email" name="email" required>
+    <input type="email" id="email" name="email" required class="@error('email') error-input @enderror">
+    @error('email')
+    <p style="color: red;">{{ $message }}</p>
+    @enderror
 
     <label for="phoneNumber">Phone Number:</label>
-    <input type="tel" id="phoneNumber" name="phoneNumber" required>
+    <input type="tel" id="phoneNumber" name="phoneNumber" required class="@error('phoneNumber') error-input @enderror">
+    @error('phoneNumber')
+    <p style="color: red;">{{ $message }}</p>
+    @enderror
 
     <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required>
+    <input type="password" id="password" name="password" required class="@error('password') error-input @enderror">
+    @error('password')
+    <p style="color: red;">{{ $message }}</p>
+    @enderror
 
-    <label for="confirmPassword">Confirm Password:</label>
-    <input type="password" id="confirmPassword" name="confirmPassword" required>
+{{--    <label for="password_confirmation">Confirm Password:</label>--}}
+{{--    <input type="password" id="password_confirmation" name="password_confirmation" required>--}}
 
     <button type="submit" >Submit</button>
 </form>
