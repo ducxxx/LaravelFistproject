@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 
 class UserService
 {
-    protected $userRepository;
+    private $userRepository;
 
     public function __construct(UserRepository $userRepository)
     {
@@ -19,8 +19,8 @@ class UserService
         // Add any additional logic (e.g., password validation)
         $user = $this->userRepository->findByUsername($username);
         if ($user && Auth::attempt(['username' => $username, 'password' => $password])){
-            return Auth::user();
+            return true;
         }
-        return null;
+        return false;
     }
 }
