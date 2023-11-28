@@ -6,6 +6,7 @@ use App\Http\Requests\UserRequest;
 use App\Rules\ValidFullName;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
@@ -14,6 +15,7 @@ class UserController extends Controller
 {
     public function showRegisterForm()
     {
+
         return view('register');
     }
     public function register(Request $request)

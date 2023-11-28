@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 
@@ -18,9 +19,19 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/home', function () {
+    return view('home');
+})->name("homepage");
+
 Route::get('/register', [UserController::class, 'showRegisterForm'])->name('register');
 
 Route::post('/register', [UserController::class, 'register'])->name('user.register');
 
+
+
+
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+
+Route::post('/login', [AuthController::class, 'login'])->name('user.login');
 
 
