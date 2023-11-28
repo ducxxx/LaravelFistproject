@@ -21,6 +21,10 @@ class AuthController extends Controller
     {
         return view('login');
     }
+    public function showLogoutForm()
+    {
+        return view('logout');
+    }
 
     public function login(Request $request)
     {
@@ -43,5 +47,15 @@ class AuthController extends Controller
             // You can customize the response as needed
             return redirect(route('user.login'))->with('error', 'Username or password incorrect')->withInput();
         }
+    }
+    public function logout(Request $request)
+    {
+        Auth::logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        return Redirect::route('login');
     }
 }
