@@ -39,9 +39,17 @@ class AuthController extends Controller
         $user = $this->userService->login($request['username'], $request['password']);
 
         if ($user) {
-            // Authentication successful
-            // You can customize the response as needed
-            return redirect(route('homepage'))->with('success', 'Login successful');
+            if (session()->has('url.intended')) {
+                // Get the intended URL and clear it from the session
+                $intendedUrl = session('url.intended');
+                session()->forget('url.intended');
+
+                // Redirect the user to the intended URL
+                return redirect()->to($intendedUrl);
+            }
+
+            // If there's no intended URL, redirect to the default location
+            return redirect()->intended($this->redirectPath());
         } else {
             // Authentication failed
             // You can customize the response as needed
