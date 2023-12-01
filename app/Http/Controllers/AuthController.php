@@ -19,7 +19,7 @@ class AuthController extends Controller
 
     public function showLoginForm()
     {
-        session(['url.intended' => url()->previous()]);
+        session(['url.after_login_redirect' => url()->previous()]);
         return view('login');
     }
     public function showLogoutForm()
@@ -40,13 +40,13 @@ class AuthController extends Controller
         $user = $this->userService->login($request['username'], $request['password']);
 
         if ($user) {
-            if (session()->has('url.intended')) {
+            if (session()->has('url.after_login_redirect')) {
                 // Get the intended URL and clear it from the session
-                $intendedUrl = session('url.intended');
-                session()->forget('url.intended');
+                $afterLoginRedirectUrl = session('url.after_login_redirect');
+                session()->forget('url.after_login_redirect');
 
                 // Redirect the user to the intended URL
-                return redirect()->to($intendedUrl);
+                return redirect()->to($afterLoginRedirectUrl);
             }
 
             // If there's no intended URL, redirect to the default location
