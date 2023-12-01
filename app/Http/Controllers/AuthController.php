@@ -19,6 +19,7 @@ class AuthController extends Controller
 
     public function showLoginForm()
     {
+        session(['url.intended' => url()->previous()]);
         return view('login');
     }
     public function showLogoutForm()
