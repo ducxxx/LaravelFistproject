@@ -21,6 +21,10 @@ class AuthController extends Controller
     {
         return view('login');
     }
+    public function showLogoutForm()
+    {
+        return view('logout');
+    }
 
     public function login(Request $request)
     {
@@ -35,13 +39,31 @@ class AuthController extends Controller
         $user = $this->userService->login($request['username'], $request['password']);
 
         if ($user) {
-            // Authentication successful
-            // You can customize the response as needed
-            return redirect(route('homepage'))->with('success', 'Login successful');
+            if (session()->has('url.after_login_redirect')) {
+                // Get the intended URL and clear it from the session
+                $afterLoginRedirectUrl = session('url.after_login_redirect');
+                session()->forget('url.after_login_redirect');
+
+                // Redirect the user to the intended URL
+                return redirect()->to($afterLoginRedirectUrl);
+            }
+
+            // If there's no intended URL, redirect to the default location
+            return redirect()->intended($this->redirectPath());
         } else {
             // Authentication failed
             // You can customize the response as needed
             return redirect(route('user.login'))->with('error', 'Username or password incorrect')->withInput();
         }
+    }
+    public function logout(Request $request)
+    {
+        Auth::logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        return Redirect::route('login');
     }
 }
