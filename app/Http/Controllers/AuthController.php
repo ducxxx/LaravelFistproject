@@ -19,7 +19,6 @@ class AuthController extends Controller
 
     public function showLoginForm()
     {
-        session(['url.after_login_redirect' => url()->previous()]);
         return view('login');
     }
     public function showLogoutForm()

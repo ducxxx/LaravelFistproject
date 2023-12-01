@@ -18,6 +18,7 @@ class AuthenticationMiddleware
     public function handle(Request $request, Closure $next)
     {
         if(!Auth::check()){
+            session(['url.after_login_redirect' => url()->previous()]);
             return redirect(route('login'));
         }
         return $next($request);
