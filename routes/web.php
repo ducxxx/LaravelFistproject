@@ -27,7 +27,7 @@ Route::get('/register', [UserController::class, 'showRegisterForm'])->name('regi
 
 Route::post('/register', [UserController::class, 'register'])->name('user.register');
 
-Route::middleware(['authentication.check'])->group(function () {
+Route::middleware(['checkLogin'])->group(function () {
     // Your routes that require authentication go here
     Route::get('/home', [HomeController::class, 'showHomePage'])->name('homepage');
 });

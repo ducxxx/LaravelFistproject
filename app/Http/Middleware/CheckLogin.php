@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class AuthenticationMiddleware
+class CheckLogin
 {
     /**
      * Handle an incoming request.
@@ -18,6 +18,7 @@ class AuthenticationMiddleware
     public function handle(Request $request, Closure $next)
     {
         if(!Auth::check()){
+            session(['url.after_login_redirect' => url()->current()]);
             return redirect(route('login'));
         }
         return $next($request);
