@@ -1,4 +1,7 @@
 @extends("layouts.index")
+@section("title")
+    <title>Home Page</title>
+@endsection
 @section("body")
 <main class="ant-layout-content css-12jzuas" style="padding: 24px; overflow: auto;">
     <div class="sc-dicizt jgZVwD">
