@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ClubBookController;
+use App\Http\Controllers\ClubController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -27,18 +29,31 @@ Route::get('/register', [UserController::class, 'showRegisterForm'])->name('regi
 
 Route::post('/register', [UserController::class, 'register'])->name('user.register');
 
-Route::middleware(['checkLogin'])->group(function () {
-    // Your routes that require authentication go here
-    Route::get('/home', [HomeController::class, 'showHomePage'])->name('homepage');
-});
+
+
+Route::get('/home', [HomeController::class, 'showHomePage'])->name('homepage');
 
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 
 Route::post('/login', [AuthController::class, 'login'])->name('user.login');
 
-Route::get('/logout', [AuthController::class, 'showLogoutForm'])->name('logout');
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::post('/logout', [AuthController::class, 'logout'])->name('user.logout');
+//Route::post('/logout', [AuthController::class, 'logout'])->name('user.logout');
+
+//Club
+
+//Route::get('/clubs', [ClubController::class, 'showClubListPage'])->name('club.page');
+Route::middleware(['checkLogin'])->group(function () {
+    // Your routes that require authentication go here
+    Route::get('/clubs', [ClubController::class, 'showClubListPage'])->name('club.page');
+});
+
+//ClubBook
+
+Route::get('/club/books/{club_id}', [ClubBookController::class, 'getBookClubsByClubId'])->name('club.book');
+Route::get('/club/books/all', [ClubBookController::class, 'getClubBooksAll'])->name('club.book.all');
+Route::get('/club/books/page', [ClubBookController::class, 'showBookListPage'])->name('club.book.page');
 
 

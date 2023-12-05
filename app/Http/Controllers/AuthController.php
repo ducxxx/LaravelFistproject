@@ -43,13 +43,12 @@ class AuthController extends Controller
                 // Get the intended URL and clear it from the session
                 $afterLoginRedirectUrl = session('url.after_login_redirect');
                 session()->forget('url.after_login_redirect');
-
-                // Redirect the user to the intended URL
-                return redirect()->to($afterLoginRedirectUrl);
+                if($afterLoginRedirectUrl){
+                    return redirect()->to($afterLoginRedirectUrl);
+                }
             }
-
             // If there's no intended URL, redirect to the default location
-            return redirect()->intended($this->redirectPath());
+            return redirect(route('homepage'))->withInput();
         } else {
             // Authentication failed
             // You can customize the response as needed
