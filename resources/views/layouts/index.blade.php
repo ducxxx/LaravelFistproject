@@ -94,6 +94,8 @@
     {{--    <link rel="modulepreload" as="script" crossorigin=""--}}
     {{--          href="https://bookoverthere.com/assets/PlusCircleOutlined-4e255eda.js">--}}
     {{--    <link rel="stylesheet" href="./Book Over There_files/index-191af69e.css">--}}
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    @yield('css')
 </head>
 <body>
 <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -108,5 +110,6 @@
         </section>
     </div>
 </div>
+@yield('js')
 </body>
 </html>

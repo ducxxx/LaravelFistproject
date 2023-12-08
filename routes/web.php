@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BookController;
 use App\Http\Controllers\ClubBookController;
 use App\Http\Controllers\ClubController;
 use App\Http\Controllers\HomeController;
@@ -51,9 +52,14 @@ Route::middleware(['checkLogin'])->group(function () {
 });
 
 //ClubBook
-
+Route::get('/club/book/all', [ClubBookController::class, 'getClubBooksAll'])->name('club.book.all');
 Route::get('/club/books/{club_id}', [ClubBookController::class, 'getBookClubsByClubId'])->name('club.book');
-Route::get('/club/books/all', [ClubBookController::class, 'getClubBooksAll'])->name('club.book.all');
 Route::get('/club/books/page', [ClubBookController::class, 'showBookListPage'])->name('club.book.page');
+Route::get('/club/book/search/{book_name}', [ClubBookController::class, 'searchClubBooksByName'])->name('club.book.search');
+
+//Book
+Route::get('/book/all', [BookController::class, 'getAllBook'])->name('book.all');
+Route::get('/book/search/{book_name}', [BookController::class, 'searchBooksByName'])->name('book.search');
+
 
 

@@ -45,38 +45,93 @@
                     var registerButton = document.getElementById('registerButton');
 
                     // Add a click event listener to the button
-                    registerButton.addEventListener('click', function() {
+                    registerButton.addEventListener('click', function () {
                         // Redirect the user to the register page
                         window.location.href = '{{ route("register") }}';
                     });
                     var loginButton = document.getElementById('loginButton');
 
                     // Add a click event listener to the button
-                    loginButton.addEventListener('click', function() {
+                    loginButton.addEventListener('click', function () {
                         // Redirect the user to the register page
                         window.location.href = '{{ route("login") }}';
                     });
                 </script>
             </div>
         @else
-            <!-- Display logout button and username when logged in -->
-            <div class="sc-ewnqHT fQATKp">
-                <div class="ant-space css-12jzuas ant-space-horizontal ant-space-align-center">
-                    <div class="ant-space-item">{{ Auth::user()->username }}</div>
+            <div style="float: right; display: flex; align-items: center;"><span
+                    class="ant-tag ant-tag-success css-12jzuas"><span role="img" aria-label="check-circle"
+                                                                      class="anticon anticon-check-circle"><svg
+                            viewBox="64 64 896 896" focusable="false" data-icon="check-circle" width="1em" height="1em"
+                            fill="currentColor" aria-hidden="true"><path
+                                d="M699 353h-46.9c-10.2 0-19.9 4.9-25.9 13.3L469 584.3l-71.2-98.8c-6-8.3-15.6-13.3-25.9-13.3H325c-6.5 0-10.3 7.4-6.5 12.7l124.6 172.8a31.8 31.8 0 0051.7 0l210.6-292c3.9-5.3.1-12.7-6.4-12.7z"></path><path
+                                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path></svg></span><span>Verified</span></span>
+                <div class="ant-select css-12jzuas ant-select-single ant-select-show-arrow"
+                     style="width: 120px; margin-right: 8px; margin-left: 8px;">
+                    <div class="ant-select-selector"><span class="ant-select-selection-search"><input
+                                type="search" autocomplete="off" class="ant-select-selection-search-input"
+                                role="combobox" aria-expanded="false" aria-haspopup="listbox"
+                                aria-owns="rc_select_0_list" aria-autocomplete="list"
+                                aria-controls="rc_select_0_list" aria-activedescendant="rc_select_0_list_0"
+                                readonly="" unselectable="on" value="" id="rc_select_0"
+                                style="opacity: 0;"></span><span class="ant-select-selection-item"
+                                                                 title="en-US">en-US</span>
+                    </div>
+                    <span class="ant-select-arrow" unselectable="on" aria-hidden="true"
+                          style="user-select: none;"><span role="img" aria-label="down"
+                                                           class="anticon anticon-down ant-select-suffix"><svg
+                                viewBox="64 64 896 896" focusable="false" data-icon="down" width="1em" height="1em"
+                                fill="currentColor" aria-hidden="true"><path
+                                    d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"></path></svg></span></span>
                 </div>
-                <button id="logoutButton" type="button" class="ant-btn css-12jzuas ant-btn-primary">
-                    <!-- You can add an SVG icon for the logout button if needed -->
-                    Logout
-                </button>
+                <div class="ant-image css-12jzuas" style="width: 25px;"><img class="ant-image-img"
+                                                                             src="./image/avata.jpg"
+                                                                             width="25"
+                                                                             style="float: left; border: 1px solid rgb(255, 255, 255); border-radius: 50%;">
+                </div>
+                <a class="ant-dropdown-trigger">
+                    <div class="ant-space css-12jzuas ant-space-horizontal ant-space-align-center"
+                         style="display: flex; justify-content: flex-end; margin-left: 5px; gap: 8px;">
+                        <div class="ant-space-item" style="" id="userDropdownTrigger">{{ Auth::user()->username }}</div>
+                        <div class="ant-space-item">
+            <span role="img" aria-label="profile" class="anticon anticon-profile">
+                <svg viewBox="64 64 896 896" focusable="false" data-icon="profile" width="1em" height="1em"
+                     fill="currentColor" aria-hidden="true">
+                    <!-- SVG path here -->
+                </svg>
+            </span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Dropdown menu -->
+                <div id="userDropdownMenu" class="user-dropdown-menu" style="display: none;">
+                    <ul style="">
+                        <li><a href="{{ route('homepage') }}">Change Password</a></li>
+                        <li><a href="{{ route('logout') }}">Logout</a></li>
+                    </ul>
+                </div>
+
+
                 <script>
-                    // ... script for logout button ...
-                    var logoutButton = document.getElementById('logoutButton');
-                    logoutButton.addEventListener('click', function() {
-                        // Redirect the user to the logout page or perform logout logic
-                        window.location.href = '{{ route("logout") }}';
+                    $(document).ready(function () {
+                        var userDropdownTrigger = $('#userDropdownTrigger');
+                        var userDropdownMenu = $('#userDropdownMenu');
+
+                        userDropdownTrigger.on('click', function () {
+                            userDropdownMenu.toggle();
+                        });
+
+                        // Close the dropdown if the user clicks outside of it
+                        $(document).on('click', function (event) {
+                            if (!userDropdownTrigger.is(event.target) && !userDropdownMenu.has(event.target).length) {
+                                userDropdownMenu.hide();
+                            }
+                        });
                     });
                 </script>
             </div>
         @endguest
     </div>
 </div>
+

@@ -14,6 +14,20 @@
                                     d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"></path></svg></span></span>
                 </h2>
             </div>
+            <section style="margin: 20px 0px;">
+                <div class="react-multi-carousel-list carousel-container " dir="ltr">
+                    <ul class="react-multi-carousel-track "
+                        style="transition: none 0s ease 0s; overflow: unset; transform: translate3d(-1794px, 0px, 0px);">
+
+                    </ul>
+                    <button aria-label="Go to previous slide"
+                            class="react-multiple-carousel__arrow react-multiple-carousel__arrow--left "
+                            type="button" fdprocessedid="wyafxk"></button>
+                    <button aria-label="Go to next slide"
+                            class="react-multiple-carousel__arrow react-multiple-carousel__arrow--right "
+                            type="button" fdprocessedid="x1cmc8"></button>
+                </div>
+            </section>
             <div class="ant-space css-12jzuas ant-space-vertical" style="display: flex; gap: 24px;">
                 <div class="ant-space-item">
                     <div class="ant-card ant-card-bordered ant-card-default css-12jzuas">
@@ -130,7 +144,7 @@
     </div>
     <div class="sc-dicizt jgZVwD">
         <div class="table-header">
-            <form autocomplete="off"
+            <form id="bookSearchForm" autocomplete="off"
                   class="ant-form ant-form-vertical css-12jzuas ant-pro-query-filter home-page-search_book ant-pro-form"
                   style="padding: 0px;"><input type="text" style="display: none;">
                 <div class="ant-row ant-row-start ant-pro-query-filter-row css-1wx4d4d css-12jzuas"
@@ -216,7 +230,7 @@
                     <div class="ant-table ant-table-scroll-horizontal">
                         <div class="ant-table-container">
                             <div class="ant-table-content" style="overflow: auto hidden;">
-                                <table style="width: max-content; min-width: 100%; table-layout: auto;">
+                                <table id="books-table" style="width: max-content; min-width: 100%; table-layout: auto;">
                                     <colgroup>
                                         <col class="ant-table-selection-col">
                                     </colgroup>
@@ -233,7 +247,6 @@
                                                             class="ant-checkbox-inner"></span></span></label>
                                             </div>
                                         </th>
-                                        <td class="ant-table-cell"></td>
                                         <th class="ant-table-cell" scope="col">Name</th>
                                         <th class="ant-table-cell" scope="col">Category</th>
                                         <th class="ant-table-cell" scope="col">Author</th>
@@ -254,169 +267,114 @@
                                         <td style="padding: 0px; border: 0px; height: 0px;">
                                             <div style="height: 0px; overflow: hidden;">&nbsp;</div>
                                         </td>
-                                        <td style="padding: 0px; border: 0px; height: 0px;">
-                                            <div style="height: 0px; overflow: hidden;">&nbsp;</div>
-                                        </td>
                                     </tr>
-                                    <tr data-row-key="5285" class="ant-table-row ant-table-row-level-0">
-                                        <td class="ant-table-cell ant-table-selection-column"><label
-                                                class="ant-checkbox-wrapper css-12jzuas"><span
-                                                    class="ant-checkbox css-12jzuas"><input
-                                                        class="ant-checkbox-input" type="checkbox"><span
-                                                        class="ant-checkbox-inner"></span></span></label>
-                                        </td>
-                                        <td class="ant-table-cell"><img
-                                                src="./Book Over There_files/book-default-af4b94c2.png"
-                                                alt="pic" style="width: 50px; height: 50px;"></td>
-                                        <td class="ant-table-cell">101+ ý tưởng khởi nghiệp</td>
-                                        <td class="ant-table-cell">Truyền cảm hứng</td>
-                                        <td class="ant-table-cell">Alpha Books</td>
-                                    </tr>
-                                    <tr data-row-key="5286" class="ant-table-row ant-table-row-level-0">
-                                        <td class="ant-table-cell ant-table-selection-column"><label
-                                                class="ant-checkbox-wrapper css-12jzuas"><span
-                                                    class="ant-checkbox css-12jzuas"><input
-                                                        class="ant-checkbox-input" type="checkbox"><span
-                                                        class="ant-checkbox-inner"></span></span></label>
-                                        </td>
-                                        <td class="ant-table-cell"><img
-                                                src="./Book Over There_files/d0982f965bc4ce4110a634dc95d97915.jpeg"
-                                                alt="pic" style="width: 50px; height: 50px;"></td>
-                                        <td class="ant-table-cell">Sĩ Số Lớp Vắng 0</td>
-                                        <td class="ant-table-cell">68</td>
-                                        <td class="ant-table-cell">Emma Hạ My</td>
-                                    </tr>
-                                    <tr data-row-key="5287" class="ant-table-row ant-table-row-level-0">
-                                        <td class="ant-table-cell ant-table-selection-column"><label
-                                                class="ant-checkbox-wrapper css-12jzuas"><span
-                                                    class="ant-checkbox css-12jzuas"><input
-                                                        class="ant-checkbox-input" type="checkbox"><span
-                                                        class="ant-checkbox-inner"></span></span></label>
-                                        </td>
-                                        <td class="ant-table-cell"><img
-                                                src="./Book Over There_files/db4f09b6ee8bc317f097ebcca1933a2d.png.webp"
-                                                alt="pic" style="width: 50px; height: 50px;"></td>
-                                        <td class="ant-table-cell">Kế Toán Vỉa Hè - Thực Hành Báo Cáo
-                                            Tài Chính Căn Bản Từ Quầy Bán Nước Chanh
-                                        </td>
-                                        <td class="ant-table-cell">Sách tài chính, kế toán</td>
-                                        <td class="ant-table-cell">Trần Thanh Phong</td>
-                                    </tr>
-                                    <tr data-row-key="5288" class="ant-table-row ant-table-row-level-0">
-                                        <td class="ant-table-cell ant-table-selection-column"><label
-                                                class="ant-checkbox-wrapper css-12jzuas"><span
-                                                    class="ant-checkbox css-12jzuas"><input
-                                                        class="ant-checkbox-input" type="checkbox"><span
-                                                        class="ant-checkbox-inner"></span></span></label>
-                                        </td>
-                                        <td class="ant-table-cell"><img
-                                                src="./Book Over There_files/book-default-af4b94c2.png"
-                                                alt="pic" style="width: 50px; height: 50px;"></td>
-                                        <td class="ant-table-cell">Combo Truyện Trinh Thám : Cuồng Vọng
-                                            Phi Nhân Tính + Sông Ngầm ( Sách Trinh Thám Giúp Luyện Não /
-                                            Tặng Kèm Bookmark Green Life )
-                                        </td>
-                                        <td class="ant-table-cell">60</td>
-                                        <td class="ant-table-cell">duc</td>
-                                    </tr>
-                                    <tr data-row-key="5289" class="ant-table-row ant-table-row-level-0">
-                                        <td class="ant-table-cell ant-table-selection-column"><label
-                                                class="ant-checkbox-wrapper css-12jzuas"><span
-                                                    class="ant-checkbox css-12jzuas"><input
-                                                        class="ant-checkbox-input" type="checkbox"><span
-                                                        class="ant-checkbox-inner"></span></span></label>
-                                        </td>
-                                        <td class="ant-table-cell"><img
-                                                src="./Book Over There_files/book-default-af4b94c2.png"
-                                                alt="pic" style="width: 50px; height: 50px;"></td>
-                                        <td class="ant-table-cell">Trở Thành Chuyên Gia Thị Trường Chứng
-                                            Khoán
-                                        </td>
-                                        <td class="ant-table-cell">Kinh doanh- kinh tế</td>
-                                        <td class="ant-table-cell">Michal Becket</td>
-                                    </tr>
-                                    <tr data-row-key="5290" class="ant-table-row ant-table-row-level-0">
-                                        <td class="ant-table-cell ant-table-selection-column"><label
-                                                class="ant-checkbox-wrapper css-12jzuas"><span
-                                                    class="ant-checkbox css-12jzuas"><input
-                                                        class="ant-checkbox-input" type="checkbox"><span
-                                                        class="ant-checkbox-inner"></span></span></label>
-                                        </td>
-                                        <td class="ant-table-cell"><img
-                                                src="./Book Over There_files/book-default-af4b94c2.png"
-                                                alt="pic" style="width: 50px; height: 50px;"></td>
-                                        <td class="ant-table-cell">The Little Book - Chiến Lược Lãi Kép
-                                            Trong Đầu Tư Chứng Khoán
-                                        </td>
-                                        <td class="ant-table-cell">Kinh doanh- kinh tế</td>
-                                        <td class="ant-table-cell">Charles B Carlson CFA</td>
-                                    </tr>
-                                    <tr data-row-key="5291" class="ant-table-row ant-table-row-level-0">
-                                        <td class="ant-table-cell ant-table-selection-column"><label
-                                                class="ant-checkbox-wrapper css-12jzuas"><span
-                                                    class="ant-checkbox css-12jzuas"><input
-                                                        class="ant-checkbox-input" type="checkbox"><span
-                                                        class="ant-checkbox-inner"></span></span></label>
-                                        </td>
-                                        <td class="ant-table-cell"><img
-                                                src="./Book Over There_files/book-default-af4b94c2.png"
-                                                alt="pic" style="width: 50px; height: 50px;"></td>
-                                        <td class="ant-table-cell">Bộ Sách Khởi Nghiệp Du Kích - Kinh
-                                            Doanh Ít Vốn: Làm Thế Nào Để Khởi Động và Vận Hành Doanh
-                                            Nghiệp Bằng Nguồn Vốn Hạn Hẹp
-                                        </td>
-                                        <td class="ant-table-cell">Kỹ năng</td>
-                                        <td class="ant-table-cell">Truonglt</td>
-                                    </tr>
-                                    <tr data-row-key="5292" class="ant-table-row ant-table-row-level-0">
-                                        <td class="ant-table-cell ant-table-selection-column"><label
-                                                class="ant-checkbox-wrapper css-12jzuas"><span
-                                                    class="ant-checkbox css-12jzuas"><input
-                                                        class="ant-checkbox-input" type="checkbox"><span
-                                                        class="ant-checkbox-inner"></span></span></label>
-                                        </td>
-                                        <td class="ant-table-cell"><img
-                                                src="./Book Over There_files/book-default-af4b94c2.png"
-                                                alt="pic" style="width: 50px; height: 50px;"></td>
-                                        <td class="ant-table-cell">Khởi Nghiệp Kinh Doanh Cà Phê - 8
-                                            Bước Xây Dựng Thành Công Từ Con Số 0 - Bí Quyết Mở Quán Cafe
-                                            Đông Khách
-                                        </td>
-                                        <td class="ant-table-cell">Kỹ năng</td>
-                                        <td class="ant-table-cell">Hoàng Tiễn</td>
-                                    </tr>
-                                    <tr data-row-key="5293" class="ant-table-row ant-table-row-level-0">
-                                        <td class="ant-table-cell ant-table-selection-column"><label
-                                                class="ant-checkbox-wrapper css-12jzuas"><span
-                                                    class="ant-checkbox css-12jzuas"><input
-                                                        class="ant-checkbox-input" type="checkbox"><span
-                                                        class="ant-checkbox-inner"></span></span></label>
-                                        </td>
-                                        <td class="ant-table-cell"><img
-                                                src="./Book Over There_files/d9b746933e8dc26b678f19e2dad6aebe.jpg.webp"
-                                                alt="pic" style="width: 50px; height: 50px;"></td>
-                                        <td class="ant-table-cell">Sách Hiểu Về Trái Tim (Tái Bản 2019)
-                                            - Minh Niệm
-                                        </td>
-                                        <td class="ant-table-cell">Kỹ năng</td>
-                                        <td class="ant-table-cell">Truonglt</td>
-                                    </tr>
-                                    <tr data-row-key="5294" class="ant-table-row ant-table-row-level-0">
-                                        <td class="ant-table-cell ant-table-selection-column"><label
-                                                class="ant-checkbox-wrapper css-12jzuas"><span
-                                                    class="ant-checkbox css-12jzuas"><input
-                                                        class="ant-checkbox-input" type="checkbox"><span
-                                                        class="ant-checkbox-inner"></span></span></label>
-                                        </td>
-                                        <td class="ant-table-cell"><img
-                                                src="./Book Over There_files/book-default-af4b94c2.png"
-                                                alt="pic" style="width: 50px; height: 50px;"></td>
-                                        <td class="ant-table-cell">Doraemon 17</td>
-                                        <td class="ant-table-cell">Kỹ năng</td>
-                                        <td class="ant-table-cell">Darrel Mullis</td>
-                                    </tr>
+
                                     </tbody>
                                 </table>
+                                <script>
+                                    // Use JavaScript to fetch data from /book/all and populate the table
+                                    fetch('{{ route('book.all') }}')
+                                        .then(response => response.json())
+                                        .then(books => {
+                                            const tableBody = document.querySelector('#books-table tbody');
+
+                                            books.forEach(book => {
+                                                const row = document.createElement('tr');
+                                                row.innerHTML = `
+                        <td class="ant-table-cell ant-table-selection-column"><label
+                                                                class="ant-checkbox-wrapper css-12jzuas"><span
+                                                                class="ant-checkbox css-12jzuas"><input
+                                                                class="ant-checkbox-input" type="checkbox"><span
+                                                                class="ant-checkbox-inner"></span></span></label></td>
+                        <td>${book.name}</td>
+                        <td>${book.category.name}</td>
+                        <td>${book.author.name}</td>
+                    `;
+
+                                                tableBody.appendChild(row);
+                                            });
+                                        })
+                                        .catch(error => console.error('Error fetching data:', error));
+                                </script>
+                                <script>
+                                    document.addEventListener('DOMContentLoaded', function () {
+                                        var form = document.getElementById('bookSearchForm');
+                                        var inputField = form.querySelector('#book_name');
+                                        var searchButton = form.querySelector('.ant-btn-primary');
+                                        var booksTable = document.getElementById('booksTable');
+
+                                        searchButton.addEventListener('click', function () {
+                                            var searchTerm = inputField.value;
+
+                                            if(searchTerm===''){
+                                                fetch('{{ route('book.all') }}')
+                                                    .then(response => response.json())
+                                                    .then(books => {
+                                                        const tableBody = document.querySelector('#books-table tbody');
+                                                        tableBody.innerHTML = "";
+                                                        books.forEach(book => {
+                                                            const row = document.createElement('tr');
+                                                            row.innerHTML = `
+                        <td class="ant-table-cell ant-table-selection-column"><label
+                                                                class="ant-checkbox-wrapper css-12jzuas"><span
+                                                                class="ant-checkbox css-12jzuas"><input
+                                                                class="ant-checkbox-input" type="checkbox"><span
+                                                                class="ant-checkbox-inner"></span></span></label></td>
+                        <td>${book.name}</td>
+                        <td>${book.category.name}</td>
+                        <td>${book.author.name}</td>
+                    `;
+
+                                                            tableBody.appendChild(row);
+                                                        });
+                                                    })
+                                                    .catch(error => console.error('Error fetching data:', error));
+                                            }else{
+                                                fetch('{{ route('book.search', ['book_name' => '__book_name__']) }}'.replace('__book_name__', searchTerm))
+                                                    .then(response => response.json())
+                                                    .then(books => {
+                                                        const tableBody = document.querySelector('#books-table tbody');
+                                                        tableBody.innerHTML = "";
+                                                        console.log('tableBody', tableBody)
+
+                                                        // Populate the table with the search results
+                                                        books.forEach(book => {
+                                                            var row = document.createElement('tr');
+                                                            row.innerHTML = `
+                        <td class="ant-table-cell ant-table-selection-column"><label
+                                                                class="ant-checkbox-wrapper css-12jzuas"><span
+                                                                class="ant-checkbox css-12jzuas"><input
+                                                                class="ant-checkbox-input" type="checkbox"><span
+                                                                class="ant-checkbox-inner"></span></span></label></td>
+                        <td>${book.name}</td>
+                        <td>${book.category.name}</td>
+                        <td>${book.author.name}</td>
+                        `;
+
+                                                            tableBody.appendChild(row);
+                                                        });
+                                                    })
+                                                    .catch(error => console.error('Error fetching data:', error));
+                                            }
+                                        });
+                                    });
+                                </script>
+                                <script>
+                                    document.addEventListener('DOMContentLoaded', function () {
+                                        // Get the form and the input field
+                                        var form = document.getElementById('bookSearchForm');
+                                        var inputField = form.querySelector('#book_name'); // Assuming the input field has an ID
+
+                                        // Get the "Reset" button
+                                        var resetButton = form.querySelector('.ant-btn-default');
+
+                                        // Add an event listener to the "Reset" button
+                                        resetButton.addEventListener('click', function () {
+                                            // Set the value of the input field to an empty string
+                                            inputField.value = '';
+                                        });
+                                    });
+                                </script>
                             </div>
                         </div>
                     </div>

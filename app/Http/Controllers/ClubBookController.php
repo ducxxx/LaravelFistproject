@@ -20,7 +20,6 @@ class ClubBookController extends Controller
     public function getBookClubsByClubId($club_id)
     {
         $clubBooks = $this->clubBookService->getClubBooksByClubId($club_id);
-//        return $clubBooks;
         if ($clubBooks) {
             return view('includes.BookList', compact('clubBooks'));
         }
@@ -31,5 +30,12 @@ class ClubBookController extends Controller
     {
         $clubBooks = $this->clubBookService->getClubBooksAll();
         return $clubBooks;
+    }
+    public function searchClubBooksByName($bookName)
+    {
+        $books = $this->clubBookService->searchClubBooksByName($bookName);
+
+        // Transform and return the response as needed
+        return response()->json($books);
     }
 }
