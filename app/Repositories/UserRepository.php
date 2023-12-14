@@ -10,4 +10,11 @@ class UserRepository
     {
         return User::where('username', $username)->first();
     }
+    public function update($id, array $data)
+    {
+        $user = User::where('id',$id)->first();
+        $user->update($data);
+
+        return $user;
+    }
 }

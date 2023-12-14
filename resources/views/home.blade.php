@@ -214,15 +214,6 @@
                     </div>
                 </div>
             </form>
-            <button type="button" class="ant-btn css-12jzuas ant-btn-primary" disabled=""><span
-                    class="ant-btn-icon"><span role="img" aria-label="plus-circle"
-                                               class="anticon anticon-plus-circle"><svg
-                            viewBox="64 64 896 896" focusable="false" data-icon="plus-circle"
-                            width="1em"
-                            height="1em" fill="currentColor" aria-hidden="true"><path
-                                d="M696 480H544V328c0-4.4-3.6-8-8-8h-48c-4.4 0-8 3.6-8 8v152H328c-4.4 0-8 3.6-8 8v48c0 4.4 3.6 8 8 8h152v152c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V544h152c4.4 0 8-3.6 8-8v-48c0-4.4-3.6-8-8-8z"></path><path
-                                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path></svg></span></span><span>Order</span>
-            </button>
         </div>
         <div class="ant-table-wrapper css-12jzuas">
             <div class="ant-spin-nested-loading css-12jzuas">
@@ -236,17 +227,7 @@
                                     </colgroup>
                                     <thead class="ant-table-thead">
                                     <tr>
-                                        <th class="ant-table-cell ant-table-selection-column"
-                                            scope="col">
-                                            <div class="ant-table-selection"><label
-                                                    class="ant-checkbox-wrapper css-12jzuas"><span
-                                                        class="ant-checkbox css-12jzuas"><input
-                                                            aria-label="Select all"
-                                                            class="ant-checkbox-input"
-                                                            type="checkbox"><span
-                                                            class="ant-checkbox-inner"></span></span></label>
-                                            </div>
-                                        </th>
+                                        <th class="ant-table-cell" scope="col">No</th>
                                         <th class="ant-table-cell" scope="col">Name</th>
                                         <th class="ant-table-cell" scope="col">Category</th>
                                         <th class="ant-table-cell" scope="col">Author</th>
@@ -277,21 +258,18 @@
                                         .then(response => response.json())
                                         .then(books => {
                                             const tableBody = document.querySelector('#books-table tbody');
-
+                                            no =1;
                                             books.forEach(book => {
                                                 const row = document.createElement('tr');
                                                 row.innerHTML = `
-                        <td class="ant-table-cell ant-table-selection-column"><label
-                                                                class="ant-checkbox-wrapper css-12jzuas"><span
-                                                                class="ant-checkbox css-12jzuas"><input
-                                                                class="ant-checkbox-input" type="checkbox"><span
-                                                                class="ant-checkbox-inner"></span></span></label></td>
+                        <td>${no}</td>
                         <td>${book.name}</td>
                         <td>${book.category.name}</td>
                         <td>${book.author.name}</td>
                     `;
 
                                                 tableBody.appendChild(row);
+                                                no=no+1;
                                             });
                                         })
                                         .catch(error => console.error('Error fetching data:', error));
@@ -312,20 +290,18 @@
                                                     .then(books => {
                                                         const tableBody = document.querySelector('#books-table tbody');
                                                         tableBody.innerHTML = "";
+                                                        no=1
                                                         books.forEach(book => {
                                                             const row = document.createElement('tr');
                                                             row.innerHTML = `
-                        <td class="ant-table-cell ant-table-selection-column"><label
-                                                                class="ant-checkbox-wrapper css-12jzuas"><span
-                                                                class="ant-checkbox css-12jzuas"><input
-                                                                class="ant-checkbox-input" type="checkbox"><span
-                                                                class="ant-checkbox-inner"></span></span></label></td>
+                        <td>${no}</td>
                         <td>${book.name}</td>
                         <td>${book.category.name}</td>
                         <td>${book.author.name}</td>
                     `;
 
                                                             tableBody.appendChild(row);
+                                                            no=no+1;
                                                         });
                                                     })
                                                     .catch(error => console.error('Error fetching data:', error));
@@ -335,23 +311,20 @@
                                                     .then(books => {
                                                         const tableBody = document.querySelector('#books-table tbody');
                                                         tableBody.innerHTML = "";
-                                                        console.log('tableBody', tableBody)
+                                                        no=1;
 
                                                         // Populate the table with the search results
                                                         books.forEach(book => {
                                                             var row = document.createElement('tr');
                                                             row.innerHTML = `
-                        <td class="ant-table-cell ant-table-selection-column"><label
-                                                                class="ant-checkbox-wrapper css-12jzuas"><span
-                                                                class="ant-checkbox css-12jzuas"><input
-                                                                class="ant-checkbox-input" type="checkbox"><span
-                                                                class="ant-checkbox-inner"></span></span></label></td>
+                        <td>${no}</td>
                         <td>${book.name}</td>
                         <td>${book.category.name}</td>
                         <td>${book.author.name}</td>
                         `;
 
                                                             tableBody.appendChild(row);
+                                                            no=no+1;
                                                         });
                                                     })
                                                     .catch(error => console.error('Error fetching data:', error));
@@ -373,6 +346,46 @@
                                             // Set the value of the input field to an empty string
                                             inputField.value = '';
                                         });
+                                    });
+                                </script>
+                                <script>
+                                    document.addEventListener('DOMContentLoaded', function () {
+                                        var tableBody = document.getElementById('tableBody');
+                                        var selectAllCheckbox = document.getElementById('selectAllCheckbox');
+
+                                        // Event delegation for handling checkbox clicks in the table body
+                                        tableBody.addEventListener('click', function (event) {
+                                            var target = event.target;
+
+                                            // Check if the clicked element is a checkbox
+                                            if (target.type === 'checkbox') {
+                                                // Toggle the 'selected' class on the parent row
+                                                var row = target.closest('tr');
+                                                row.classList.toggle('selected');
+                                            }
+                                        });
+
+                                        // Event listener for the "Select all" checkbox in the table header
+                                        selectAllCheckbox.addEventListener('click', function () {
+                                            // Get all checkboxes in the table body
+                                            var checkboxes = tableBody.querySelectorAll('input[type="checkbox"]');
+
+                                            // Set the 'checked' property of each checkbox based on the state of the "Select all" checkbox
+                                            checkboxes.forEach(function (checkbox) {
+                                                checkbox.checked = selectAllCheckbox.checked;
+
+                                                // Toggle the 'selected' class on the parent row
+                                                var row = checkbox.closest('tr');
+                                                if (selectAllCheckbox.checked) {
+                                                    row.classList.add('selected');
+                                                } else {
+                                                    row.classList.remove('selected');
+                                                }
+                                            });
+                                        });
+
+                                        // Your existing code to append rows to the table body
+                                        // ...
                                     });
                                 </script>
                             </div>
@@ -408,19 +421,6 @@
                     </ul>
                 </div>
             </div>
-        </div>
-    </div>
-    <div style="position: absolute; bottom: 30px; right: 40px; z-index: 999;">
-        <div class="">
-            <button type="button" class="ant-btn css-12jzuas ant-btn-primary"><span
-                    class="ant-btn-icon"><span role="img" aria-label="plus-circle"
-                                               class="anticon anticon-plus-circle"><svg
-                            viewBox="64 64 896 896" focusable="false" data-icon="plus-circle"
-                            width="1em"
-                            height="1em" fill="currentColor" aria-hidden="true"><path
-                                d="M696 480H544V328c0-4.4-3.6-8-8-8h-48c-4.4 0-8 3.6-8 8v152H328c-4.4 0-8 3.6-8 8v48c0 4.4 3.6 8 8 8h152v152c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V544h152c4.4 0 8-3.6 8-8v-48c0-4.4-3.6-8-8-8z"></path><path
-                                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path></svg></span></span><span>Go to order</span>
-            </button>
         </div>
     </div>
 </main>

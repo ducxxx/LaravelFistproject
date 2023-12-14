@@ -21,8 +21,8 @@ class ClubBookService
     {
         return $this->clubBookRepository->getClubBooksAll();
     }
-    public function searchClubBooksByName($bookName)
+    public function searchClubBooksByName($clubId, $bookName)
     {
-        return $this->clubBookRepository->searchClubBooksByName($bookName);
+        return $this->clubBookRepository->searchClubBooksByName($clubId,$bookName);
     }
 }

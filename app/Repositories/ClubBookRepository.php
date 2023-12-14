@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Club;
 use App\Models\ClubBook;
+use Illuminate\Support\Facades\DB;
 
 class ClubBookRepository
 {
@@ -46,12 +47,16 @@ class ClubBookRepository
         }
         return $clubs;
     }
-    public function searchClubBooksByName($bookName)
+    public function searchClubBooksByName(int $clubId, string $bookName)
     {
-        return ClubBook::with('book')
-            ->whereHas('book', function ($query) use ($bookName) {
-                $query->where('name', 'like', "%$bookName%");
-            })
+        $clubBooks = DB::table('club_book')
+            ->join('book', 'club_book.book_id', '=', 'book.id')
+            ->join('author', 'book.author_id', '=', 'author.id')
+            ->join('category', 'book.category_id', '=', 'category.id')
+            ->where('club_book.club_id', $clubId)
+            ->where('book.name', 'like', '%' . $bookName . '%')
+            ->select('club_book.*', 'book.name as book_name', 'author.name as author_name', 'category.name as category_name')
             ->get();
+        return $clubBooks;
     }
 }
