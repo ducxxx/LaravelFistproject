@@ -23,4 +23,9 @@ class UserService
         }
         return false;
     }
+    public function updateUser($id, array $data)
+    {
+        // You can add any additional business logic here before updating the user.
+        return $this->userRepository->update($id, $data);
+    }
 }

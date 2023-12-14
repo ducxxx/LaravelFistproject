@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Login</title>
+    <title>Change Password</title>
     <!-- You can add your styles or link to a CSS file here -->
     <style>
         body {
@@ -56,37 +56,31 @@
 <div>
     <h2>Login</h2>
 
-    <form method="POST" action="{{ route('user.login') }}">
+    <form method="POST" action="{{ route('change.password') }}">
         @csrf
 
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username"{{ $errors->has('username') ? '' : old('username') }}"{{ $errors->has('username') ? ' autofocus' : '' }}>
+        <div class="form-group row">
+            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
 
-        @error('username')
-        <span class="error-message" style="color: red">{{ $message }}</span>
-        @enderror
+            <div class="col-md-6">
+                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autofocus>
 
-        <br>
-
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password">
-
-        @error('password')
-        <span class="error-message" style="color: red">{{ $message }}</span>
-        @enderror
-
-        <br>
-
-        <button type="submit">Login</button>
-    </form>
-    @if(session('error') && ! $errors->has('username'))
-        <!-- Show a specific error message only if it's not related to the username field -->
-        <div class="alert alert-danger">
-            <p style="color: red;">Username or password incorrect</p>
+                @error('email')
+                <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                @enderror
+            </div>
         </div>
-    @endif
-    <p>Don't have an account? <a href="{{ route('register') }}">Register here</a></p>
-    <p>Don't remember password? <a href="{{ route('password.request') }}">Forget Password</a></p>
+
+        <div class="form-group row mb-0">
+            <div class="col-md-6 offset-md-4">
+                <button type="submit" class="btn btn-primary">
+                    {{ __('Send Password Reset Link') }}
+                </button>
+            </div>
+        </div>
+    </form>
 </div>
 </body>
 </html>
