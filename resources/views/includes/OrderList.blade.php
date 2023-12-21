@@ -1,3 +1,7 @@
+@extends("includes.header")
+@section("breadcrumb")
+    <li><span class="ant-breadcrumb-link"><a>Orders List</a></span></li>
+@endsection
 @extends("layouts.index")
 @section("title")
     <title>Order List</title>

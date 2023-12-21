@@ -13,25 +13,35 @@ class ClubBookController extends Controller
     {
         $this->clubBookService = $clubBookService;
     }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     public function showBookListPage()
     {
         return view('includes.BookList');
     }
+
+    /**
+     * @param $club_id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\JsonResponse
+     */
     public function getBookClubsByClubId($club_id)
     {
         $clubBooks = $this->clubBookService->getClubBooksByClubId($club_id);
-//        return $clubBooks;
         if ($clubBooks) {
-            return view('includes.BookList', compact('clubBooks','club_id'));
+            return view('pages.BookList', compact('clubBooks','club_id'));
         }
 
         return response()->json(['error' => 'Dont Have Club'], 404);
     }
-    public function getClubBooksAll()
-    {
-        $clubBooks = $this->clubBookService->getClubBooksAll();
-        return $clubBooks;
-    }
+
+    /**
+     *
+     * @param $clubId
+     * @param $bookName
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function searchClubBooksByName($clubId, $bookName)
     {
         $books = $this->clubBookService->searchClubBooksByName($clubId,$bookName);

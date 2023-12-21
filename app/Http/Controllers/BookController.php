@@ -24,4 +24,11 @@ class BookController extends Controller
         // Transform and return the response as needed
         return response()->json($books);
     }
+    public function bookDetail(int $id)
+    {
+        $books = $this->bookService->bookDetail($id);
+
+        // Transform and return the response as needed
+        return response()->json($books);
+    }
 }

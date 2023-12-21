@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Services\OrderService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redirect;
 
 class OrderController extends Controller
 {
@@ -15,20 +17,22 @@ class OrderController extends Controller
     }
     public function showOrderList()
     {
-        return view('includes.OrderList');
+        return view('includes-back.OrderList');
     }
-    public function showOrderDialog()
+    public function showOrderDialog(Request $request)
     {
-        return view('includes.orderDialog');
+        $clubBookId = $request->input('order');
+        if ($clubBookId){
+            $clubBookName = $this->orderService->getClubBookName($clubBookId);
+            return view('pages.orderDialog', compact('clubBookName'));
+        }
+        return back();
     }
 
     public function create(Request $request)
     {
         // Validate request data as needed
-
-        $orderData = $request->input('order');
-        $orderDetailData = $request->input('order_detail');
-        $order = $this->orderService->createOrder($orderData, $orderDetailData);
+        $order = $this->orderService->createOrder($request);
 
         // You can return a response or redirect as needed
         return response()->json($order, 201);
@@ -36,7 +40,7 @@ class OrderController extends Controller
     public function getOrderByUserId($userId){
         $orders = $this->orderService->getOrderByUserId($userId);
         if ($orders) {
-            return view('includes.OrderList', compact('orders'));
+            return view('pages.OrderList', compact('orders'));
         }
 
         return response()->json(['error' => 'Dont Have Order'], 404);

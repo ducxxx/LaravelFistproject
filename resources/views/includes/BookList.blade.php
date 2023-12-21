@@ -1,3 +1,7 @@
+@extends("includes.header")
+@section("breadcrumb")
+    <li><span class="ant-breadcrumb-link"><a>Books List</a></span></li>
+@endsection
 @extends("layouts.index")
 @section("title")
     <title>Book List In Club</title>
@@ -145,16 +149,16 @@
                                         </tr>
                                         </thead>
                                         <tbody class="ant-table-tbody">
-                                        @forelse ($clubBooks[0]->clubBooks as $index => $clubBook)
+                                        @forelse ($clubBooks as $index => $clubBook)
                                             <tr class="ant-table-row ant-table-row-level-{{ $index % 2 }}">
                                                 <td class="ant-table-cell ant-table-selection-column"><label
                                                         class="ant-checkbox-wrapper css-12jzuas"><span
                                                             class="ant-checkbox css-12jzuas"><input
                                                                 class="cb-element" type="checkbox"></span></label></td>
                                                 <td class="ant-table-cell">{{ $index + 1 }}</td>
-                                                <td class="ant-table-cell">{{ $clubBook->book->name }}</td>
-                                                <td class="ant-table-cell">{{ $clubBook->book->category->name }}</td>
-                                                <td class="ant-table-cell">{{ $clubBook->book->author->name}}</td>
+                                                <td class="ant-table-cell">{{ $clubBook->book_name }}</td>
+                                                <td class="ant-table-cell">{{ $clubBook->category_name }}</td>
+                                                <td class="ant-table-cell">{{ $clubBook->author_name}}</td>
                                             </tr>
                                         @empty
                                             <tr>

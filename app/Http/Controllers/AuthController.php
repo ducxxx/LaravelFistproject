@@ -21,15 +21,15 @@ class AuthController extends Controller
 
     public function showLoginForm()
     {
-        return view('login');
+        return view('auth.login');
     }
     public function showChangePasswordForm()
     {
-        return view('changePassword');
+        return view('auth.changePassword');
     }
     public function showLinkRequestForm()
     {
-        return view('forgetPassword');
+        return view('auth.forgetPassword');
     }
     public function showLogoutForm()
     {
@@ -57,8 +57,9 @@ class AuthController extends Controller
                     return redirect()->to($afterLoginRedirectUrl);
                 }
             }
+
             // If there's no intended URL, redirect to the default location
-            return redirect(route('homepage'))->withInput();
+            return redirect(route('app'))->withInput();
         } else {
             // Authentication failed
             // You can customize the response as needed

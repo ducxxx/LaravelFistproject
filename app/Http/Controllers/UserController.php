@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\UserRequest;
+use App\Models\Member;
 use App\Rules\ValidFullName;
 use App\Services\UserService;
 use Illuminate\Http\Request;
@@ -24,7 +25,7 @@ class UserController extends Controller
     public function showRegisterForm()
     {
 
-        return view('register');
+        return view('auth.register');
     }
     public function register(Request $request)
     {
@@ -51,7 +52,7 @@ class UserController extends Controller
     }
     public function viewMyProfile()
     {
-        return view('includes.MyProfile');
+        return view('pages.MyProfile');
     }
     public function update(Request $request, $id)
     {
@@ -61,12 +62,24 @@ class UserController extends Controller
             return Redirect::back()->withErrors($validator->errors())->withInput();
         }
         $user = User::where('id',$id)->first();
-        $user->email = $request->input('email');
-        $user->phone_number = $request->input('phoneNumber');
-        $user->full_name = $request->input('fullName');
-        $user->birth_date = $request->input('birthDate');
-        $user->address = $request->input('address');
-        $user->save();
+        if($user){
+            $user->email = $request->input('email');
+            $user->phone_number = $request->input('phoneNumber');
+            $user->full_name = $request->input('fullName');
+            $user->birth_date = $request->input('birthDate');
+            $user->address = $request->input('address');
+            $user->save();
+        }
+
+        $member = Member::where('user_id',$id)->first();
+        if ($member){
+            $member->email = $request->input('email');
+            $member->phone_number = $request->input('phoneNumber');
+            $member->full_name = $request->input('fullName');
+            $member->birth_date = $request->input('birthDate');
+            $member->address = $request->input('address');
+            $member->save();
+        }
 
         return redirect()->route('user.profile')->with('success', 'User updated successfully!');
     }

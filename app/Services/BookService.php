@@ -21,4 +21,9 @@ class BookService
     {
         return $this->bookRepository->searchBooksByName($bookName);
     }
+
+    public function bookDetail(int $id)
+    {
+        return $this->bookRepository->bookDetail($id);
+    }
 }

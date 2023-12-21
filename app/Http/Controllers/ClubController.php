@@ -17,7 +17,7 @@ class ClubController extends Controller
     {
         $clubs = $this->clubService->getAllClubs();
         if ($clubs) {
-            return view('includes.ClubList', compact('clubs'));
+            return view('pages.ClubList', compact('clubs'));
         }
 
         return response()->json(['error' => 'Dont Have Club'], 404);

@@ -1,3 +1,7 @@
+@extends("includes.header")
+@section("breadcrumb")
+    <li><span class="ant-breadcrumb-link"><a>Order Create</a></span></li>
+@endsection
 @extends("layouts.index")
 @section("body")
 <div class="ant-modal-mask"></div>

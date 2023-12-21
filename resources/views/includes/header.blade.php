@@ -3,10 +3,9 @@
         <nav class="ant-breadcrumb css-12jzuas">
             <ol>
                 <li><span class="ant-breadcrumb-link"><a
-                            href="http://localhost:8000/home">Home</a></span></li>
+                            href="http://localhost:8000/app">Home</a></span></li>
                 <li class="ant-breadcrumb-separator" aria-hidden="true">/</li>
-                <li><span class="ant-breadcrumb-link"><a
-                            href="http://localhost:8000/home">Home</a></span></li>
+                @yield('breadcrumb')
             </ol>
         </nav>
     </div>
@@ -77,7 +76,7 @@
                 <a class="ant-dropdown-trigger">
                     <div class="ant-space css-12jzuas ant-space-horizontal ant-space-align-center"
                          style="display: flex; justify-content: flex-end; margin-left: 5px; gap: 8px;">
-                        <div class="ant-space-item" style="" id="userDropdownTrigger">{{ Auth::user()->username }}</div>
+                        <div class="userDropdownTrigger ant-space-item" style="" id="userDropdownTrigger">{{ Auth::user()->username }}</div>
                         <div class="ant-space-item">
             <span role="img" aria-label="profile" class="anticon anticon-profile">
                 <svg viewBox="64 64 896 896" focusable="false" data-icon="profile" width="1em" height="1em"
@@ -89,31 +88,46 @@
                     </div>
                 </a>
 
-                <!-- Dropdown menu -->
-                <div id="userDropdownMenu" class="user-dropdown-menu" style="display: none;">
-                    <ul style="">
-                        <li><a href="{{ route('show.change.password') }}">Change Password</a></li>
-                        <li><a href="{{ route('logout') }}">Logout</a></li>
-                    </ul>
+                <div>
+                    <div id="userDropdownMenu" class="d-none ant-dropdown css-12jzuas ant-dropdown-show-arrow ant-dropdown-placement-bottomRight"
+                         style="--arrow-x: 103.671875px; --arrow-y: -6px; inset: 66.9844px auto auto 1740.81px; box-sizing: border-box; min-width: 83.0312px; pointer-events: none;">
+                        <div class="ant-dropdown-arrow">
+                        </div>
+                        <ul class="ant-dropdown-menu ant-dropdown-menu-root ant-dropdown-menu-vertical ant-dropdown-menu-light css-12jzuas"
+                            role="menu" tabindex="0" data-menu-list="true">
+                            <li class="ant-dropdown-menu-item ant-dropdown-menu-item-only-child" role="menuitem" tabindex="-1"
+                                data-menu-id="rc-menu-uuid-74221-3-1"><span
+                                    class="ant-dropdown-menu-title-content" >Change Password</span></li>
+                            <li class="ant-dropdown-menu-item ant-dropdown-menu-item-only-child" role="menuitem" tabindex="-1"
+                                data-menu-id="rc-menu-uuid-74221-3-2"><span class="ant-dropdown-menu-title-content">Logout</span></li>
+                        </ul>
+                        <div aria-hidden="true" style="display: none;"></div>
+                    </div>
                 </div>
-
+                <style>
+                    .d-none {
+                        display: none;
+                    }
+                </style>
 
                 <script>
-                    $(document).ready(function () {
-                        var userDropdownTrigger = $('#userDropdownTrigger');
-                        var userDropdownMenu = $('#userDropdownMenu');
+                    $(".userDropdownTrigger").on('click', function (event) {
+                        event.preventDefault();
+                        //$('#userDropdownTrigger').on('click', function(){
+                        console.log("99")
+                        if ($('#userDropdownMenu').hasClass('d-none')) {
+                            console.log("111")
+                            $('#userDropdownMenu').removeClass('d-none')
 
-                        userDropdownTrigger.on('click', function () {
-                            userDropdownMenu.toggle();
-                        });
-
-                        // Close the dropdown if the user clicks outside of it
-                        $(document).on('click', function (event) {
-                            if (!userDropdownTrigger.is(event.target) && !userDropdownMenu.has(event.target).length) {
-                                userDropdownMenu.hide();
-                            }
-                        });
+                        }else{
+                            console.log("222")
+                            $('#userDropdownMenu').addClass('d-none')
+                        }
                     });
+
+
+
+
                 </script>
             </div>
         @endguest
