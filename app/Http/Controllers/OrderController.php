@@ -35,7 +35,7 @@ class OrderController extends Controller
         $order = $this->orderService->createOrder($request);
 
         // You can return a response or redirect as needed
-        return response()->json($order, 201);
+        return Redirect::route('app')->withInput();
     }
     public function getOrderByUserId($userId){
         $orders = $this->orderService->getOrderByUserId($userId);

@@ -29,6 +29,7 @@ class OrderService
             ->first();
         if ($member){
             $order = $this->orderRepository->create($request, $member);
+            return $order;
         }else{
             $newMember = new Member();
             $newMember->user_id = Auth::id();
@@ -39,9 +40,8 @@ class OrderService
             $newMember->email = Auth::user()->email;
             $newMember->save();
             $order = $this->orderRepository->create($request, $newMember);
+            return $order;
         }
-
-        return null;
     }
 
     public function getClubBookName($clubBookId)
