@@ -14,6 +14,11 @@ class UserService
         $this->userRepository = $userRepository;
     }
 
+    /**
+     * @param $username
+     * @param $password
+     * @return bool
+     */
     public function login($username, $password)
     {
         // Add any additional logic (e.g., password validation)
@@ -23,6 +28,12 @@ class UserService
         }
         return false;
     }
+
+    /**
+     * @param $id
+     * @param array $data
+     * @return mixed
+     */
     public function updateUser($id, array $data)
     {
         // You can add any additional business logic here before updating the user.

@@ -28,17 +28,20 @@ Route::get('/gotohomepage', function () {
     return view('GoToHomePage');
 });
 
+Route::get('/home', [HomeController::class, 'showHomePage'])->name('homepage');
+Route::get('/app', [HomeController::class, 'showAppPage'])->name('app');
+
+
 //User
 Route::get('/register', [UserController::class, 'showRegisterForm'])->name('register');
 
 Route::post('/register', [UserController::class, 'register'])->name('user.register');
-Route::get('/my-profile', [UserController::class, 'viewMyProfile'])->name('user.profile');
-Route::put('/users/update/{id}', [UserController::class, 'update'])->name('user.update');
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/my-profile', [UserController::class, 'viewMyProfile'])->name('user.profile');
+    Route::put('/users/update/{id}', [UserController::class, 'update'])->name('user.update');
+});
 
-
-Route::get('/home', [HomeController::class, 'showHomePage'])->name('homepage');
-Route::get('/app', [HomeController::class, 'showAppPage'])->name('app');
 
 //Auth
 
@@ -46,9 +49,8 @@ Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 
 Route::post('/login', [AuthController::class, 'login'])->name('user.login');
 
-Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
-
 Route::middleware(['auth'])->group(function () {
+    Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/change-password', [AuthController::class, 'showChangePasswordForm'])->name('show.change.password');
     Route::post('/change-password', [AuthController::class, 'changePassword'])->name('change.password');
 });

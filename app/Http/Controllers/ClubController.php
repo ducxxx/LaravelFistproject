@@ -13,6 +13,10 @@ class ClubController extends Controller
     {
         $this->clubService = $clubService;
     }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\JsonResponse
+     */
     public function showClubListPage()
     {
         $clubs = $this->clubService->getAllClubs();

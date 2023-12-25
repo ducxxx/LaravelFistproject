@@ -56,6 +56,7 @@
         }
     </style>
 </head>
+@include('includes-back.flash.flash')
 <body>
 <form id="registrationForm" method="post" action="{{ route('user.register')}}">
     @csrf

@@ -8,6 +8,10 @@ use Illuminate\Support\Facades\DB;
 
 class ClubBookRepository
 {
+    /**
+     * @param $club_id
+     * @return \Illuminate\Support\Collection
+     */
     public function getClubBooksByClubId($club_id)
     {
         $clubBooks = DB::table('club_book')
@@ -19,6 +23,12 @@ class ClubBookRepository
             ->get();
         return $clubBooks;
     }
+
+    /**
+     * @param int $clubId
+     * @param string $bookName
+     * @return \Illuminate\Support\Collection
+     */
     public function searchClubBooksByName(int $clubId, string $bookName)
     {
         $clubBooks = DB::table('club_book')

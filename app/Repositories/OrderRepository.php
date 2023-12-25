@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\DB;
 
 class OrderRepository
 {
+    /**
+     * @param $request
+     * @param $member
+     * @return Order
+     */
     public function create($request,$member)
     {
         $bookOrders = json_decode($request->clubBook);
@@ -33,6 +38,11 @@ class OrderRepository
 
         return $newOrder;
     }
+
+    /**
+     * @param $userId
+     * @return \Illuminate\Support\Collection
+     */
     public function getOrderByUserId($userId)
     {
         $orders = DB::table('order')
@@ -46,6 +56,10 @@ class OrderRepository
         return $orders;
     }
 
+    /**
+     * @param $clubBookId
+     * @return \Illuminate\Support\Collection
+     */
     public function getClubBookName($clubBookId)
     {
         $clubBookName = DB::table('club_book')

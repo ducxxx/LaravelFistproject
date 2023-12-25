@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\DB;
 
 class BookVoteRepository
 {
+
+    /**
+     * @param int $book_id
+     * @return \Illuminate\Support\Collection
+     */
     public function bookStarById(int $book_id)
     {
         $bookStars = DB::table('book_vote')

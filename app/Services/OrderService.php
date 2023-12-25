@@ -20,7 +20,10 @@ class OrderService
         $this->orderDetailRepository = $orderDetailRepository;
     }
 
-    // Inside OrderService.php
+    /**
+     * @param $request
+     * @return \App\Models\Order
+     */
     public function createOrder($request)
     {
         $member = DB::table('member')

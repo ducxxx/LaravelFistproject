@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
@@ -36,6 +37,10 @@ class AuthController extends Controller
         return view('logout');
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
     public function login(Request $request)
     {
         $loginRequest = new AuthRequest();
@@ -54,18 +59,25 @@ class AuthController extends Controller
                 $afterLoginRedirectUrl = session('url.after_login_redirect');
                 session()->forget('url.after_login_redirect');
                 if($afterLoginRedirectUrl){
+                    // Redirect to a route or view
                     return redirect()->to($afterLoginRedirectUrl);
                 }
             }
-
+            Session::flash('success', 'Login success');
             // If there's no intended URL, redirect to the default location
             return redirect(route('app'))->withInput();
         } else {
             // Authentication failed
             // You can customize the response as needed
+            Session::flash('false', 'Login False');
             return redirect(route('user.login'))->with('error', 'Username or password incorrect')->withInput();
         }
     }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function logout(Request $request)
     {
         Auth::logout();
@@ -76,6 +88,11 @@ class AuthController extends Controller
 
         return Redirect::route('login');
     }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
     public function changePassword(Request $request)
     {
         $changePasswordRequest = new ChangePasswordRequest();

@@ -12,11 +12,20 @@ class BookController extends Controller
     {
         $this->bookService = $bookService;
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     */
     public function getAllBook()
     {
         $clubBooks = $this->bookService->getAllBook();
         return $clubBooks;
     }
+
+    /**
+     * @param $bookName
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function searchBooksByName($bookName)
     {
         $books = $this->bookService->searchBooksByName($bookName);
@@ -24,6 +33,11 @@ class BookController extends Controller
         // Transform and return the response as needed
         return response()->json($books);
     }
+
+    /**
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function bookDetail(int $id)
     {
         $books = $this->bookService->bookDetail($id);

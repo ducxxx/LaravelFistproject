@@ -12,6 +12,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
@@ -22,11 +23,20 @@ class UserController extends Controller
     {
         $this->userService = $userService;
     }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     public function showRegisterForm()
     {
 
         return view('auth.register');
     }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
     public function register(Request $request)
     {
 //        // Validate the request
@@ -47,9 +57,18 @@ class UserController extends Controller
         $user->password = bcrypt($request->input('password'));
 
         $user->save();
-
-        return redirect(route('login'))->withInput();
+        if ($user){
+            Session::flash('success', 'Register success');
+            return redirect(route('login'))->withInput();
+        }else{
+            Session::flash('error', 'Register Error');
+            return redirect(route('register'))->withInput();
+        }
     }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     public function viewMyProfile()
     {
         return view('pages.MyProfile');
@@ -69,6 +88,7 @@ class UserController extends Controller
             $user->birth_date = $request->input('birthDate');
             $user->address = $request->input('address');
             $user->save();
+            Session::flash('success', 'Update success');
         }
 
         $member = Member::where('user_id',$id)->first();
@@ -80,7 +100,6 @@ class UserController extends Controller
             $member->address = $request->input('address');
             $member->save();
         }
-
         return redirect()->route('user.profile')->with('success', 'User updated successfully!');
     }
 }

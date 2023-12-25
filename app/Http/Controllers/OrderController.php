@@ -19,6 +19,11 @@ class OrderController extends Controller
     {
         return view('includes-back.OrderList');
     }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
+     */
     public function showOrderDialog(Request $request)
     {
         $clubBookId = $request->input('order');
@@ -29,6 +34,10 @@ class OrderController extends Controller
         return back();
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function create(Request $request)
     {
         // Validate request data as needed
@@ -37,6 +46,11 @@ class OrderController extends Controller
         // You can return a response or redirect as needed
         return Redirect::route('app')->withInput();
     }
+
+    /**
+     * @param $userId
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\JsonResponse
+     */
     public function getOrderByUserId($userId){
         $orders = $this->orderService->getOrderByUserId($userId);
         if ($orders) {

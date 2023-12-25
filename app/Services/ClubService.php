@@ -15,6 +15,9 @@ class ClubService
         $this->clubRepository = $clubRepository;
     }
 
+    /**
+     * @return \App\Models\Club[]|\Illuminate\Database\Eloquent\Collection
+     */
     public function getAllClubs()
     {
         return $this->clubRepository->getAllClubs();

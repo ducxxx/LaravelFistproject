@@ -7,6 +7,11 @@ use App\Models\Book;
 
 class BookRepository
 {
+
+    /**
+     * @param $bookName
+     * @return mixed
+     */
     public function getBookByName($bookName)
     {
         return Book::where('name', $bookName)->first();
@@ -31,6 +36,11 @@ class BookRepository
             ->where('name', 'like', "%".$bookName."%")
             ->get();
     }
+
+    /**
+     * @param int $id
+     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     */
     public function bookDetail(int $id)
     {
         return Book::with('author','category')

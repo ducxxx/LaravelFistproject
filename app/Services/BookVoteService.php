@@ -13,6 +13,10 @@ class BookVoteService
         $this->bookVoteRepository = $bookVoteRepository;
     }
 
+    /**
+     * @param int $book_id
+     * @return \Illuminate\Support\Collection
+     */
     public function bookStarById(int $book_id)
     {
         return $this->bookVoteRepository->bookStarById($book_id);
