@@ -3,15 +3,16 @@
 namespace App\Repositories;
 
 use App\Models\Club;
+use Illuminate\Support\Facades\DB;
 
 class ClubRepository
 {
 
     /**
-     * @return Club[]|\Illuminate\Database\Eloquent\Collection
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function getAllClubs()
     {
-        return Club::all();
+        return DB::table('club')->paginate(2);
     }
 }

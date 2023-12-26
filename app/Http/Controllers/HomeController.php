@@ -16,4 +16,9 @@ class HomeController extends Controller
     {
         return view('pages.home');
     }
+
+    public function showEmptyPage()
+    {
+        return view('pages.EmptyPage');
+    }
 }

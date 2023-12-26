@@ -30,6 +30,7 @@ Route::get('/gotohomepage', function () {
 
 Route::get('/home', [HomeController::class, 'showHomePage'])->name('homepage');
 Route::get('/app', [HomeController::class, 'showAppPage'])->name('app');
+Route::get('/empty', [HomeController::class, 'showEmptyPage'])->name('empty');
 
 
 //User

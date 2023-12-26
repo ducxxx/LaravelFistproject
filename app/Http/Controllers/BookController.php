@@ -24,25 +24,21 @@ class BookController extends Controller
 
     /**
      * @param $bookName
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
      */
     public function searchBooksByName($bookName)
     {
         $books = $this->bookService->searchBooksByName($bookName);
-
-        // Transform and return the response as needed
-        return response()->json($books);
+        return $books;
     }
 
     /**
      * @param int $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
      */
     public function bookDetail(int $id)
     {
         $books = $this->bookService->bookDetail($id);
-
-        // Transform and return the response as needed
-        return response()->json($books);
+        return $books;
     }
 }

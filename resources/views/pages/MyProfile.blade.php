@@ -9,7 +9,14 @@
     <main class="ant-layout-content css-12jzuas" style="padding: 24px; overflow: auto;">
         <div style="display: flex; align-items: center; justify-content: center;">
             <div style="display: flex; padding: 30px; background: rgb(255, 255, 255); border-radius: 10px; box-shadow: rgba(0, 0, 0, 0.12) 0px 5px 5px;">
-                <form id="control-ref" class="ant-form ant-form-horizontal css-12jzuas" method="POST" action="{{ route('user.update', ['id' => Auth::user()->id]) }}"
+                <div class="profilepic" id="img-avatar-click">
+                    <img id="img-avatar" class="profilepic__image" src="{{ Auth::user()->avatar }}" width="150" height="150" alt="Profibild" />
+                    <div class="profilepic__content">
+                        <span class="profilepic__icon"><i class="fas fa-camera"></i></span>
+                        <span class="profilepic__text">Edit Profile</span>
+                    </div>
+                </div>
+                <form id="control-ref" class="ant-form ant-form-horizontal css-12jzuas" enctype="multipart/form-data" method="POST" action="{{ route('user.update', ['id' => Auth::user()->id]) }}"
                       style="width: 600px;">
                     @csrf
                     @method('PUT')
@@ -104,6 +111,34 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="ant-form-item-control-input">
+                        <div class="ant-form-item-control-input-content">
+                            <input type="file" name="avatar" id="avatar" accept="image/*" style="display: none">
+                        </div>
+                        <script>
+                            $(document).ready(function () {
+                                $('#img-avatar-click').click(function () {
+                                    $('#avatar').click();
+                                });
+
+                                // Listen for changes in the file input
+                                $('#avatar').on('change', function () {
+                                    // Access the selected file
+                                    var selectedFile = this.files[0];
+                                    var imgAvatar = $('#img-avatar');
+                                    if (imgAvatar.length) {
+                                        // Read the selected file as a data URL
+                                        var reader = new FileReader();
+                                        reader.onload = function (e) {
+                                            // Set the image source to the data URL
+                                            imgAvatar.attr('src', e.target.result);
+                                        };
+                                        reader.readAsDataURL(selectedFile);
+                                    }
+                                });
+                            });
+                        </script>
                     </div>
                     <div class="ant-form-item css-12jzuas">
                         <div class="ant-row ant-form-item-row css-12jzuas">

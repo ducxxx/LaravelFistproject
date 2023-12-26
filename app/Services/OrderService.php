@@ -22,7 +22,7 @@ class OrderService
 
     /**
      * @param $request
-     * @return \App\Models\Order
+     * @return \App\Models\Order|\Illuminate\Http\RedirectResponse
      */
     public function createOrder($request)
     {

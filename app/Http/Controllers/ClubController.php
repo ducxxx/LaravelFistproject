@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\ClubService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 
 class ClubController extends Controller
 {
@@ -15,7 +16,7 @@ class ClubController extends Controller
     }
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\JsonResponse
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
     public function showClubListPage()
     {
@@ -24,6 +25,7 @@ class ClubController extends Controller
             return view('pages.ClubList', compact('clubs'));
         }
 
-        return response()->json(['error' => 'Dont Have Club'], 404);
+        $empty = "Don't have Club";
+        return view('pages.EmptyPage',compact($empty))->with('status',404);
     }
 }

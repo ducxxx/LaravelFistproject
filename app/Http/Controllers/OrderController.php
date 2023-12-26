@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 
 class OrderController extends Controller
 {
@@ -40,11 +41,22 @@ class OrderController extends Controller
      */
     public function create(Request $request)
     {
-        // Validate request data as needed
         $order = $this->orderService->createOrder($request);
-
-        // You can return a response or redirect as needed
-        return Redirect::route('app')->withInput();
+        if ($order==2){
+            Session::flash('success', 'Create order success');
+            return Redirect::route('order.get.list', ['user_id' => Auth::id()])->withInput();
+        }
+        if ($order==0){
+            Session::flash('Error', 'You can borrow max 3 books');
+            return Redirect::route('app')->with('error', 'You can borrow max 3 books')->withInput();
+        }
+        if($order==1){
+            return Redirect::route('app')->with('error', 'Cannot borrow more book because you are borrowing 3 books')->withInput();
+        }
+        if ($order==3){
+            return Redirect::route('app')->with('error', 'You can borrow max 3 books you borrowed')->withInput();
+        }
+        return back();
     }
 
     /**
@@ -56,9 +68,8 @@ class OrderController extends Controller
         if ($orders) {
             return view('pages.OrderList', compact('orders'));
         }
-
-        return response()->json(['error' => 'Dont Have Order'], 404);
-//        return $orders;
+        $empty = "Don't have Order";
+        return view('pages.EmptyPage',compact($empty))->with('status',404);
     }
 
 }

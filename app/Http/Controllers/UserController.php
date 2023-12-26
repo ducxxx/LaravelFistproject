@@ -73,12 +73,24 @@ class UserController extends Controller
     {
         return view('pages.MyProfile');
     }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(Request $request, $id)
     {
         $updateUserRequest = new UpdateUserRequest();
         $validator = $updateUserRequest->validation($request);
         if ($validator->fails()) {
+            Session::flash('error', 'Update error');
             return Redirect::back()->withErrors($validator->errors())->withInput();
+        }
+        if ($request->file('avatar')){
+            $path = $request->file('avatar')->store('avatars', 'public');
+            // Update the user's avatar path in the database (assuming you have a User model)
+            auth()->user()->update(['avatar' => $path]);
         }
         $user = User::where('id',$id)->first();
         if($user){

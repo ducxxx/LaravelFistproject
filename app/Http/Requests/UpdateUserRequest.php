@@ -31,6 +31,7 @@ class UpdateUserRequest extends FormRequest
             'phoneNumber' => 'required',
             'address' => 'required',
             'birthDate' => 'nullable|date',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             // Add other rules as needed
         ];
     }
@@ -40,7 +41,8 @@ class UpdateUserRequest extends FormRequest
      */
     public function messages()
     {
-        return ['fullName.valid_full_name' => 'The full name field is not contain special characters.',];
+        return ['fullName.valid_full_name' => 'The full name field is not contain special characters.',
+                'avatar.image' => 'choose image.',];
     }
 
     /**

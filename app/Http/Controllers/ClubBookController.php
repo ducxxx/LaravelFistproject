@@ -32,21 +32,18 @@ class ClubBookController extends Controller
         if ($clubBooks) {
             return view('pages.BookList', compact('clubBooks','club_id'));
         }
-
-        return response()->json(['error' => 'Dont Have Club'], 404);
+        $empty = "Don't have Book in Club";
+        return view('pages.EmptyPage',compact($empty))->with('status',404);
     }
 
     /**
-     *
      * @param $clubId
      * @param $bookName
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Support\Collection
      */
     public function searchClubBooksByName($clubId, $bookName)
     {
         $books = $this->clubBookService->searchClubBooksByName($clubId,$bookName);
-
-        // Transform and return the response as needed
-        return response()->json($books);
+        return $books;
     }
 }

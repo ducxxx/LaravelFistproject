@@ -162,7 +162,7 @@
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="4">No clubs found</td>
+                                                <td colspan="4">No Book found</td>
                                             </tr>
                                         @endforelse
                                         </tbody>

@@ -109,6 +109,7 @@ class AuthController extends Controller
         // Check if the current password matches
         if (!Hash::check($request->current_password, $user->password)) {
 //            return response()->json(['error' => 'Current password is incorrect'], 401);
+            Session::flash('error', 'Change password error');
             return redirect(route('show.change.password'))->withErrors($validator->errors())->withInput();
         }
 
@@ -116,7 +117,7 @@ class AuthController extends Controller
         $user->update([
             'password' => Hash::make($request->new_password),
         ]);
-
+        Session::flash('success', 'Change password success');
         return redirect(route('user.login'))->with('message', 'Change password successfully')->withInput();
     }
 
