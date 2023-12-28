@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
+use function Sodium\add;
 
 class OrderRepository
 {
@@ -56,16 +57,19 @@ class OrderRepository
                     $newOrder->due_date = $request->input('due_date');
                     $newOrder->save();
 
+                    $newOrderDetailList =[];
                     foreach ($bookOrders as $bookOrder) {
-                        $newOrderDetail = new OrderDetail();
-                        $newOrderDetail->order_id = $newOrder->id;
-                        $newOrderDetail->club_book_id = $bookOrder->id;
-                        $newOrderDetail->return_date = null;
-                        $newOrderDetail->overdue_day_count = 0;
-                        $newOrderDetail->order_status = 0;
-                        $newOrderDetail->note = $request->input('note');
-                        $newOrderDetail->save();
+                        $newOrderDetail = [
+                            'order_id' => $newOrder->id,
+                            'club_book_id' => $bookOrder->id,
+                            'return_date' => null,
+                            'overdue_day_count' => 0,
+                            'order_status' => 0,
+                            'note' => $request->input('note'),
+                        ];
+                        $newOrderDetailList[] = $newOrderDetail;
                     }
+                    OrderDetail::insert($newOrderDetailList);
                     return 2; //borrow success
                 }else{
                     return 3; //please return book
@@ -82,7 +86,7 @@ class OrderRepository
      */
     public function getOrderByUserId($userId)
     {
-        $orders = DB::table('order')
+        return DB::table('order')
             ->join('order_detail', 'order.id', '=', 'order_detail.order_id')
             ->join('member', 'order.member_id', '=', 'member.id')
             ->join('club_book', 'order_detail.club_book_id', '=', 'club_book.id')
@@ -90,7 +94,6 @@ class OrderRepository
             ->where('member.user_id', $userId)
             ->select('order.*','order_detail.*','member.full_name as full_name','member.phone_number as phone_number', 'book.name as book_name')
             ->paginate(5);
-        return $orders;
     }
 
     /**
@@ -99,11 +102,10 @@ class OrderRepository
      */
     public function getClubBookName($clubBookId)
     {
-        $clubBookName = DB::table('club_book')
+        return DB::table('club_book')
             ->join('book', 'club_book.book_id', '=', 'book.id')
             ->whereIn('club_book.id', $clubBookId)
             ->select('club_book.id','club_book.club_id as club_id','book.name as name')
             ->get();
-        return $clubBookName;
     }
 }

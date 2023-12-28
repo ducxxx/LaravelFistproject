@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\OrderService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
@@ -30,7 +31,7 @@ class OrderController extends Controller
         $clubBookId = $request->input('order');
         if ($clubBookId){
             $clubBookName = $this->orderService->getClubBookName($clubBookId);
-            return view('pages.orderDialog', compact('clubBookName'));
+            return view('pages.order.orderDialog', compact('clubBookName'));
         }
         return back();
     }
@@ -41,10 +42,14 @@ class OrderController extends Controller
      */
     public function create(Request $request)
     {
-        $order = $this->orderService->createOrder($request);
+        $user = DB::table('users')
+            ->where('id', Auth::id())
+            ->select('users.*')
+            ->first();
+        $order = $this->orderService->createOrder($request,$user);
         if ($order==2){
             Session::flash('success', 'Create order success');
-            return Redirect::route('order.get.list', ['user_id' => Auth::id()])->withInput();
+            return Redirect::route('order.get.list', ['user_id' => ($user->id)])->withInput();
         }
         if ($order==0){
             Session::flash('Error', 'You can borrow max 3 books');
@@ -66,7 +71,7 @@ class OrderController extends Controller
     public function getOrderByUserId($userId){
         $orders = $this->orderService->getOrderByUserId($userId);
         if ($orders) {
-            return view('pages.OrderList', compact('orders'));
+            return view('pages.order.OrderList', compact('orders'));
         }
         $empty = "Don't have Order";
         return view('pages.EmptyPage',compact($empty))->with('status',404);

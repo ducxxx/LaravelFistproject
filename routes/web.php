@@ -6,6 +6,7 @@ use App\Http\Controllers\BookVoteController;
 use App\Http\Controllers\ClubBookController;
 use App\Http\Controllers\ClubController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MemberController;
 use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -23,9 +24,6 @@ use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
     return view('welcome');
-});
-Route::get('/gotohomepage', function () {
-    return view('GoToHomePage');
 });
 
 Route::get('/home', [HomeController::class, 'showHomePage'])->name('homepage');
@@ -87,6 +85,13 @@ Route::middleware(['checkLogin'])->group(function () {
     Route::any('/order/dialog', [OrderController::class, 'showOrderDialog'])->name('order.dialog');
 });
 
+
+//staff check
+Route::middleware(['checkStaff'])->group(function () {
+    Route::get('/club/member/list', [MemberController::class, 'showMemberListPage'])->name('member.get.list');
+    Route::get('/member/detail/{id}', [MemberController::class, 'memberDetail'])->name('member.detail');
+    Route::put('/member/update/{id}', [MemberController::class, 'updateMemberDetail'])->name('member.update');
+});
 
 
 

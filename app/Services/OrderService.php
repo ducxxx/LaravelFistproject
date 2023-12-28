@@ -24,10 +24,10 @@ class OrderService
      * @param $request
      * @return \App\Models\Order|\Illuminate\Http\RedirectResponse
      */
-    public function createOrder($request)
+    public function createOrder($request,$user)
     {
         $member = DB::table('member')
-            ->where('member.user_id', Auth::id())
+            ->where('member.user_id', $user->id)
             ->select('member.*')
             ->first();
         if ($member){
@@ -35,12 +35,12 @@ class OrderService
             return $order;
         }else{
             $newMember = new Member();
-            $newMember->user_id = Auth::id();
+            $newMember->user_id = $user->id;
             $newMember->address = $request->input('address');
             $newMember->phone_number = $request->input('phone_number');
             $newMember->full_name = $request->input('full_name');
-            $newMember->birth_date = optional(Auth::user()->birth_date)->format('Y-m-d');
-            $newMember->email = Auth::user()->email;
+            $newMember->birth_date = optional($user->birth_date)->format('Y-m-d');
+            $newMember->email = $user->email;
             $newMember->save();
             $order = $this->orderRepository->create($request, $newMember);
             return $order;

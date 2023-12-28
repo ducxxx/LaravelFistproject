@@ -22,7 +22,7 @@ class ClubController extends Controller
     {
         $clubs = $this->clubService->getAllClubs();
         if ($clubs) {
-            return view('pages.ClubList', compact('clubs'));
+            return view('pages.club.ClubList', compact('clubs'));
         }
 
         $empty = "Don't have Club";

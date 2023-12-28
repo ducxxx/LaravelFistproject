@@ -30,7 +30,7 @@ class ClubBookController extends Controller
     {
         $clubBooks = $this->clubBookService->getClubBooksByClubId($club_id);
         if ($clubBooks) {
-            return view('pages.BookList', compact('clubBooks','club_id'));
+            return view('pages.book.BookList', compact('clubBooks','club_id'));
         }
         $empty = "Don't have Book in Club";
         return view('pages.EmptyPage',compact($empty))->with('status',404);
