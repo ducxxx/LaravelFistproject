@@ -260,6 +260,7 @@
                                             <select id="multiple-checkboxes" multiple="multiple">
                                                 <option value="php">PHP</option>
                                             </select>
+                                            <div id="ttttt"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -278,9 +279,8 @@
                                             type: 'GET',
                                             success: function (data) {
                                                 for (var i = 0; i < data.length; i++) {
-                                                    console.log('<option value="' + data[i].id + '">'
-                                                        + data[i].book_name + '</option>');
-                                                    $('#multiple-checkboxes').append(
+                                                    console.log(data);
+                                                    $('#ttttt').append(
                                                         '<option value="' + data[i].id + '">'
                                                         + data[i].book_name + '</option>');
                                                 }
