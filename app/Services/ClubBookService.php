@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Book;
 use App\Repositories\ClubBookRepository;
 
 class ClubBookService
@@ -38,5 +39,30 @@ class ClubBookService
     public function searchClubBooksByName($clubId, $bookName)
     {
         return $this->clubBookRepository->searchClubBooksByName($clubId,$bookName);
+    }
+
+    public function getListBook()
+    {
+        return $this->clubBookRepository->getListBook();
+    }
+
+    public function getClubBookDetail($id)
+    {
+        return $this->clubBookRepository->getClubBookDetail($id);
+    }
+
+    public function updateClubBookDetail($id , $request)
+    {
+        return $this->clubBookRepository->updateClubBookDetail($id, $request);
+    }
+
+    public function addNewBook($request)
+    {
+        return $this->clubBookRepository->addNewBook($request);
+    }
+
+    public function getClubBookByClubId($club_id)
+    {
+        return $this->clubBookRepository->getClubBookByClubId($club_id);
     }
 }

@@ -32,4 +32,9 @@ class MemberService
     {
         return $this->memberRepository->getClubMemberDetail($id);
     }
+
+    public function getMemberByPhoneNumber($phoneNumber)
+    {
+        return $this->memberRepository->getMemberByPhoneNumber($phoneNumber);
+    }
 }

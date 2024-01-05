@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -22,6 +21,7 @@
     <!-- Custom styles for this template-->
     <link href="{{ asset('css/sb-admin-2.min.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/homepage.css') }}">
+    @yield("css")
 </head>
 
 <body id="page-top">
@@ -102,6 +102,7 @@
 
 <!-- Custom scripts for all pages-->
 <script src="{{ asset('js/sb-admin-2.min.js') }}"></script>
+@yield("js")
 
 <!-- Page level plugins -->
 {{--<script src="{{ asset('vendor/chart.js/Chart.min.js') }}"></script>--}}

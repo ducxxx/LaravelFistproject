@@ -85,12 +85,34 @@ Route::middleware(['checkLogin'])->group(function () {
     Route::any('/order/dialog', [OrderController::class, 'showOrderDialog'])->name('order.dialog');
 });
 
+Route::middleware(['checkStaff'])->group(function () {
+    Route::get('/order/club/list', [OrderController::class, 'getOrderList'])->name('order.get.list.control');
+});
+
 
 //staff check
 Route::middleware(['checkStaff'])->group(function () {
     Route::get('/club/member/list', [MemberController::class, 'showMemberListPage'])->name('member.get.list');
     Route::get('/member/detail/{id}', [MemberController::class, 'memberDetail'])->name('member.detail');
     Route::put('/member/update/{id}', [MemberController::class, 'updateMemberDetail'])->name('member.update');
+    Route::get('/member/search/{phone_number}', [MemberController::class, 'getMemberByPhoneNumber'])->name('member.search.phone');
+});
+
+//club book staff
+Route::middleware(['checkStaff'])->group(function () {
+    Route::get('/club/book/list', [ClubBookController::class, 'getListBook'])->name('book.get.list');
+    Route::get('/club/book/detail/{id}', [ClubBookController::class, 'getClubBookDetail'])->name('club.book.detail');
+    Route::any('/club/book/update/{id}', [ClubBookController::class, 'updateClubBookDetail'])->name('club.book.update');
+    Route::get('/club/book/add/form', [ClubBookController::class, 'bookAddForm'])->name('book.add.form');
+    Route::post('/club/book/add', [ClubBookController::class, 'addNewBook'])->name('book.add');
+    Route::get('/club/book/{club_id}', [ClubBookController::class, 'getClubBookByClubId'])->name('club.book.by.clubId');
+});
+
+//order staff
+Route::middleware(['checkStaff'])->group(function () {
+    Route::get('/order/confirm/{id}', [OrderController::class, 'orderConfirm'])->name('order.confirm');
+    Route::get('/order/return/{id}', [OrderController::class, 'orderReturn'])->name('order.return');
+    Route::post('/order/offline/dialog', [OrderController::class, 'orderOfflineDialog'])->name('order.offline.dialog');
 });
 
 

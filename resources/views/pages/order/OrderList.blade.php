@@ -1,9 +1,9 @@
 @extends("layouts.app")
 @section("breadcrumb")
-    <li><span class="ant-breadcrumb-link"><a>Order list</a></span></li>
+    <li><span class="ant-breadcrumb-link"><a>Book History</a></span></li>
 @endsection
 @section("title")
-    <title>Order List</title>
+    <title>Book History</title>
 @endsection
 @section("body")
     <main class="ant-layout-content css-12jzuas" style="padding: 24px; overflow: auto;">
@@ -29,6 +29,7 @@
                                             <th class="ant-table-cell" scope="col">Phone Number</th>
                                             <th class="ant-table-cell" scope="col">Order Status</th>
                                             <th class="ant-table-cell" scope="col">Order Date</th>
+                                            <th class="ant-table-cell" scope="col">Due Date</th>
                                             <th class="ant-table-cell" scope="col">Return Date</th>
                                             <th class="ant-table-cell" scope="col">Overdue Day</th>
                                         </tr>
@@ -40,9 +41,26 @@
                                                 <td class="ant-table-cell">{{ $order->book_name }}</td>
                                                 <td class="ant-table-cell">{{ $order->full_name }}</td>
                                                 <td class="ant-table-cell">{{ $order->phone_number }}</td>
-                                                <td class="ant-table-cell">{{ $order->order_status }}</td>
-                                                <td class="ant-table-cell">{{ $order->order_date }}</td>
-                                                <td class="ant-table-cell">{{ $order->return_date }}</td>
+                                                <td class="ant-table-cell">
+                                                    @if($order->order_status == 0)
+                                                        Pending
+                                                    @endif
+                                                    @if($order->order_status ==1)
+                                                        Created
+                                                    @endif
+                                                    @if($order->order_status ==2)
+                                                        Return
+                                                    @endif
+                                                    @if($order->order_status ==3)
+                                                        OverDue
+                                                    @endif</td>
+                                                <td class="ant-table-cell">{{ \Carbon\Carbon::parse($order->order_date)->format('Y-m-d') }}</td>
+                                                <td class="ant-table-cell">{{ \Carbon\Carbon::parse($order->due_date)->format('Y-m-d') }}</td>
+                                                <td class="ant-table-cell">
+                                                    @if($order->return_date)
+                                                        {{ \Carbon\Carbon::parse($order->return_date)->format('Y-m-d') }}
+                                                    @endif
+                                                </td>
                                                 <td class="ant-table-cell">{{ $order->overdue_day_count }}</td>
                                             </tr>
                                         @empty
@@ -58,6 +76,7 @@
                     </div>
                 </div>
             </div>
+            <br>
             <div>{{ $orders->links() }}</div>
         </div>
     </main>

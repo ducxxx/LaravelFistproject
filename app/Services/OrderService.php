@@ -55,4 +55,19 @@ class OrderService
     {
         return $this->orderRepository->getOrderByUserId($userId);
     }
+
+    public function getOrderList()
+    {
+        return $this->orderRepository->getOrderList();
+    }
+
+    public function orderConfirm(int $id)
+    {
+        return $this->orderRepository->orderConfirm($id);
+    }
+
+    public function orderReturn(int $id)
+    {
+        return $this->orderRepository->orderReturn($id);
+    }
 }

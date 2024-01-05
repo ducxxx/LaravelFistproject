@@ -1,13 +1,16 @@
 @extends("layouts.app")
 @section("breadcrumb")
-    <li><span class="ant-breadcrumb-link"><a>Club Member List</a></span></li>
+    <li><span class="ant-breadcrumb-link"><a>Club Book List</a></span></li>
 @endsection
 @section("title")
-    <title>Club Member List</title>
+    <title>Club Book List</title>
 @endsection
 @section("body")
     <main class="ant-layout-content css-12jzuas" style="padding: 24px; overflow: auto;">
         <div class="sc-gxYJeL iVyfZn">
+            <button type="button" class="ant-btn css-12jzuas ant-btn-primary" onclick="window.location.href='{{ route('book.add.form') }}'"
+                    style="margin-right: 10px;"><span>Add New Book</span>
+            </button>
             <div class="ant-table-wrapper css-12jzuas">
                 <div class="ant-spin-nested-loading css-12jzuas">
                     <div class="ant-spin-container">
@@ -21,28 +24,32 @@
                                             <th class="ant-table-cell" scope="col">No</th>
                                             <th class="ant-table-cell" scope="col">
                                                 <div class="ant-table-filter-column"><span
-                                                        class="ant-table-column-title">Full Name</span>
+                                                        class="ant-table-column-title">Book Name</span>
                                                 </div>
                                             </th>
-                                            <th class="ant-table-cell" scope="col">Phone Number</th>
-                                            <th class="ant-table-cell" scope="col">Address</th>
-                                            <th class="ant-table-cell" scope="col">Join Date</th>
+                                            <th class="ant-table-cell" scope="col">Author</th>
+                                            <th class="ant-table-cell" scope="col">Category</th>
+                                            <th class="ant-table-cell" scope="col">Club Name</th>
+                                            <th class="ant-table-cell" scope="col">Init Count</th>
+                                            <th class="ant-table-cell" scope="col">Current Count</th>
                                             <th class="ant-table-cell" scope="col">Action</th>
                                         </tr>
                                         </thead>
                                         <tbody class="ant-table-tbody">
-                                        @forelse ($members as $index => $member)
+                                        @forelse ($books as $index => $book)
                                             <tr class="ant-table-row ant-table-row-level-{{ $index % 2 }}">
                                                 <td class="ant-table-cell">{{ $index + 1 }}</td>
-                                                <td class="ant-table-cell">{{ $member->full_name }}</td>
-                                                <td class="ant-table-cell">{{ $member->phone_number }}</td>
-                                                <td class="ant-table-cell">{{ $member->address }}</td>
-                                                <td class="ant-table-cell">{{ $member->created_at }}</td>
+                                                <td class="ant-table-cell">{{ $book->name }}</td>
+                                                <td class="ant-table-cell">{{ $book->author_name }}</td>
+                                                <td class="ant-table-cell">{{ $book->category_name }}</td>
+                                                <td class="ant-table-cell">{{ $book->club_name }}</td>
+                                                <td class="ant-table-cell">{{ $book->init_count }}</td>
+                                                <td class="ant-table-cell">{{ $book->current_count }}</td>
                                                 <td class="ant-table-cell">
                                                     <div class="ant-space css-12jzuas ant-space-horizontal ant-space-align-center"
                                                          style="gap: 8px;">
                                                         <div class="ant-space-item">
-                                                            <button type="button" value="{{$member->id}}"
+                                                            <button type="button" value="{{$book->club_book_id}}"
                                                                     class="edit-button ant-btn css-12jzuas ant-btn-primary"
                                                                     fdprocessedid="q8qe9e"><span
                                                                     class="ant-btn-icon"><span role="img"
@@ -57,10 +64,10 @@
                                                                 $(document).ready(function () {
                                                                     $('.edit-button').on('click', function () {
                                                                         // Get the member ID from the button's value attribute
-                                                                        var memberId = $(this).val();
+                                                                        var clubBookId = $(this).val();
 
                                                                         // Redirect to the member.detail route with the member ID
-                                                                        window.location.href = '/member/detail/'+memberId;
+                                                                        window.location.href = '/club/book/detail/'+clubBookId;
                                                                     });
                                                                 });
                                                             </script>
@@ -70,7 +77,7 @@
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="4">No clubs found</td>
+                                                <td colspan="4">No books found</td>
                                             </tr>
                                         @endforelse
                                         </tbody>
@@ -82,7 +89,7 @@
                 </div>
             </div>
             <br>
-            {{ $members->links() }}
+            {{ $books->links() }}
         </div>
     </main>
 @endsection

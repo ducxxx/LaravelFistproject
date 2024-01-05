@@ -63,9 +63,8 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="">Report</a>
                         <a class="collapse-item" href="{{route('member.get.list')}}">Club Member</a>
-                        <a class="collapse-item" href="">Book</a>
-                        <a class="collapse-item" href="">Order</a>
-                        <a class="collapse-item" href="">Online Order</a>
+                        <a class="collapse-item" href="{{route('book.get.list')}}">Book</a>
+                        <a class="collapse-item" href="{{route('order.get.list.control')}}">Order</a>
                     </div>
                 </div>
             </li>

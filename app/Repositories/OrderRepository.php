@@ -93,7 +93,7 @@ class OrderRepository
             ->join('book', 'club_book.id', '=', 'book.id')
             ->where('member.user_id', $userId)
             ->select('order.*','order_detail.*','member.full_name as full_name','member.phone_number as phone_number', 'book.name as book_name')
-            ->paginate(5);
+            ->paginate(10);
     }
 
     /**
@@ -107,5 +107,48 @@ class OrderRepository
             ->whereIn('club_book.id', $clubBookId)
             ->select('club_book.id','club_book.club_id as club_id','book.name as name')
             ->get();
+    }
+
+
+    /**
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function getOrderList()
+    {
+        return DB::table('order')
+            ->join('order_detail', 'order.id', '=', 'order_detail.order_id')
+            ->join('member', 'order.member_id', '=', 'member.id')
+            ->join('club_book', 'order_detail.club_book_id', '=', 'club_book.id')
+            ->join('book', 'club_book.id', '=', 'book.id')
+            ->select('order.*','order_detail.*','member.full_name as full_name','member.phone_number as phone_number', 'book.name as book_name')
+            ->paginate(10);
+    }
+
+    /**
+     * @param int $id
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function orderConfirm(int $id)
+    {
+        $order_detail = OrderDetail::where('id',$id)->first();
+        if ($order_detail){
+            $order_detail->order_status = 1;
+            $order_detail->save();
+        }
+        return $order_detail;
+    }
+
+    /**
+     * @param int $id
+     * @return mixed
+     */
+    public function orderReturn(int $id)
+    {
+        $order_detail = OrderDetail::where('id',$id)->first();
+        if ($order_detail){
+            $order_detail->order_status = 2;
+            $order_detail->save();
+        }
+        return $order_detail;
     }
 }

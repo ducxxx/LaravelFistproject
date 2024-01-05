@@ -28,4 +28,13 @@ class MemberRepository
             ->first();
         return $clubMemberDetail;
     }
+
+    public function getMemberByPhoneNumber($phoneNumber)
+    {
+        $clubMemberDetail = DB::table('member')
+            ->where('member.phone_number', $phoneNumber)
+            ->select('member.*')
+            ->first();
+        return $clubMemberDetail;
+    }
 }
