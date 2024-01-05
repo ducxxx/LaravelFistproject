@@ -2,8 +2,12 @@
 // app/Services/OrderService.php
 namespace App\Services;
 
+use App\Models\Book;
+use App\Models\Member;
 use App\Repositories\OrderRepository;
 use App\Repositories\OrderDetailRepository;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class OrderService
 {
@@ -16,19 +20,37 @@ class OrderService
         $this->orderDetailRepository = $orderDetailRepository;
     }
 
-    // Inside OrderService.php
-    public function createOrder(array $orderData, array $orderDetailsData)
+    /**
+     * @param $request
+     * @return \App\Models\Order|\Illuminate\Http\RedirectResponse
+     */
+    public function createOrder($request,$user)
     {
-        $order = $this->orderRepository->create($orderData);
-
-        foreach ($orderDetailsData as $orderDetailData) {
-            $orderDetailData['order_id'] = $order->id;
-            $this->orderDetailRepository->create($orderDetailData);
+        $member = DB::table('member')
+            ->where('member.user_id', $user->id)
+            ->select('member.*')
+            ->first();
+        if ($member){
+            $order = $this->orderRepository->create($request, $member);
+            return $order;
+        }else{
+            $newMember = new Member();
+            $newMember->user_id = $user->id;
+            $newMember->address = $request->input('address');
+            $newMember->phone_number = $request->input('phone_number');
+            $newMember->full_name = $request->input('full_name');
+            $newMember->birth_date = optional($user->birth_date)->format('Y-m-d');
+            $newMember->email = $user->email;
+            $newMember->save();
+            $order = $this->orderRepository->create($request, $newMember);
+            return $order;
         }
-
-        return $order;
     }
 
+    public function getClubBookName($clubBookId)
+    {
+        return $this->orderRepository->getClubBookName($clubBookId);
+    }
     public function getOrderByUserId($userId)
     {
         return $this->orderRepository->getOrderByUserId($userId);

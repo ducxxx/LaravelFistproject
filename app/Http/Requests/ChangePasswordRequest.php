@@ -31,11 +31,19 @@ class ChangePasswordRequest extends FormRequest
             'confirm_password' => 'required|same:new_password',
         ];
     }
+
+    /**
+     * @return string[]
+     */
     public function messages()
     {
         return ['current_password.current_password' => 'The current password field is not correct',];
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
     public function validation(Request $request){
         return Validator::make($request->all(), $this->rules(), $this->messages());
     }

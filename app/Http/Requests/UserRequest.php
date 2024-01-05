@@ -34,11 +34,19 @@ class UserRequest extends FormRequest
             'password' => 'required',
         ];
     }
+
+    /**
+     * @return string[]
+     */
     public function messages()
     {
         return ['fullName.valid_full_name' => 'The full name field is not contain special characters.',];
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
     public function validation(Request $request){
         return Validator::make($request->all(), $this->rules(), $this->messages());
     }

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
@@ -21,21 +22,25 @@ class AuthController extends Controller
 
     public function showLoginForm()
     {
-        return view('login');
+        return view('auth.login');
     }
     public function showChangePasswordForm()
     {
-        return view('changePassword');
+        return view('auth.changePassword');
     }
     public function showLinkRequestForm()
     {
-        return view('forgetPassword');
+        return view('auth.forgetPassword');
     }
     public function showLogoutForm()
     {
         return view('logout');
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
     public function login(Request $request)
     {
         $loginRequest = new AuthRequest();
@@ -54,17 +59,25 @@ class AuthController extends Controller
                 $afterLoginRedirectUrl = session('url.after_login_redirect');
                 session()->forget('url.after_login_redirect');
                 if($afterLoginRedirectUrl){
+                    // Redirect to a route or view
                     return redirect()->to($afterLoginRedirectUrl);
                 }
             }
+            Session::flash('success', 'Login success');
             // If there's no intended URL, redirect to the default location
-            return redirect(route('homepage'))->withInput();
+            return redirect(route('app'))->withInput();
         } else {
             // Authentication failed
             // You can customize the response as needed
+            Session::flash('false', 'Login False');
             return redirect(route('user.login'))->with('error', 'Username or password incorrect')->withInput();
         }
     }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function logout(Request $request)
     {
         Auth::logout();
@@ -75,6 +88,11 @@ class AuthController extends Controller
 
         return Redirect::route('login');
     }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
     public function changePassword(Request $request)
     {
         $changePasswordRequest = new ChangePasswordRequest();
@@ -91,6 +109,7 @@ class AuthController extends Controller
         // Check if the current password matches
         if (!Hash::check($request->current_password, $user->password)) {
 //            return response()->json(['error' => 'Current password is incorrect'], 401);
+            Session::flash('error', 'Change password error');
             return redirect(route('show.change.password'))->withErrors($validator->errors())->withInput();
         }
 
@@ -98,7 +117,7 @@ class AuthController extends Controller
         $user->update([
             'password' => Hash::make($request->new_password),
         ]);
-
+        Session::flash('success', 'Change password success');
         return redirect(route('user.login'))->with('message', 'Change password successfully')->withInput();
     }
 

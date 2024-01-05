@@ -30,12 +30,20 @@ class AuthRequest extends FormRequest
             'password' => 'required',
         ];
     }
+
+    /**
+     * @return string[]
+     */
     public function messages()
     {
         return ['username.required' => 'Please input username',
                 'password.required' => 'Please input password',];
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
     public function validation(Request $request){
         return Validator::make($request->all(), $this->rules(), $this->messages());
     }

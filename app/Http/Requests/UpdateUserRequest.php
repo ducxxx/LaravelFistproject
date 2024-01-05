@@ -31,14 +31,24 @@ class UpdateUserRequest extends FormRequest
             'phoneNumber' => 'required',
             'address' => 'required',
             'birthDate' => 'nullable|date',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             // Add other rules as needed
         ];
     }
+
+    /**
+     * @return string[]
+     */
     public function messages()
     {
-        return ['fullName.valid_full_name' => 'The full name field is not contain special characters.',];
+        return ['fullName.valid_full_name' => 'The full name field is not contain special characters.',
+                'avatar.image' => 'choose image.',];
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
     public function validation(Request $request){
         return Validator::make($request->all(), $this->rules(), $this->messages());
     }

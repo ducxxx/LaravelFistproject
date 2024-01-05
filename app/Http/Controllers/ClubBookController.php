@@ -13,30 +13,37 @@ class ClubBookController extends Controller
     {
         $this->clubBookService = $clubBookService;
     }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     public function showBookListPage()
     {
         return view('includes.BookList');
     }
+
+    /**
+     * @param $club_id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\JsonResponse
+     */
     public function getBookClubsByClubId($club_id)
     {
         $clubBooks = $this->clubBookService->getClubBooksByClubId($club_id);
-//        return $clubBooks;
         if ($clubBooks) {
-            return view('includes.BookList', compact('clubBooks','club_id'));
+            return view('pages.book.BookList', compact('clubBooks','club_id'));
         }
+        $empty = "Don't have Book in Club";
+        return view('pages.EmptyPage',compact($empty))->with('status',404);
+    }
 
-        return response()->json(['error' => 'Dont Have Club'], 404);
-    }
-    public function getClubBooksAll()
-    {
-        $clubBooks = $this->clubBookService->getClubBooksAll();
-        return $clubBooks;
-    }
+    /**
+     * @param $clubId
+     * @param $bookName
+     * @return \Illuminate\Support\Collection
+     */
     public function searchClubBooksByName($clubId, $bookName)
     {
         $books = $this->clubBookService->searchClubBooksByName($clubId,$bookName);
-
-        // Transform and return the response as needed
-        return response()->json($books);
+        return $books;
     }
 }
