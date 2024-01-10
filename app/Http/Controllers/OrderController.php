@@ -117,12 +117,25 @@ class OrderController extends Controller
 
     /**
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     *
      */
     public function orderOfflineDialog(){
         $members = Member::all();
-//        dd($members);
         $clubBooks = ClubBook::all();
         return view('pages.order.orderOfflineDialog', compact('members','clubBooks'));
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function orderOfflineCreate(Request $request){
+        return $this->orderService->orderOfflineCreate($request);
+    }
+
+    public function reportPage(){
+//        dd(Auth::id());
+        return view('pages.report.report');
     }
 
 }

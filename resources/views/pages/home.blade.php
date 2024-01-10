@@ -256,28 +256,44 @@
                                     </tbody>
                                 </table>
                                 <script>
-                                    // Use JavaScript to fetch data from /book/all and populate the table
-                                    fetch('{{ route('book.all') }}')
-                                        .then(response => response.json())
-                                        .then(books => {
-                                            const tableBody = document.querySelector('#books-table tbody');
-                                            no =1;
-                                            books.forEach(book => {
-                                                console.log(book);
-                                                const row = document.createElement('tr');
-                                                row.innerHTML = `
-                    <td>${no}</td>
-                    <td>${book.name}</td>
-                    <td>${book.category.name}</td>
-                    <td>${book.author.name}</td>
-                `;
+                                    document.addEventListener('DOMContentLoaded', function () {
+                                        // Use JavaScript to fetch data from /book/all and populate the table
+                                        fetch('{{ route('book.all') }}')
+                                            .then(response => response.json())
+                                            .then(books => {
+                                                const tableBody = document.querySelector('#books-table tbody');
+                                                let no = 1;
 
-                                                tableBody.appendChild(row);
-                                                no=no+1;
-                                            });
-                                        })
-                                        .catch(error => console.error('Error fetching data:', error));
+                                                books.forEach(book => {
+                                                    const row = document.createElement('tr');
+                                                    row.id = book.id;
+                                                    row.innerHTML = `
+                        <td>${no}</td>
+                        <td>${book.name}</td>
+                        <td>${book.category.name}</td>
+                        <td>${book.author.name}</td>
+                    `;
+                                                    tableBody.appendChild(row);
+                                                    no = no + 1;
+                                                });
+
+                                                // Add click event listener to the table rows
+                                                tableBody.addEventListener('click', function (event) {
+                                                    const clickedRow = event.target.closest('tr');
+                                                    if (clickedRow) {
+                                                        const bookId = clickedRow.id;
+                                                        console.log(clickedRow.id);
+
+                                                        // Make a request to the corresponding route
+                                                        window.location.href = `{{ url('/book/star') }}/${bookId}`;
+                                                    }
+                                                });
+                                            })
+                                            .catch(error => console.error('Error fetching data:', error));
+                                    });
                                 </script>
+
+
                                 <script>
                                     document.addEventListener('DOMContentLoaded', function () {
                                         var form = document.getElementById('bookSearchForm');
@@ -296,7 +312,9 @@
                                                         tableBody.innerHTML = "";
                                                         no=1
                                                         books.forEach(book => {
+                                                            console.log(book.id);
                                                             const row = document.createElement('tr');
+                                                            row.id = book.id;
                                                             row.innerHTML = `
                     <td>${no}</td>
                     <td>${book.name}</td>
@@ -306,6 +324,16 @@
 
                                                             tableBody.appendChild(row);
                                                             no=no+1;
+                                                        });
+                                                        tableBody.addEventListener('click', function (event) {
+                                                            const clickedRow = event.target.closest('tr');
+                                                            if (clickedRow) {
+                                                                const bookId = clickedRow.id;
+                                                                console.log(clickedRow.id);
+
+                                                                // Make a request to the corresponding route
+                                                                window.location.href = `{{ url('/book/star') }}/${bookId}`;
+                                                            }
                                                         });
                                                     })
                                                     .catch(error => console.error('Error fetching data:', error));
@@ -319,7 +347,9 @@
 
                                                         // Populate the table with the search results
                                                         books.forEach(book => {
+                                                            console.log(book.id);
                                                             var row = document.createElement('tr');
+                                                            row.id = book.id;
                                                             row.innerHTML = `
                     <td>${no}</td>
                     <td>${book.name}</td>
@@ -330,12 +360,23 @@
                                                             tableBody.appendChild(row);
                                                             no=no+1;
                                                         });
+                                                        tableBody.addEventListener('click', function (event) {
+                                                            const clickedRow = event.target.closest('tr');
+                                                            if (clickedRow) {
+                                                                const bookId = clickedRow.id;
+                                                                console.log(clickedRow.id);
+
+                                                                // Make a request to the corresponding route
+                                                                window.location.href = `{{ url('/book/star') }}/${bookId}`;
+                                                            }
+                                                        });
                                                     })
                                                     .catch(error => console.error('Error fetching data:', error));
                                             }
                                         });
                                     });
                                 </script>
+
                                 <script>
                                     document.addEventListener('DOMContentLoaded', function () {
                                         // Get the form and the input field

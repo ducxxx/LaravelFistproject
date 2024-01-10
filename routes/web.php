@@ -69,11 +69,16 @@ Route::middleware(['checkLogin'])->group(function () {
     Route::get('/club/book/search/{club_id}/{book_name}', [ClubBookController::class, 'searchClubBooksByName'])->name('club.book.search');
 });
 
+Route::middleware(['checkLogin'])->group(function () {
+    Route::get('/book/star/{book_id}', [BookVoteController::class, 'bookStarById'])->name('book.star');
+    Route::get('/book/comment/{book_id}', [BookVoteController::class, 'bookCommentByBookId'])->name('book.comment');
+    Route::post('/book/vote/create', [BookVoteController::class, 'createBookVote'])->name('book.vote.create');
+});
 //Book
 Route::get('/book/all', [BookController::class, 'getAllBook'])->name('book.all');
 Route::get('/book/search/{book_name}', [BookController::class, 'searchBooksByName'])->name('book.search');
 Route::get('/book/detail/{id}', [BookController::class, 'bookDetail'])->name('book.detail');
-Route::get('/book/star/{book_id}', [BookVoteController::class, 'bookStarById'])->name('book.star');
+
 
 //Order
 Route::middleware(['checkLogin'])->group(function () {
@@ -95,7 +100,8 @@ Route::middleware(['checkStaff'])->group(function () {
     Route::get('/club/member/list', [MemberController::class, 'showMemberListPage'])->name('member.get.list');
     Route::get('/member/detail/{id}', [MemberController::class, 'memberDetail'])->name('member.detail');
     Route::put('/member/update/{id}', [MemberController::class, 'updateMemberDetail'])->name('member.update');
-    Route::get('/member/search/{phone_number}', [MemberController::class, 'getMemberByPhoneNumber'])->name('member.search.phone');
+    Route::get('/member/search/{phone_number}', [MemberController::class, 'getMemberByPhoneNumber'])
+        ->name('member.search.phone');
 });
 
 //club book staff
@@ -113,6 +119,9 @@ Route::middleware(['checkStaff'])->group(function () {
     Route::get('/order/confirm/{id}', [OrderController::class, 'orderConfirm'])->name('order.confirm');
     Route::get('/order/return/{id}', [OrderController::class, 'orderReturn'])->name('order.return');
     Route::post('/order/offline/dialog', [OrderController::class, 'orderOfflineDialog'])->name('order.offline.dialog');
+    Route::post('/order/offline/create', [OrderController::class, 'orderOfflineCreate'])->name('order.offline.create');
+    Route::get('/report', [OrderController::class, 'reportPage'])->name('report.page');
+
 });
 
 

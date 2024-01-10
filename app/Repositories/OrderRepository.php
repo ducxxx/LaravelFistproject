@@ -151,4 +151,70 @@ class OrderRepository
         }
         return $order_detail;
     }
+
+    public function orderOfflineCreate($request, $member)
+    {
+        $bookOrders = $request->input('club_book_ids');
+        $countOrders = DB::table('order')
+            ->join('order_detail', 'order.id', '=', 'order_detail.order_id')
+            ->join('member', 'order.member_id', '=', 'member.id')
+            ->join('club_book', 'order_detail.club_book_id', '=', 'club_book.id')
+            ->where('member.id', $member->id)
+            ->where(function ($query) {
+                $query->where('order_detail.order_status', 0)
+                    ->orWhere('order_detail.order_status', 1)
+                    ->orWhere('order_detail.order_status', 3);
+            })
+            ->select('order.*','order_detail.*')
+            ->count();
+
+        $booksBorrowing = DB::table('order')
+            ->join('order_detail', 'order.id', '=', 'order_detail.order_id')
+            ->join('member', 'order.member_id', '=', 'member.id')
+            ->join('club_book', 'order_detail.club_book_id', '=', 'club_book.id')
+            ->where('member.id', $member->id)
+            ->where(function ($query) {
+                $query->where('order_detail.order_status', 0)
+                    ->orWhere('order_detail.order_status', 1);
+            })
+            ->select('order.*','order_detail.*')
+            ->count();
+
+        if (count($bookOrders)>3){
+            return Redirect::route('order.get.list.control')->with('error', 'You can borrow max 3 books')->withInput();
+        }else{
+            if($countOrders <3){
+                if ((count($bookOrders)+$booksBorrowing)<=3) {
+                    $newOrder = new Order();
+                    $newOrder->member_id = $member->id;
+                    $newOrder->club_id = $request->input('clubId');
+                    $newOrder->order_date = $request->input('order_date');
+                    $newOrder->due_date = $request->input('due_date');
+                    $newOrder->save();
+
+                    $newOrderDetailList =[];
+                    foreach ($bookOrders as $bookOrder) {
+                        $newOrderDetail = [
+                            'order_id' => $newOrder->id,
+                            'club_book_id' => $bookOrder,
+                            'return_date' => null,
+                            'overdue_day_count' => 0,
+                            'order_status' => 1,
+                            'note' => $request->input('note'),
+                        ];
+                        $newOrderDetailList[] = $newOrderDetail;
+                    }
+                    OrderDetail::insert($newOrderDetailList);
+                    Session::flash('success', 'Create order success');
+                    return Redirect::route('order.get.list.control')->withInput();
+                }else{
+                    return Redirect::route('order.get.list.control')->with('error',
+                        'You can borrow max 3 books you borrowed')->withInput();
+                }
+            }else{
+                return Redirect::route('order.get.list.control')->with('error',
+                    'Cannot borrow more book because you are borrowing 3 books')->withInput();
+            }
+        }
+    }
 }
