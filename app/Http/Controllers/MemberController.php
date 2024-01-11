@@ -83,4 +83,10 @@ class MemberController extends Controller
         return back();
     }
 
+    public function getMemberByPhoneNumber(string $phoneNumber)
+    {
+        $memberDetail = $this->memberService->getMemberByPhoneNumber($phoneNumber);
+        return $memberDetail;
+    }
+
 }

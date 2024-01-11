@@ -1,15 +1,25 @@
 @extends("layouts.app")
 @section("breadcrumb")
-    <li><span class="ant-breadcrumb-link"><a>Order Create</a></span></li>
+    <li><span class="ant-breadcrumb-link"><a>Order Offline Create</a></span></li>
 @endsection
 @section("title")
-    <title>Create Order</title>
+    <title>Create Order Offline</title>
+@endsection
+@section("css")
+    <link href="{{ asset('css/styleMutil.css') }}" rel="stylesheet" type="text/css">
+@endsection
+@section("js")
+    <script src="{{ asset('js/bootstrap-multiselect.js') }}"></script>
+    <script src="{{ asset('js/main.js') }}"></script>
 @endsection
 @section("body")
     <main class="ant-layout-content css-12jzuas" style="padding: 24px; overflow: auto;">
         <div style="display: flex; align-items: center; justify-content: center;">
+            <div tabindex="-1" class="ant-modal-wrap">
                 <div role="dialog" aria-labelledby=":rj:" aria-modal="true" class="ant-modal css-12jzuas"
                      style="width: 800px; transform-origin: 1257px 422px;">
+                    <div tabindex="0" aria-hidden="true"
+                         style="width: 0px; height: 0px; overflow: hidden; outline: none;"></div>
                     <div class="ant-modal-content">
                         <button type="button" aria-label="Close" class="ant-modal-close" onclick="goBack()"><span
                                 class="ant-modal-close-x"><span role="img" aria-label="close"
@@ -23,8 +33,70 @@
                         </div>
                         <div class="ant-modal-body">
                             <div class="sc-iVCKna jTcnru">
-                                <form method="POST" action="{{ route('order.create') }}" id="control-ref" class="ant-form ant-form-horizontal css-12jzuas">
+                                <form method="POST" action="{{ route('order.offline.create') }}" id="control-ref" class="ant-form ant-form-horizontal css-12jzuas">
                                     @csrf
+                                    <div class="ant-form-item css-12jzuas">
+                                        <div class="ant-row ant-form-item-row css-12jzuas">
+                                            <div class="ant-col ant-col-4 ant-form-item-label css-12jzuas"><label
+                                                    for="control-ref_full_name" class="ant-form-item-required"
+                                                    title="Member">Member</label></div>
+                                            <div class="ant-form-item-control-input">
+                                                <div class="ant-form-item-control-input-content">
+                                                    <input
+                                                        id="control-ref-search-member" aria-required="true"
+                                                        placeholder="PhoneNumber"
+                                                        autofocus="autofocus"
+                                                        class="ant-input ant-input css-12jzuas" type="text"
+                                                        name="search_member">
+                                                </div>
+                                                <button id="searchButton" type="button" class="btn btn-primary btn-sm">Search</button>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" name="newMember" type="checkbox" id="newMember">
+                                                    <label class="form-check-label" for="flexCheckDefault">
+                                                        New Member
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <script>
+                                        $(document).ready(function () {
+                                            // Attach a click event handler to the Search button
+                                            $('#searchButton').on('click', function () {
+                                                // Get the phone number from the input field
+                                                var phoneNumber = $('#control-ref-search-member').val();
+
+                                                // Make an AJAX request to the API endpoint
+                                                $.ajax({
+                                                    url: '/member/search/' + phoneNumber,
+                                                    type: 'GET',
+                                                    success: function (data) {
+                                                        // Handle the API response here
+                                                        $('#control-ref_full_name').val(data.full_name).prop('disabled', true);
+                                                        $('#ref_full_name').val(data.full_name)
+                                                        $('#ref_phone_number').val(data.phone_number)
+                                                        $('#control-ref_phone_number').val(data.phone_number)
+                                                            .prop('disabled', true);
+                                                        $('#control-ref_address').val(data.address);
+                                                    },
+                                                    error: function (error) {
+                                                        // Handle errors here
+                                                        console.error(error);
+                                                    },
+                                                    complete: function () {
+                                                        $('#newMember').prop('checked', false);
+                                                    }
+                                                });
+                                            });
+                                            $('#newMember').on('change', function () {
+                                                // Enable or disable the input field based on the checkbox state
+                                                $('#control-ref-search-member').val('');
+                                                $('#control-ref_full_name').val('').prop('disabled', !this.checked);
+                                                $('#control-ref_phone_number').val('').prop('disabled', !this.checked);
+                                                $('#control-ref_address').val('');
+                                            });
+                                        });
+                                    </script>
                                     <div class="ant-form-item css-12jzuas">
                                         <div class="ant-row ant-form-item-row css-12jzuas">
                                             <div class="ant-col ant-col-4 ant-form-item-label css-12jzuas"><label
@@ -33,11 +105,11 @@
                                             <div class="ant-col ant-col-16 ant-form-item-control css-12jzuas">
                                                 <div class="ant-form-item-control-input">
                                                     <div class="ant-form-item-control-input-content">
-                                                        <input type="hidden" name="full_name" value="{{ Auth::user()->full_name }}" >
+                                                        <input id="ref_full_name" type="hidden" name="full_name" value="" >
                                                         <input
                                                             id="control-ref_full_name" aria-required="true" disabled=""
-                                                            class="ant-input ant-input-disabled css-12jzuas" type="text"
-                                                            name="full_name" value="{{ Auth::user()->full_name }}"></div>
+                                                            class="ant-input css-12jzuas" type="text"
+                                                            name="full_name" value=""></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -50,11 +122,12 @@
                                             <div class="ant-col ant-col-16 ant-form-item-control css-12jzuas">
                                                 <div class="ant-form-item-control-input">
                                                     <div class="ant-form-item-control-input-content">
-                                                        <input type="hidden" name="phone_number" value="{{ Auth::user()->phone_number }}" >
+                                                        <input id="ref_phone_number" type="hidden" name="phone_number"
+                                                               value="" >
                                                         <input
                                                             id="control-ref_phone_number" aria-required="true" disabled=""
-                                                            class="ant-input ant-input-disabled css-12jzuas" type="text"
-                                                            name="phone_number" value="{{ Auth::user()->phone_number }}"></div>
+                                                            class="ant-input css-12jzuas" type="text"
+                                                            name="phone_number" value=""></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -67,11 +140,10 @@
                                             <div class="ant-col ant-col-16 ant-form-item-control css-12jzuas">
                                                 <div class="ant-form-item-control-input">
                                                     <div class="ant-form-item-control-input-content">
-
                                                         <input
                                                             id="control-ref_address" aria-required="true"
                                                             class="ant-input css-12jzuas" type="text"
-                                                            name="address" value="{{ Auth::user()->address }}"></div>
+                                                            name="address" value=""></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -157,35 +229,84 @@
                                     <div class="ant-form-item css-12jzuas">
                                         <div class="ant-row ant-form-item-row css-12jzuas">
                                             <div class="ant-col ant-col-4 ant-form-item-label css-12jzuas"><label
-                                                    for="control-ref_selected_book" class="" title="Selected Books">Selected
-                                                    Books</label></div>
+                                                    for="control-ref_club_name" class="ant-form-item-required"
+                                                    title="ClubName">Club Name</label></div>
                                             <div class="ant-col ant-col-16 ant-form-item-control css-12jzuas">
-                                                <div class="ant-form-item-control-input">
-                                                    <div class="ant-form-item-control-input-content">
-                                                        <div class="ant-list ant-list-split css-12jzuas">
-                                                            <div class="ant-spin-nested-loading css-12jzuas">
-                                                                <div class="ant-spin-container">
-                                                                    <input type="hidden" name="clubBook"
-                                                                           value="{{$clubBookName}}" >
-                                                                    <ul class="ant-list-items">
-                                                                        @foreach($clubBookName as $clubBook)
-                                                                            <div class="ant-list-item-meta-content">
-                                                                                <h4 class="ant-list-item-meta-title">
-                                                                                    <p>{{$clubBook->name}}</p>
-                                                                                </h4>
-
-                                                                            </div>
-                                                                        @endforeach
-
-                                                                    </ul>
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                <div class="dropdown">
+                                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        Club Name
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                        <a class="dropdown-item" data-value="1">CLB Sách Chuyên Hùng Vương</a>
+                                                        <a class="dropdown-item" data-value="2">CLB Sách FPT</a>
+                                                        <a class="dropdown-item" data-value="3">D Free Book Đại La</a>
+                                                        <a class="dropdown-item" data-value="4">D Free Book Cầu Giấy</a>
+                                                        <a class="dropdown-item" data-value="5">Free Book Test</a>
                                                     </div>
+                                                    <div class="ant-form-item-control-input-content"><input
+                                                            id="control-ref_club_id" aria-required="true" name="clubId" type="hidden"
+                                                            class="ant-input ant-input-status-success css-12jzuas"
+                                                            fdprocessedid="u5g27o"></div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ant-form-item css-12jzuas">
+                                        <div class="ant-row ant-form-item-row css-12jzuas">
+                                            <div class="ant-col ant-col-4 ant-form-item-label css-12jzuas"><label
+                                                    for="control-ref_select_book" class="ant-form-item-required"
+                                                    title="SelectBook">Select Book</label></div>
+                                            <div class="ant-col ant-col-16 ant-form-item-control css-12jzuas">
+                                                <div class="text-left align-items-center">
+                                                    <input
+                                                        id="control-ref_club_book_id" aria-required="true" name="club_book_id" type="hidden"
+                                                        class="ant-input ant-input-status-success css-12jzuas"
+                                                        fdprocessedid="u5g27o">
+                                                    <select name="club_book_ids[]" id="multiple-checkboxes" multiple="multiple">
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                    <script>
+                                        $(document).ready(function () {
+                                            $('.dropdown-item').on('click', function () {
+                                                var selectedValue = $(this).data('value');
+                                                var newItemName = $(this).text();
+                                                $('#dropdownMenuButton').text(newItemName);
+                                                $('#control-ref_club_id').val(selectedValue);
+                                                $.ajax({
+                                                    url: '/club/book/' + selectedValue,
+                                                    type: 'GET',
+                                                    success: function (data) {
+                                                        $('#multiple-checkboxes').empty();
+                                                        $('#multiple-checkboxes').multiselect("destroy");
+                                                        console.log(data);
+                                                        for (var i = 0; i < data.length; i++) {
+                                                            $('#multiple-checkboxes').append('<option value="' + data[i].id + '">' + data[i].book_name + '</option>');
+                                                        }
+                                                        $('#multiple-checkboxes').multiselect('refresh');
+                                                        // $('#multiple-checkboxes').multiselect('refresh');
+                                                    },
+                                                    error: function (error) {
+                                                        console.error(error);
+                                                    }
+                                                });
+                                            });
+                                            // $('#multiple-checkboxes').multiselect({
+                                            //     includeSelectAllOption: true,
+                                            //     enableFiltering: true,
+                                            //     onChange: function () {
+                                            //         // Update the hidden input with the selected book IDs
+                                            //         var selectedBooks = $('#multiple-checkboxes').val();
+                                            //         console.log(selectedBooks);
+                                            //         $('#control-ref_club_book_id').val(selectedBooks);
+                                            //     }
+                                            // });
+                                        });
+                                    </script>
                                     <div class="ant-form-item css-12jzuas">
                                         <div class="ant-row ant-form-item-row css-12jzuas">
                                             <div class="ant-col ant-col-4 ant-form-item-label css-12jzuas"><label
@@ -216,6 +337,7 @@
                     <div tabindex="0" aria-hidden="true"
                          style="width: 0px; height: 0px; overflow: hidden; outline: none;"></div>
                 </div>
+            </div>
         </div>
     </main>
 @endsection

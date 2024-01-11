@@ -55,4 +55,41 @@ class OrderService
     {
         return $this->orderRepository->getOrderByUserId($userId);
     }
+
+    public function getOrderList()
+    {
+        return $this->orderRepository->getOrderList();
+    }
+
+    public function orderConfirm(int $id)
+    {
+        return $this->orderRepository->orderConfirm($id);
+    }
+
+    public function orderReturn(int $id)
+    {
+        return $this->orderRepository->orderReturn($id);
+    }
+    public function orderOfflineCreate($request)
+    {
+        if ($request->input('newMember')){
+            $newMember = new Member();
+            $newMember->address = $request->input('address');
+            $newMember->phone_number = $request->input('phone_number');
+            $newMember->full_name = $request->input('full_name');
+            $newMember->save();
+            return $this->orderRepository->orderOfflineCreate($request, $newMember);
+        }else{
+            $member = DB::table('member')
+                ->where('member.phone_number', $request->input('phone_number'))
+                ->select('member.*')
+                ->first();
+            return $this->orderRepository->orderOfflineCreate($request, $member);
+        }
+    }
+
+    public function getListBookCalendar()
+    {
+        return $this->orderRepository->getListBookCalendar();
+    }
 }

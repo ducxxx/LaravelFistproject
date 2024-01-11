@@ -49,6 +49,7 @@
                 </div>
             </div>
         </div>
+        <br>
         {{ $clubs->links() }}
     </div>
 </main>
