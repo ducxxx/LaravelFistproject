@@ -33,6 +33,8 @@ class User extends Authenticatable
         'birth_date',
         'phone_number',
         'avatar',
+        'otp_code',
+        'limit_time_verify'
     ];
 
     protected $dates = [

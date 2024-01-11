@@ -5,6 +5,7 @@ use App\Http\Controllers\BookController;
 use App\Http\Controllers\BookVoteController;
 use App\Http\Controllers\ClubBookController;
 use App\Http\Controllers\ClubController;
+use App\Http\Controllers\EmailController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\OrderController;
@@ -41,7 +42,10 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/users/update/{id}', [UserController::class, 'update'])->name('user.update');
 });
 
-
+Route::middleware(['checkLogin'])->group(function () {
+    Route::get('/send-email', [EmailController::class, 'sendEmailWithCode'])->name('sendEmailWithCode');
+    Route::get('/verify/{code}', [EmailController::class, 'verifyCode'])->name('verifyCode');
+});
 //Auth
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -93,6 +97,12 @@ Route::middleware(['checkLogin'])->group(function () {
 Route::middleware(['checkStaff'])->group(function () {
     Route::get('/order/club/list', [OrderController::class, 'getOrderList'])->name('order.get.list.control');
 });
+
+Route::middleware(['checkStaff'])->group(function () {
+    Route::get('/book/calendar', [OrderController::class, 'getBookCalendar'])->name('book.calendar');
+
+});
+Route::get('list/book/calendar', [OrderController::class, 'getListBookCalendar'])->name('list.book.calendar');
 
 
 //staff check

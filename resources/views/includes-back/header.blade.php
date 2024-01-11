@@ -65,6 +65,28 @@
     @else
         <!-- Topbar Navbar -->
         <ul class="navbar-nav ml-auto">
+            @if(\Illuminate\Support\Facades\Auth::user()->is_active == 1)
+                <li class="nav-item dropdown no-arrow">
+                    <a class="nav-link" href="#" role="button" aria-haspopup="true" aria-expanded="false"
+                       style="color: #52c41a">
+                        <span
+                            class="ant-tag ant-tag-success css-12jzuas"><span role="img" aria-label="check-circle"
+                                                                              class="anticon anticon-check-circle"><svg
+                                    viewBox="64 64 896 896" focusable="false" data-icon="check-circle" width="1em" height="1em"
+                                    fill="currentColor" aria-hidden="true"><path
+                                        d="M699 353h-46.9c-10.2 0-19.9 4.9-25.9 13.3L469 584.3l-71.2-98.8c-6-8.3-15.6-13.3-25.9-13.3H325c-6.5 0-10.3 7.4-6.5 12.7l124.6 172.8a31.8 31.8 0 0051.7 0l210.6-292c3.9-5.3.1-12.7-6.4-12.7z"></path><path
+                                        d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path></svg></span><span>Verified</span></span>
+                    </a>
+                </li>
+            @endif
+            @if(\Illuminate\Support\Facades\Auth::user()->is_active != 1)
+                <li class="nav-item dropdown no-arrow">
+                    <a class="nav-link" href="#" role="button" aria-haspopup="true" aria-expanded="false"
+                       data-toggle="modal" data-target="#verifyModal" style="color: #1677ff">
+                        <span style="color: #1677ff">Verify</span>
+                    </a>
+                </li>
+                @endif
             <!-- Nav Item - User Information -->
             <li class="nav-item dropdown no-arrow">
                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
@@ -87,6 +109,127 @@
                 </div>
             </li>
         </ul>
+        <div class="modal fade" id="verifyModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Verify email user?</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="control-ref" class="ant-form ant-form-horizontal css-12jzuas" style="width: 800px;">
+                            <div class="ant-form-item css-12jzuas">
+                                <div class="ant-row ant-form-item-row css-12jzuas">
+                                    <div class="ant-col ant-col-4 ant-form-item-label css-12jzuas"><label
+                                            for="control-ref_email" class="ant-form-item-required"
+                                            title="Email">Email</label></div>
+                                    <div class="ant-col ant-col-16 ant-form-item-control css-12jzuas">
+                                        <div class="ant-form-item-control-input">
+                                            <div class="ant-form-item-control-input-content">
+                                                <div id="control-ref_email" aria-required="true"
+                                                     style="display: flex; align-items: center;">
+                                                    <input
+                                                        id="control-ref_email" aria-required="true" style="width: auto" disabled =""
+                                                        class="ant-input css-12jzuas" type="text" value="{{Auth::user()->email}}"
+                                                        fdprocessedid="w1nft3">
+                                                    <div style="margin-left: 10px;">
+                                                        <button type="button" class="ant-btn css-12jzuas ant-btn-link"
+                                                                onclick="sendOtp()"
+                                                                fdprocessedid="5xzvtb"><span>Send OTP</span></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <script>
+                                function sendOtp() {
+                                    // Make an AJAX request to the sendEmailWithCode route
+                                    $.ajax({
+                                        type: 'GET',
+                                        url: '{{ route('sendEmailWithCode') }}',
+                                        success: function (response) {
+                                            // Handle success, e.g., show a success message
+                                            console.log(response);
+                                        },
+                                        error: function (error) {
+                                            // Handle error, e.g., show an error message
+                                            console.error(error);
+                                        }
+                                    });
+                                }
+                            </script>
+                            <div class="ant-form-item css-12jzuas">
+                                <div class="ant-row ant-form-item-row css-12jzuas">
+                                    <div class="ant-col ant-col-4 ant-form-item-label css-12jzuas"><label
+                                            for="control-ref_otp_code" class="ant-form-item-required" title="OTP Code">OTP
+                                            Code</label></div>
+                                    <div class="ant-col ant-col-16 ant-form-item-control css-12jzuas">
+                                        <div class="ant-form-item-control-input">
+                                            <div class="ant-form-item-control-input-content"><input
+                                                    id="control-ref_otp_code" aria-required="true" style="width: auto"
+                                                    class="ant-input css-12jzuas" type="text" value=""
+                                                    fdprocessedid="w1nft3"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <label id="control_message"></label>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <a id="verifyBtn" class="btn btn-primary" href="">Verify</a>
+                    </div>
+                    <script>
+                        $(document).ready(function () {
+                            var verifyModal = $('#verifyModal');
+
+                            // Event listener for the "Verify" button
+                            $('#verifyBtn').on('click', function () {
+                                event.preventDefault();
+                                // Get the OTP code from the input field
+                                var otpCode = $('#control-ref_otp_code').val();
+
+                                // Check if otpCode is not empty or undefined
+                                if (otpCode) {
+                                    // Construct the URL with the OTP code
+                                    var verifyUrl = '/verify' + '/' + encodeURIComponent(otpCode);
+
+                                    // Update the 'href' attribute of the "Verify" button
+                                    $.ajax({
+                                        type: 'GET',
+                                        url: verifyUrl,
+                                        success: function (response) {
+                                            // Handle the response based on the returned message
+                                            if (response.message === 'Verify successfully.') {
+                                                // Update the content of the label with success message
+                                                // $('#control_message').html('Verification Successful!');
+                                                $('#control_message').html('Verification Successful!').css('color', 'green');
+                                                location.reload();
+                                            } else {
+                                                // Update the content of the label with error message
+                                                $('#control_message').html(response.message).css('color', 'red');
+                                            }
+                                        },
+                                        error: function (error) {
+                                            // Handle error, e.g., show an error message
+                                            console.error(error);
+                                        }
+                                    });
+                                } else {
+                                    $('#control_message').html('Please input OTP Code');
+                                }
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
     @endguest
 
 </nav>

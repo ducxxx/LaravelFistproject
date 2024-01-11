@@ -6,6 +6,7 @@ use App\Models\ClubBook;
 use App\Models\Member;
 use App\Services\OrderService;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -136,6 +137,18 @@ class OrderController extends Controller
     public function reportPage(){
 //        dd(Auth::id());
         return view('pages.report.report');
+    }
+
+    public function getBookCalendar(){
+        $bookList = $this->orderService->getListBookCalendar()->toArray();
+        //.$bookList = response()->json($bookList);
+        //dd($bookList);
+        return view('pages.book.BookBorrowCalendar', compact('bookList'));
+    }
+
+    public function getListBookCalendar(){
+        $bookList = $this->orderService->getListBookCalendar();
+        return $bookList;
     }
 
 }

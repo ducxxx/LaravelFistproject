@@ -393,46 +393,6 @@
                                         });
                                     });
                                 </script>
-                                <script>
-                                    document.addEventListener('DOMContentLoaded', function () {
-                                        var tableBody = document.getElementById('tableBody');
-                                        var selectAllCheckbox = document.getElementById('selectAllCheckbox');
-
-                                        // Event delegation for handling checkbox clicks in the table body
-                                        tableBody.addEventListener('click', function (event) {
-                                            var target = event.target;
-
-                                            // Check if the clicked element is a checkbox
-                                            if (target.type === 'checkbox') {
-                                                // Toggle the 'selected' class on the parent row
-                                                var row = target.closest('tr');
-                                                row.classList.toggle('selected');
-                                            }
-                                        });
-
-                                        // Event listener for the "Select all" checkbox in the table header
-                                        selectAllCheckbox.addEventListener('click', function () {
-                                            // Get all checkboxes in the table body
-                                            var checkboxes = tableBody.querySelectorAll('input[type="checkbox"]');
-
-                                            // Set the 'checked' property of each checkbox based on the state of the "Select all" checkbox
-                                            checkboxes.forEach(function (checkbox) {
-                                                checkbox.checked = selectAllCheckbox.checked;
-
-                                                // Toggle the 'selected' class on the parent row
-                                                var row = checkbox.closest('tr');
-                                                if (selectAllCheckbox.checked) {
-                                                    row.classList.add('selected');
-                                                } else {
-                                                    row.classList.remove('selected');
-                                                }
-                                            });
-                                        });
-
-                                        // Your existing code to append rows to the table body
-                                        // ...
-                                    });
-                                </script>
                             </div>
                         </div>
                     </div>

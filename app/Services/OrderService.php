@@ -87,4 +87,9 @@ class OrderService
             return $this->orderRepository->orderOfflineCreate($request, $member);
         }
     }
+
+    public function getListBookCalendar()
+    {
+        return $this->orderRepository->getListBookCalendar();
+    }
 }
