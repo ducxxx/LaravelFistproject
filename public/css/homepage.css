@@ -13133,7 +13133,7 @@ body {
     flex-direction: column;
     min-width: 0;
     padding: 20px;
-    width: 1200px;
+    width: 600px;
     word-wrap: break-word;
     background-color: #fff;
     background-clip: border-box;
@@ -13237,6 +13237,6 @@ html, body {
 }
 
 #calendar {
-    max-width: 900px;
+    max-width: 1300px;
     margin: 40px auto;
 }
