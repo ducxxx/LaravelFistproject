@@ -9,7 +9,7 @@
     <main class="ant-layout-content css-12jzuas" style="padding: 24px; overflow: auto;">
         <div class="p-5">
             <h2 class="mb-4">Book Borrow Calendar</h2>
-            <div class="card">
+            <div class="card" style="width: 1200px">
                 <div class="card-body p-0">
                     <div id="calendar"></div>
                 </div>
@@ -23,6 +23,78 @@
                     <div class="modal-body">
                         <h4 class="modal-title"><span class="event-icon"></span><span class="event-title"></span></h4>
                         <div class="event-body"></div>
+                        <div class="ant-form-item css-12jzuas ant-form-item-has-success">
+                            <div class="ant-row ant-form-item-row css-12jzuas">
+                                <div class="ant-col ant-col-8 ant-form-item-label css-12jzuas" style="text-align: start "><label
+                                        for="control-ref-borrower" class="ant-form-item-required"
+                                        title="Borrower">Borrower</label></div>
+                                <div class="ant-col ant-col-16 ant-form-item-control css-12jzuas">
+                                    <div class="ant-form-item-control-input">
+                                        <div class="ant-form-item-control-input-content">
+                                            <label id="control-ref-borrower"
+                                                   for="control-ref-borrower" class="ant-form-item-required" type="text"
+                                                   fdprocessedid="u5g27o" style="position: relative; display: inline-flex;
+                                            align-items: center; max-width: 100%;height: 32px;
+                                            color: rgba(0, 0, 0, 0.88); font-size: 14px;"
+                                                   title="Borrower"></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ant-row ant-form-item-row css-12jzuas">
+                                <div class="ant-col ant-col-8 ant-form-item-label css-12jzuas" style="text-align: start "><label
+                                        for="control-ref-from-club" class="ant-form-item-required"
+                                        title="From Club">From Club</label></div>
+                                <div class="ant-col ant-col-16 ant-form-item-control css-12jzuas">
+                                    <div class="ant-form-item-control-input">
+                                        <div class="ant-form-item-control-input-content">
+                                            <label id="control-ref-from-club"
+                                                   for="control-ref-from-club" class="ant-form-item-required" type="text"
+                                                   fdprocessedid="u5g27o" style="position: relative; display: inline-flex;
+                                            align-items: center; max-width: 100%;height: 32px;
+                                            color: rgba(0, 0, 0, 0.88); font-size: 14px;"
+                                                   title="From Club"></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ant-row ant-form-item-row css-12jzuas">
+                                <div class="ant-col ant-col-8 ant-form-item-label css-12jzuas" style="text-align: start "><label
+                                        for="control-ref-due-date" class="ant-form-item-required"
+                                        title="Due Date">Due Date</label></div>
+                                <div class="ant-col ant-col-16 ant-form-item-control css-12jzuas">
+                                    <div class="ant-form-item-control-input">
+                                        <div class="ant-form-item-control-input-content">
+                                            <label id="control-ref-due-date"
+                                                   for="control-ref-due-date" class="ant-form-item-required" type="text"
+                                                   fdprocessedid="u5g27o" style="position: relative; display: inline-flex;
+                                            align-items: center; max-width: 100%;height: 32px;
+                                            color: rgba(0, 0, 0, 0.88); font-size: 14px;"
+                                                   title="Due Date"></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ant-form-item css-12jzuas ant-form-item-has-success">
+                                <div class="ant-row ant-form-item-row css-12jzuas">
+                                    <div class="ant-col ant-col-8 ant-form-item-label css-12jzuas" style="text-align: start "><label
+                                            for="control-ref-return-date" class="ant-form-item-required"
+                                            title="Return Date">Return Date</label></div>
+                                    <div class="ant-col ant-col-16 ant-form-item-control css-12jzuas">
+                                        <div class="ant-form-item-control-input">
+                                            <div class="ant-form-item-control-input-content">
+                                                <label id="control-ref-return-date"
+                                                       for="control-ref-return-date" class="ant-form-item-required" type="text"
+                                                       fdprocessedid="u5g27o" style="position: relative; display: inline-flex;
+                                            align-items: center; max-width: 100%;height: 32px;
+                                            color: rgba(0, 0, 0, 0.88); font-size: 14px;"
+                                                       title="Return Date"></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -72,7 +144,12 @@
                         eventClick: function(event, jsEvent, view) {
                             jQuery('.event-icon').html("<i class='fa fa-"+event.icon+"'></i>");
                             jQuery('.event-title').html(event.title);
-                            jQuery('.event-body').html(event.from_club);
+                            // jQuery('.event-body').html(event.from_club);
+                            jQuery('#control-ref-borrower').text(event.borrower);
+                            jQuery('#control-ref-from-club').text(event.from_club);
+
+                            jQuery('#control-ref-due-date').text( event.due_date);
+                            jQuery('#control-ref-return-date').text( event.return_date);
                             // jQuery('.eventUrl').attr('href',event.url);
                             jQuery('#modal-view-event').modal();
                         },
