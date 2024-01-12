@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use Illuminate\Http\Request;
 use App\Services\BookService;
 class BookController extends Controller
 {
@@ -14,31 +12,26 @@ class BookController extends Controller
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     * get all book
      */
     public function getAllBook()
     {
-        $clubBooks = $this->bookService->getAllBook();
-        return $clubBooks;
+        return $this->bookService->getAllBook();
     }
 
     /**
      * @param $bookName
-     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
      */
     public function searchBooksByName($bookName)
     {
-        $books = $this->bookService->searchBooksByName($bookName);
-        return $books;
+        return $this->bookService->searchBooksByName($bookName);
     }
 
     /**
      * @param int $id
-     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
      */
     public function bookDetail(int $id)
     {
-        $books = $this->bookService->bookDetail($id);
-        return $books;
+        return $this->bookService->bookDetail($id);
     }
 }

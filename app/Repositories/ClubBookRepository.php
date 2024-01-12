@@ -54,8 +54,8 @@ class ClubBookRepository
             ->join('club', 'club_book.club_id', '=', 'club.id')
             ->join('author', 'book.author_id', '=', 'author.id')
             ->join('category', 'book.category_id', '=', 'category.id')
-            ->select('book.*','club.name as club_name', 'author.name as author_name', 'category.name as category_name',
-                'club_book.init_count as init_count','club_book.current_count as current_count','club_book.id as club_book_id')
+            ->select('book.*', 'club.name as club_name', 'author.name as author_name', 'category.name as category_name',
+                'club_book.init_count as init_count', 'club_book.current_count as current_count', 'club_book.id as club_book_id')
             ->paginate(10);
     }
 
@@ -71,7 +71,7 @@ class ClubBookRepository
             ->join('category', 'book.category_id', '=', 'category.id')
             ->join('club', 'club_book.club_id', '=', 'club.id')
             ->where('club_book.id', $id)
-            ->select('club_book.*','club.name as club_name', 'book.name as book_name', 'author.name as author_name', 'category.name as category_name')
+            ->select('club_book.*', 'club.name as club_name', 'book.name as book_name', 'author.name as author_name', 'category.name as category_name')
             ->first();
     }
 
@@ -83,12 +83,12 @@ class ClubBookRepository
     public function updateClubBookDetail($id, $request)
     {
         $clubBook = ClubBook::find($id);
-        if ($clubBook){
+        if ($clubBook) {
             $clubBook->init_count = $request->input('initCount');
             $clubBook->current_count = $request->input('currentCount');
-//            dd($clubBook);
             $clubBook->save();
         }
+
         return $clubBook;
     }
 
@@ -98,25 +98,25 @@ class ClubBookRepository
      */
     public function addNewBook($request)
     {
-        $book = Book::where('name',$request->input('bookName'))->first();
-        if($book){
-            return redirect()->route('book.get.list')->with("error","book is exist please search in list");
-        }else{
-            $author = Author::where('name',$request->input('authorName'))->first();
-            $authorId=0;
-            if ($author){
+        $book = Book::where('name', $request->input('bookName'))->first();
+        if ($book) {
+            return redirect()->route('book.get.list')->with("error", "book is exist please search in list");
+        } else {
+            $author = Author::where('name', $request->input('authorName'))->first();
+            $authorId = 0;
+            if ($author) {
                 $authorId = $author->id;
-            }else{
+            } else {
                 $newAuthor = new Author();
                 $newAuthor->name = $request->input('authorName');
                 $newAuthor->save();
                 $authorId = $newAuthor->id;
             }
-            $category = Category::where('name',$request->input('categoryName'))->first();
-            $categoryId =0;
-            if ($category){
+            $category = Category::where('name', $request->input('categoryName'))->first();
+            $categoryId = 0;
+            if ($category) {
                 $categoryId = $category->id;
-            }else{
+            } else {
                 $newCategory = new Category();
                 $newCategory->name = $request->input('authorName');
                 $newCategory->save();
@@ -134,7 +134,7 @@ class ClubBookRepository
             $newClubBook->init_count = $request->input('initCount');
             $newClubBook->current_count = $request->input('currentCount');
             $newClubBook->save();
-            return redirect()->route('book.get.list')->with("success","add Book success");
+            return redirect()->route('book.get.list')->with("success", "add Book success");
         }
     }
 
@@ -150,7 +150,7 @@ class ClubBookRepository
             ->join('category', 'book.category_id', '=', 'category.id')
             ->join('club', 'club_book.club_id', '=', 'club.id')
             ->where('club_book.club_id', $club_id)
-            ->select('club_book.*','club.name as club_name', 'book.name as book_name',
+            ->select('club_book.*', 'club.name as club_name', 'book.name as book_name',
                 'author.name as author_name', 'category.name as category_name')
             ->get();
     }

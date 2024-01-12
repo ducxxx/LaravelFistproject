@@ -9,14 +9,14 @@ use Illuminate\Support\Facades\Redirect;
 class ClubController extends Controller
 {
     protected $clubService;
-
     public function __construct(ClubService $clubService)
     {
         $this->clubService = $clubService;
     }
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
+     * show club list
+     * @return View
      */
     public function showClubListPage()
     {
