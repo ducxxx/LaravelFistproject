@@ -9,7 +9,7 @@
     <main class="ant-layout-content css-12jzuas" style="padding: 24px; overflow: auto;">
         <div class="p-5">
             <h2 class="mb-4">Book Borrow Calendar</h2>
-            <div class="card" style="width: 1200px">
+            <div class="card" style="width: 1300px">
                 <div class="card-body p-0">
                     <div id="calendar"></div>
                 </div>
@@ -115,14 +115,7 @@
 
             (function () {
                 'use strict';
-                // ------------------------------------------------------- //
-                // Calendar
-                // ------------------------------------------------------ //
                 jQuery(function() {
-                    // console.log($bookList);
-                    // page is ready
-                    {{--var $listEvent = [];--}}
-                    {{--@foreach($bookList as $bookDetail)--}}
 
                     {{--@endforeach--}}
                     jQuery('#calendar').fullCalendar({
