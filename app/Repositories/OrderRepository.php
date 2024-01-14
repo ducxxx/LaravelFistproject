@@ -223,12 +223,11 @@ class OrderRepository
         $bookList = DB::table('order_detail')
             ->join('order', 'order.id', '=', 'order_detail.order_id')
             ->join('member', 'order.member_id', '=', 'member.id')
-            ->join('users', 'member.user_id', '=', 'users.id')
             ->join('club_book', 'order_detail.club_book_id', '=', 'club_book.id')
             ->join('book', 'club_book.book_id', '=', 'book.id')
             ->join('club', 'order.club_id', '=', 'club.id')
             ->select('book.name as title', 'order.order_date as start', 'order.due_date as due_date',
-                'order_detail.return_date as return_date', 'club.name as from_club', 'users.full_name as borrower',
+                'order_detail.return_date as return_date', 'club.name as from_club', 'member.full_name as borrower',
                 'order_detail.order_status as order_status')
             ->get();
         return $bookList;
