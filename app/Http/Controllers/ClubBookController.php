@@ -15,7 +15,9 @@ class ClubBookController extends Controller
     }
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * show list book
+     *
+     * @return View|mixed
      */
     public function showBookListPage()
     {
@@ -23,8 +25,10 @@ class ClubBookController extends Controller
     }
 
     /**
+     * get list book club by ID
      * @param $club_id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\JsonResponse
+     *
+     * @return View|mixed
      */
     public function getBookClubsByClubId($club_id)
     {
@@ -44,15 +48,16 @@ class ClubBookController extends Controller
      */
     public function searchClubBooksByName($clubId, $bookName)
     {
-        $books = $this->clubBookService->searchClubBooksByName($clubId,$bookName);
-        return $books;
+        return $this->clubBookService->searchClubBooksByName($clubId,$bookName);
     }
 
+    /**
+     * @return \Illuminate\Contracts\View\View|mixed
+     */
     public function getListBook()
     {
         $books = $this->clubBookService->getListBook();
         if ($books) {
-//            dd($books);
             return view('pages.book.ClubBookList', compact('books'));
         }
         $empty = "Don't have Book in Club";
@@ -62,7 +67,7 @@ class ClubBookController extends Controller
 
     /**
      * @param int $id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return View
      */
     public function getClubBookDetail(int $id)
     {
@@ -77,7 +82,7 @@ class ClubBookController extends Controller
     /**
      * @param Request $request
      * @param $id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
+     * @return View
      */
     public function updateClubBookDetail(Request $request, $id)
     {
@@ -90,7 +95,7 @@ class ClubBookController extends Controller
     }
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return View
      */
     public function bookAddForm()
     {
@@ -108,9 +113,12 @@ class ClubBookController extends Controller
         return $this->clubBookService->addNewBook( $request);
     }
 
+    /**
+     * @param int $club_id
+     * @return \Illuminate\Support\Collection
+     */
     public function getClubBookByClubId(int $club_id)
     {
-        $book = $this->clubBookService->getClubBookByClubId($club_id);
-        return $book;
+        return $this->clubBookService->getClubBookByClubId($club_id);
     }
 }

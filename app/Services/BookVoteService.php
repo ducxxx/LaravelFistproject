@@ -43,6 +43,10 @@ class BookVoteService
         return $this->bookVoteRepository->bookCommentByBookId($book_id);
     }
 
+    /**
+     * create vote
+     * @param $request
+     */
     public function createBookVote($request)
     {
         return $this->bookVoteRepository->createBookVote($request);

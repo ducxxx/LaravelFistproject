@@ -9,43 +9,49 @@ use Illuminate\Support\Facades\Session;
 
 class EmailController extends Controller
 {
-
     protected $emailService;
-
     public function __construct(EmailService $emailService)
     {
         $this->emailService = $emailService;
     }
+
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function sendEmailWithCode()
     {
         // Generate a random 6-digit code
         $code = $this->emailService->generateRandomString();
-        $save_code = $this->emailService->updateOtpCode($code);
-
+        // update code DB
+        $this->emailService->updateOtpCode($code);
+        // send email code verify
         Mail::to(auth()->user()->email)->send(new \App\Mail\VerificationCodeMail($code));
 
         return response()->json(['message' => 'Email sent successfully.']);
     }
 
+    /**
+     * verify code
+     * @param string $code
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function verifyCode(string $code)
     {
         // Generate a random 6-digit code
         $save_code = $this->emailService->verifyCode($code);
-        if ($save_code==0){
+        $message = '';
+        if ($save_code == 0) {
             $this->emailService->acticeUser();
             Session::flash('success', 'Verify successfully.');
-//            // If there's no intended URL, redirect to the default location
-//            return redirect(route('app'))->withInput();
-            return response()->json(['message' => 'Verify successfully.']);
-        }
-        if ($save_code==1){
-            return response()->json(['message' => 'Please send code again, code expired.']);
-        }
-        if ($save_code==2){
-            return response()->json(['message' => 'Code incorrect, verify fail']);
+            $message = 'Verify successfully.';
+        } else if ($save_code == 1) {
+            $message = 'Please send code again, code expired.';
+        } else if ($save_code == 2) {
+            $message = 'Code incorrect, verify fail';
+        } else {
+            $message = 'Verify Error.';
         }
 
-
-        return response()->json(['message' => 'Verify Error.']);
+        return response()->json(['message' => $message]);
     }
 }

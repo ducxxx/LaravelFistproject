@@ -20,18 +20,33 @@ class AuthController extends Controller
         $this->userService = $userService;
     }
 
+    /**
+     * @return View
+     */
     public function showLoginForm()
     {
         return view('auth.login');
     }
+
+    /**
+     * @return View
+     */
     public function showChangePasswordForm()
     {
         return view('auth.changePassword');
     }
+
+    /**
+     * @return View
+     */
     public function showLinkRequestForm()
     {
         return view('auth.forgetPassword');
     }
+
+    /**
+     * @return View
+     */
     public function showLogoutForm()
     {
         return view('logout');
@@ -52,7 +67,6 @@ class AuthController extends Controller
         }
 
         $user = $this->userService->login($request['username'], $request['password']);
-
         if ($user) {
             if (session()->has('url.after_login_redirect')) {
                 // Get the intended URL and clear it from the session
@@ -65,7 +79,7 @@ class AuthController extends Controller
             }
             Session::flash('success', 'Login success');
             // If there's no intended URL, redirect to the default location
-            return redirect(route('app'))->withInput();
+            return redirect(route('home'))->withInput();
         } else {
             // Authentication failed
             // You can customize the response as needed
@@ -81,12 +95,9 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         Auth::logout();
-
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
-
-        return Redirect::route('login');
+        return Redirect::route('home');
     }
 
     /**

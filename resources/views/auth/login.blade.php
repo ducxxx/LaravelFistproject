@@ -52,7 +52,6 @@
         }
     </style>
 </head>
-@include('includes-back.flash.flash')
 <body>
 <div>
     <h2>Login</h2>

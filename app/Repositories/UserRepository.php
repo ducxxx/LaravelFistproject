@@ -22,7 +22,7 @@ class UserRepository
      */
     public function update($id, array $data)
     {
-        $user = User::where('id',$id)->first();
+        $user = User::where('id', $id)->first();
         $user->update($data);
 
         return $user;

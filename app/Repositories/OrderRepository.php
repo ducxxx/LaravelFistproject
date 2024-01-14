@@ -17,7 +17,7 @@ class OrderRepository
      * @param $member
      * @return Order|\Illuminate\Http\RedirectResponse
      */
-    public function create($request,$member)
+    public function create($request, $member)
     {
         $bookOrders = json_decode($request->clubBook);
         $countOrders = DB::table('order')
@@ -30,7 +30,7 @@ class OrderRepository
                     ->orWhere('order_detail.order_status', 1)
                     ->orWhere('order_detail.order_status', 3);
             })
-            ->select('order.*','order_detail.*')
+            ->select('order.*', 'order_detail.*')
             ->count();
 
         $booksBorrowing = DB::table('order')
@@ -42,14 +42,14 @@ class OrderRepository
                 $query->where('order_detail.order_status', 0)
                     ->orWhere('order_detail.order_status', 1);
             })
-            ->select('order.*','order_detail.*')
+            ->select('order.*', 'order_detail.*')
             ->count();
 
-        if (count($bookOrders)>3){
+        if (count($bookOrders) > 3) {
             return 0; //can borrow max 3 book
-        }else{
-            if($countOrders <3){
-                if ((count($bookOrders)+$booksBorrowing)<=3) {
+        } else {
+            if ($countOrders < 3) {
+                if ((count($bookOrders) + $booksBorrowing) <= 3) {
                     $newOrder = new Order();
                     $newOrder->member_id = $member->id;
                     $newOrder->club_id = $bookOrders[0]->club_id;
@@ -57,7 +57,7 @@ class OrderRepository
                     $newOrder->due_date = $request->input('due_date');
                     $newOrder->save();
 
-                    $newOrderDetailList =[];
+                    $newOrderDetailList = [];
                     foreach ($bookOrders as $bookOrder) {
                         $newOrderDetail = [
                             'order_id' => $newOrder->id,
@@ -71,10 +71,10 @@ class OrderRepository
                     }
                     OrderDetail::insert($newOrderDetailList);
                     return 2; //borrow success
-                }else{
+                } else {
                     return 3; //please return book
                 }
-            }else{
+            } else {
                 return 1; //you borrowed 3 book please return books
             }
         }
@@ -92,7 +92,7 @@ class OrderRepository
             ->join('club_book', 'order_detail.club_book_id', '=', 'club_book.id')
             ->join('book', 'club_book.id', '=', 'book.id')
             ->where('member.user_id', $userId)
-            ->select('order.*','order_detail.*','member.full_name as full_name','member.phone_number as phone_number', 'book.name as book_name')
+            ->select('order.*', 'order_detail.*', 'member.full_name as full_name', 'member.phone_number as phone_number', 'book.name as book_name')
             ->paginate(10);
     }
 
@@ -105,7 +105,7 @@ class OrderRepository
         return DB::table('club_book')
             ->join('book', 'club_book.book_id', '=', 'book.id')
             ->whereIn('club_book.id', $clubBookId)
-            ->select('club_book.id','club_book.club_id as club_id','book.name as name')
+            ->select('club_book.id', 'club_book.club_id as club_id', 'book.name as name')
             ->get();
     }
 
@@ -120,7 +120,7 @@ class OrderRepository
             ->join('member', 'order.member_id', '=', 'member.id')
             ->join('club_book', 'order_detail.club_book_id', '=', 'club_book.id')
             ->join('book', 'club_book.id', '=', 'book.id')
-            ->select('order.*','order_detail.*','member.full_name as full_name','member.phone_number as phone_number', 'book.name as book_name')
+            ->select('order.*', 'order_detail.*', 'member.full_name as full_name', 'member.phone_number as phone_number', 'book.name as book_name')
             ->paginate(10);
     }
 
@@ -130,8 +130,8 @@ class OrderRepository
      */
     public function orderConfirm(int $id)
     {
-        $order_detail = OrderDetail::where('id',$id)->first();
-        if ($order_detail){
+        $order_detail = OrderDetail::where('id', $id)->first();
+        if ($order_detail) {
             $order_detail->order_status = 1;
             $order_detail->save();
         }
@@ -144,8 +144,8 @@ class OrderRepository
      */
     public function orderReturn(int $id)
     {
-        $order_detail = OrderDetail::where('id',$id)->first();
-        if ($order_detail){
+        $order_detail = OrderDetail::where('id', $id)->first();
+        if ($order_detail) {
             $order_detail->order_status = 2;
             $order_detail->save();
         }
@@ -165,7 +165,7 @@ class OrderRepository
                     ->orWhere('order_detail.order_status', 1)
                     ->orWhere('order_detail.order_status', 3);
             })
-            ->select('order.*','order_detail.*')
+            ->select('order.*', 'order_detail.*')
             ->count();
 
         $booksBorrowing = DB::table('order')
@@ -177,14 +177,14 @@ class OrderRepository
                 $query->where('order_detail.order_status', 0)
                     ->orWhere('order_detail.order_status', 1);
             })
-            ->select('order.*','order_detail.*')
+            ->select('order.*', 'order_detail.*')
             ->count();
 
-        if (count($bookOrders)>3){
+        if (count($bookOrders) > 3) {
             return Redirect::route('order.get.list.control')->with('error', 'You can borrow max 3 books')->withInput();
-        }else{
-            if($countOrders <3){
-                if ((count($bookOrders)+$booksBorrowing)<=3) {
+        } else {
+            if ($countOrders < 3) {
+                if ((count($bookOrders) + $booksBorrowing) <= 3) {
                     $newOrder = new Order();
                     $newOrder->member_id = $member->id;
                     $newOrder->club_id = $request->input('clubId');
@@ -192,7 +192,7 @@ class OrderRepository
                     $newOrder->due_date = $request->input('due_date');
                     $newOrder->save();
 
-                    $newOrderDetailList =[];
+                    $newOrderDetailList = [];
                     foreach ($bookOrders as $bookOrder) {
                         $newOrderDetail = [
                             'order_id' => $newOrder->id,
@@ -207,11 +207,11 @@ class OrderRepository
                     OrderDetail::insert($newOrderDetailList);
                     Session::flash('success', 'Create order success');
                     return Redirect::route('order.get.list.control')->withInput();
-                }else{
+                } else {
                     return Redirect::route('order.get.list.control')->with('error',
                         'You can borrow max 3 books you borrowed')->withInput();
                 }
-            }else{
+            } else {
                 return Redirect::route('order.get.list.control')->with('error',
                     'Cannot borrow more book because you are borrowing 3 books')->withInput();
             }
@@ -227,8 +227,8 @@ class OrderRepository
             ->join('club_book', 'order_detail.club_book_id', '=', 'club_book.id')
             ->join('book', 'club_book.book_id', '=', 'book.id')
             ->join('club', 'order.club_id', '=', 'club.id')
-            ->select('book.name as title','order.order_date as start','order.due_date as due_date',
-                'order_detail.return_date as return_date','club.name as from_club', 'users.full_name as borrower',
+            ->select('book.name as title', 'order.order_date as start', 'order.due_date as due_date',
+                'order_detail.return_date as return_date', 'club.name as from_club', 'users.full_name as borrower',
                 'order_detail.order_status as order_status')
             ->get();
         return $bookList;
