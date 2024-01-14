@@ -25,21 +25,20 @@ class UserController extends Controller
     }
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return View|Mixed
      */
     public function showRegisterForm()
     {
-
         return view('auth.register');
     }
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse
      */
     public function register(Request $request)
     {
-//        // Validate the request
+        // Validate the request
         $userRequest = new UserRequest();
         $validator = $userRequest->validation($request);
 
@@ -57,17 +56,17 @@ class UserController extends Controller
         $user->password = bcrypt($request->input('password'));
 
         $user->save();
-        if ($user){
+        if ($user) {
             Session::flash('success', 'Register success');
             return redirect(route('login'))->withInput();
-        }else{
+        } else {
             Session::flash('error', 'Register Error');
             return redirect(route('register'))->withInput();
         }
     }
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return View
      */
     public function viewMyProfile()
     {
@@ -87,13 +86,13 @@ class UserController extends Controller
             Session::flash('error', 'Update error');
             return Redirect::back()->withErrors($validator->errors())->withInput();
         }
-        if ($request->file('avatar')){
+        if ($request->file('avatar')) {
             $path = $request->file('avatar')->store('avatars', 'public');
             // Update the user's avatar path in the database (assuming you have a User model)
             auth()->user()->update(['avatar' => $path]);
         }
-        $user = User::where('id',$id)->first();
-        if($user){
+        $user = User::where('id', $id)->first();
+        if ($user) {
             $user->email = $request->input('email');
             $user->phone_number = $request->input('phoneNumber');
             $user->full_name = $request->input('fullName');
@@ -103,8 +102,8 @@ class UserController extends Controller
             Session::flash('success', 'Update success');
         }
 
-        $member = Member::where('user_id',$id)->first();
-        if ($member){
+        $member = Member::where('user_id', $id)->first();
+        if ($member) {
             $member->email = $request->input('email');
             $member->phone_number = $request->input('phoneNumber');
             $member->full_name = $request->input('fullName');
@@ -112,6 +111,7 @@ class UserController extends Controller
             $member->address = $request->input('address');
             $member->save();
         }
+
         return redirect()->route('user.profile')->with('success', 'User updated successfully!');
     }
 }

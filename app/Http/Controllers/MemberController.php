@@ -15,14 +15,13 @@ use Illuminate\Support\Facades\Session;
 class MemberController extends Controller
 {
     protected $memberService;
-
     public function __construct(MemberService $memberService)
     {
         $this->memberService = $memberService;
     }
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
+     * @return View|Mixed
      */
     public function showMemberListPage()
     {
@@ -32,12 +31,12 @@ class MemberController extends Controller
         }
 
         $empty = "Don't have Club Member";
-        return view('pages.EmptyPage',compact($empty))->with('status',404);
+        return view('pages.EmptyPage', compact($empty))->with('status', 404);
     }
 
     /**
      * @param int $id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return View|Mixed
      */
     public function memberDetail(int $id)
     {
@@ -49,10 +48,14 @@ class MemberController extends Controller
         }
 
         $empty = "Don't have Member";
-        return view('pages.EmptyPage',compact($empty))->with('status',404);
+        return view('pages.EmptyPage', compact($empty))->with('status', 404);
     }
 
-
+    /**
+     * @param Request $request
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function updateMemberDetail(Request $request, int $id)
     {
         $updateMemberRequest = new UpdateMemberRequest();
@@ -61,8 +64,8 @@ class MemberController extends Controller
             Session::flash('error', 'Update error');
             return Redirect::back()->withErrors($validator->errors())->withInput();
         }
-        $member = Member::where('id',$id)->first();
-        if ($member){
+        $member = Member::where('id', $id)->first();
+        if ($member) {
             $member->phone_number = $request->input('phoneNumber');
             $member->email = $request->input('email');
             $member->full_name = $request->input('fullName');
@@ -70,8 +73,9 @@ class MemberController extends Controller
             $member->address = $request->input('address');
             $member->save();
         }
-        $user = User::where('id',$member->user_id)->first();
-        if($user){
+        $user = User::where('id', $member->user_id)->first();
+
+        if ($user) {
             $user->phone_number = $request->input('phoneNumber');
             $user->email = $request->input('email');
             $user->full_name = $request->input('fullName');
@@ -83,10 +87,13 @@ class MemberController extends Controller
         return back();
     }
 
+    /**
+     * @param string $phoneNumber
+     * @return object|null
+     */
     public function getMemberByPhoneNumber(string $phoneNumber)
     {
-        $memberDetail = $this->memberService->getMemberByPhoneNumber($phoneNumber);
-        return $memberDetail;
+        return $this->memberService->getMemberByPhoneNumber($phoneNumber);
     }
 
 }
