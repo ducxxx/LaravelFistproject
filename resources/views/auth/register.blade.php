@@ -89,6 +89,12 @@
     @error('password')
     <p style="color: red;">{{ $message }}</p>
     @enderror
+
+    <label for="confirm_password">Re-enter password:</label>
+    <input type="password" id="confirm_password" name="confirm_password" value="{{ $errors->has('confirm_password') ? '' : old('confirm_password') }}" {{ $errors->has('confirm_password') ? ' autofocus' : '' }} class="@error('confirm_password') error-input @enderror">
+    @error('confirm_password')
+    <p style="color: red;">{{ $message }}</p>
+    @enderror
     <button type="submit" >Submit</button>
 </form>
 </body>
