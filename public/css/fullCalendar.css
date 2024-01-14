@@ -561,6 +561,7 @@ tr:first-child > td > .fc-day-grid-event {
     overflow: hidden; }
 
 .fc-day-grid-event .fc-time {
+    display: none;
     font-weight: bold; }
 
 /* resizer (cursor devices) */
