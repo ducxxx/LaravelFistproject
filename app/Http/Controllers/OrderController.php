@@ -142,7 +142,7 @@ class OrderController extends Controller
     public function getBookCalendar(){
         $bookList = $this->orderService->getListBookCalendar()->toArray();
         //.$bookList = response()->json($bookList);
-        //dd($bookList);
+//        dd($bookList);
         return view('pages.book.BookBorrowCalendar', compact('bookList'));
     }
 
