@@ -71,6 +71,9 @@ class OrderController extends Controller
         if ($order == 3) {
             return Redirect::route('club.book', ['club_id' => session('club_id')])->with('error', 'You can borrow max 3 books you borrowed')->withInput();
         }
+        if ($order==4){
+            return Redirect::route('club.book', ['club_id' => session('club_id')])->with('error', 'You must verify account ')->withInput();
+        }
         return back();
     }
 

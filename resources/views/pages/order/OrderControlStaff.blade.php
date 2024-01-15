@@ -81,46 +81,9 @@
                                                             <div class="ant-space-item">
                                                                 <button type="button" class="confirm-button btn btn-outline-primary" value="{{$order->id}}" data-toggle="modal" data-target="#confirmModal"
                                                                         @if ($order->order_status != 0) disabled @endif>Confirm</button>
-
-                                                                <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                                                                     aria-hidden="true">
-                                                                    <div class="modal-dialog" role="document">
-                                                                        <div class="modal-content">
-                                                                            <div class="modal-header">
-                                                                                <h5 class="modal-title" id="exampleModalLabel">Confirm Borrowing Book?</h5>
-                                                                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                                                                    <span aria-hidden="true">×</span>
-                                                                                </button>
-                                                                            </div>
-                                                                            <div class="modal-body">Select "Confirm" if have book send to user.</div>
-                                                                            <div class="modal-footer">
-                                                                                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                                                                                <button class="btn btn-primary" id="confirmButton">Confirm</button>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
                                                                 <br>
                                                                 <button type="button" class="return-button btn btn-outline-primary" value="{{$order->id}}" data-toggle="modal" data-target="#returnModal"
                                                                         @if ($order->order_status == 0 || $order->order_status == 2) disabled @endif>Return</button>
-                                                                <div class="modal fade" id="returnModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                                                                     aria-hidden="true">
-                                                                    <div class="modal-dialog" role="document">
-                                                                        <div class="modal-content">
-                                                                            <div class="modal-header">
-                                                                                <h5 class="modal-title" id="exampleModalLabel">Confirm Return Book?</h5>
-                                                                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                                                                    <span aria-hidden="true">×</span>
-                                                                                </button>
-                                                                            </div>
-                                                                            <div class="modal-body">Select "Return" if user want to return book.</div>
-                                                                            <div class="modal-footer">
-                                                                                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                                                                                <button class="btn btn-primary" id="returnButton">Return</button>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
                                                             </div>
                                                         </div>
                                                     </td>
@@ -130,26 +93,7 @@
                                                     <td colspan="4">No Order found</td>
                                                 </tr>
                                             @endforelse
-                                            <script>
-                                                $(document).ready(function () {
-                                                    $('.confirm-button').on('click', function () {
-                                                        // Get the member ID from the button's value attribute
-                                                        var id = $(this).val();
-                                                        $('#confirmButton').on('click', function () {
-                                                            var confirmUrl = '/order/confirm/' + id;
-                                                            window.location.href = confirmUrl;
-                                                        });
-                                                    });
-                                                    $('.return-button').on('click', function () {
-                                                        // Get the member ID from the button's value attribute
-                                                        var id = $(this).val();
-                                                        $('#returnButton').on('click', function () {
-                                                            var returnUrl = '/order/return/' + id;
-                                                            window.location.href = returnUrl;
-                                                        });
-                                                    });
-                                                });
-                                            </script>
+
                                             </tbody>
                                         </table>
                                     </div>
@@ -162,5 +106,61 @@
                 <div>{{ $orders->links() }}</div>
             </div>
         </form>
+        <div class="modal fade" id="returnModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Confirm Return Book?</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">Select "Return" if user want to return book.</div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-primary" id="returnButton">Return</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Confirm Borrowing Book?</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">Select "Confirm" if have book send to user.</div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-primary" id="confirmButton">Confirm</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            $(document).ready(function () {
+                $('.confirm-button').on('click', function () {
+                    // Get the member ID from the button's value attribute
+                    var id = $(this).val();
+                    $('#confirmButton').on('click', function () {
+                        var confirmUrl = '/order/confirm/' + id;
+                        window.location.href = confirmUrl;
+                    });
+                });
+                $('.return-button').on('click', function () {
+                    // Get the member ID from the button's value attribute
+                    var id = $(this).val();
+                    $('#returnButton').on('click', function () {
+                        var returnUrl = '/order/return/' + id;
+                        window.location.href = returnUrl;
+                    });
+                });
+            });
+        </script>
     </main>
 @endsection

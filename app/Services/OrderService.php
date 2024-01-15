@@ -8,6 +8,8 @@ use App\Repositories\OrderRepository;
 use App\Repositories\OrderDetailRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 
 class OrderService
 {
@@ -30,20 +32,24 @@ class OrderService
             ->where('member.user_id', $user->id)
             ->select('member.*')
             ->first();
-        if ($member){
-            $order = $this->orderRepository->create($request, $member);
-            return $order;
+        if ($user->is_active ==1){
+            if ($member){
+                $order = $this->orderRepository->create($request, $member);
+                return $order;
+            }else{
+                $newMember = new Member();
+                $newMember->user_id = $user->id;
+                $newMember->address = $request->input('address');
+                $newMember->phone_number = $request->input('phone_number');
+                $newMember->full_name = $request->input('full_name');
+                $newMember->birth_date = optional($user->birth_date)->format('Y-m-d');
+                $newMember->email = $user->email;
+                $newMember->save();
+                $order = $this->orderRepository->create($request, $newMember);
+                return $order;
+            }
         }else{
-            $newMember = new Member();
-            $newMember->user_id = $user->id;
-            $newMember->address = $request->input('address');
-            $newMember->phone_number = $request->input('phone_number');
-            $newMember->full_name = $request->input('full_name');
-            $newMember->birth_date = optional($user->birth_date)->format('Y-m-d');
-            $newMember->email = $user->email;
-            $newMember->save();
-            $order = $this->orderRepository->create($request, $newMember);
-            return $order;
+            return 4;
         }
     }
 
