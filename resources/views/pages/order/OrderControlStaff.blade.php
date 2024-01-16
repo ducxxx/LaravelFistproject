@@ -79,9 +79,8 @@
                                                         <div class="ant-space css-12jzuas ant-space-horizontal ant-space-align-center"
                                                              style="gap: 8px;">
                                                             <div class="ant-space-item">
-                                                                <button type="button" class="confirm-button btn btn-outline-primary" value="{{$order->id}}" data-toggle="modal" data-target="#confirmModal"
+                                                                <button type="button" class="confirm-button btn btn-outline-primary mr-2" value="{{$order->id}}" data-toggle="modal" data-target="#confirmModal"
                                                                         @if ($order->order_status != 0) disabled @endif>Confirm</button>
-                                                                <br>
                                                                 <button type="button" class="return-button btn btn-outline-primary" value="{{$order->id}}" data-toggle="modal" data-target="#returnModal"
                                                                         @if ($order->order_status == 0 || $order->order_status == 2) disabled @endif>Return</button>
                                                             </div>

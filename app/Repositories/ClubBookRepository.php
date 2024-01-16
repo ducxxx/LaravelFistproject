@@ -118,7 +118,7 @@ class ClubBookRepository
                 $categoryId = $category->id;
             } else {
                 $newCategory = new Category();
-                $newCategory->name = $request->input('authorName');
+                $newCategory->name = $request->input('categoryName');
                 $newCategory->save();
                 $categoryId = $newCategory->id;
             }
