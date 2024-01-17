@@ -13,7 +13,7 @@
         });
     </script>
 @elseif (Session::has('error'))
-    <div id="errorFlashMessage" class="alert alert-danger">
+    <div id="errorFlashMessage" class="alert alert-danger" style="color: red">
         {{ Session::get('error') }}
     </div>
     <script>

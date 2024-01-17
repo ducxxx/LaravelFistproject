@@ -44,6 +44,11 @@ class AuthController extends Controller
         return view('auth.forgetPassword');
     }
 
+    public function showConfirmPasswordForm()
+    {
+        return view('auth.confirmFormgetPassword');
+    }
+
     /**
      * @return View
      */

@@ -227,7 +227,7 @@ class OrderRepository
             ->join('book', 'club_book.book_id', '=', 'book.id')
             ->join('club', 'order.club_id', '=', 'club.id')
             ->select('book.name as title', 'order.order_date as start', 'order.due_date as due_date',
-                'order_detail.return_date as return_date', 'club.name as from_club', 'member.full_name as borrower',
+                'order_detail.return_date as end', 'club.name as from_club', 'member.full_name as borrower',
                 'order_detail.order_status as order_status')
             ->get();
         return $bookList;

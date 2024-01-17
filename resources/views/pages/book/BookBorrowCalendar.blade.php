@@ -137,12 +137,20 @@
                         eventClick: function(event, jsEvent, view) {
                             jQuery('.event-icon').html("<i class='fa fa-"+event.icon+"'></i>");
                             jQuery('.event-title').html(event.title);
-                            // jQuery('.event-body').html(event.from_club);
+                            console.log(event.end);
+                            var return_date;
+                            if (event.end !== null) {
+                                return_date = $.datepicker.formatDate('yy-mm-dd', new Date(event.end));
+                            } else {
+                                // Handle the case where event.end is null
+                                return_date = null; // You can set any default value you prefer
+                            }
                             jQuery('#control-ref-borrower').text(event.borrower);
                             jQuery('#control-ref-from-club').text(event.from_club);
 
-                            jQuery('#control-ref-due-date').text( event.due_date);
-                            jQuery('#control-ref-return-date').text( event.return_date);
+                            jQuery('#control-ref-due-date').text( $.datepicker.formatDate('yy-mm-dd',
+                                new Date(event.due_date)));
+                            jQuery('#control-ref-return-date').text(return_date);
                             // jQuery('.eventUrl').attr('href',event.url);
                             jQuery('#modal-view-event').modal();
                         },
@@ -161,6 +169,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/js/datepicker.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/js/i18n/datepicker.en.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 @endsection
 @section("css")
     <link rel="stylesheet" href="{{ asset('css/fullCalendar.css') }}">
