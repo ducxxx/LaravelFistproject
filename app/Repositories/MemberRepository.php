@@ -33,7 +33,7 @@ class MemberRepository
     {
         $clubMemberDetail = DB::table('member')
             ->where('member.phone_number', $phoneNumber)
-            ->select('member.*')
+            ->select('member.phone_number', 'member.full_name','member.address' )
             ->first();
         return $clubMemberDetail;
     }

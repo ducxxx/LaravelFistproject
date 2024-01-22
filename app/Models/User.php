@@ -16,6 +16,7 @@ class User extends Authenticatable
     use HasFactory, SoftDeletes;
 
     protected $table = 'users';
+    const  ACTIVE = 1;
 
     protected $fillable = [
         'password',

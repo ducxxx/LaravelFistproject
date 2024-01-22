@@ -149,7 +149,14 @@ class OrderController extends Controller
      */
     public function orderOfflineCreate(Request $request)
     {
-        return $this->orderService->orderOfflineCreate($request);
+        $dataCheck = $this->orderService->orderOfflineCreate($request);
+        if ($dataCheck['isBorrow']==true){
+            Session::flash('success', 'Create order success');
+            return Redirect::route('order.get.list.control')->withInput();
+        }else{
+            dd($dataCheck);
+            return back();
+        }
     }
 
     /**

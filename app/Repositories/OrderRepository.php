@@ -2,10 +2,12 @@
 
 namespace App\Repositories;
 
+use App\Models\Member;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use function Sodium\add;
@@ -145,8 +147,10 @@ class OrderRepository
     public function orderReturn(int $id)
     {
         $order_detail = OrderDetail::where('id', $id)->first();
+        $return_day = date('Y-m-d');
         if ($order_detail) {
             $order_detail->order_status = 2;
+            $order_detail->return_date = $return_day;
             $order_detail->save();
         }
         return $order_detail;
@@ -155,68 +159,78 @@ class OrderRepository
     public function orderOfflineCreate($request, $member)
     {
         $bookOrders = $request->input('club_book_ids');
-        $countOrders = DB::table('order')
+        try {
+            $newOrder = new Order();
+            $newOrder->member_id = $member;
+            $newOrder->club_id = $request->input('clubId');
+            $newOrder->order_date = $request->input('order_date');
+            $newOrder->due_date = $request->input('due_date');
+            $newOrder->save();
+
+            $newOrderDetailList = [];
+            foreach ($bookOrders as $bookOrder) {
+                $newOrderDetail = [
+                    'order_id' => $newOrder->id,
+                    'club_book_id' => $bookOrder,
+                    'return_date' => null,
+                    'overdue_day_count' => 0,
+                    'order_status' => 1,
+                    'note' => $request->input('note'),
+                ];
+                $newOrderDetailList[] = $newOrderDetail;
+            }
+            OrderDetail::insert($newOrderDetailList);
+        }catch (\Exception $e){
+            DB::rollBack();
+            // Log the error
+            Log::error('Error updating data: ' . $e->getMessage());
+        }
+    }
+
+    public function currentCountBook(int $club_book_id){
+        return  DB::table('club_book')
+            ->join('book', 'book.id', '=', 'club_book.book_id')
+            ->where('club_book.id', $club_book_id)
+            ->select('club_book.current_count as current_count', 'book.name as book_name')->first();
+    }
+
+    public function countBookBorrowing(int $memberId){
+        return DB::table('order')
             ->join('order_detail', 'order.id', '=', 'order_detail.order_id')
             ->join('member', 'order.member_id', '=', 'member.id')
             ->join('club_book', 'order_detail.club_book_id', '=', 'club_book.id')
-            ->where('member.id', $member->id)
+            ->where('member.id', $memberId)
             ->where(function ($query) {
                 $query->where('order_detail.order_status', 0)
                     ->orWhere('order_detail.order_status', 1)
                     ->orWhere('order_detail.order_status', 3);
             })
-            ->select('order.*', 'order_detail.*')
+            ->select('order.id', 'order_detail.id')
             ->count();
-
-        $booksBorrowing = DB::table('order')
-            ->join('order_detail', 'order.id', '=', 'order_detail.order_id')
-            ->join('member', 'order.member_id', '=', 'member.id')
-            ->join('club_book', 'order_detail.club_book_id', '=', 'club_book.id')
-            ->where('member.id', $member->id)
-            ->where(function ($query) {
-                $query->where('order_detail.order_status', 0)
-                    ->orWhere('order_detail.order_status', 1);
-            })
-            ->select('order.*', 'order_detail.*')
-            ->count();
-
-        if (count($bookOrders) > 3) {
-            return Redirect::route('order.get.list.control')->with('error', 'You can borrow max 3 books')->withInput();
-        } else {
-            if ($countOrders < 3) {
-                if ((count($bookOrders) + $booksBorrowing) <= 3) {
-                    $newOrder = new Order();
-                    $newOrder->member_id = $member->id;
-                    $newOrder->club_id = $request->input('clubId');
-                    $newOrder->order_date = $request->input('order_date');
-                    $newOrder->due_date = $request->input('due_date');
-                    $newOrder->save();
-
-                    $newOrderDetailList = [];
-                    foreach ($bookOrders as $bookOrder) {
-                        $newOrderDetail = [
-                            'order_id' => $newOrder->id,
-                            'club_book_id' => $bookOrder,
-                            'return_date' => null,
-                            'overdue_day_count' => 0,
-                            'order_status' => 1,
-                            'note' => $request->input('note'),
-                        ];
-                        $newOrderDetailList[] = $newOrderDetail;
-                    }
-                    OrderDetail::insert($newOrderDetailList);
-                    Session::flash('success', 'Create order success');
-                    return Redirect::route('order.get.list.control')->withInput();
-                } else {
-                    return Redirect::route('order.get.list.control')->with('error',
-                        'You can borrow max 3 books you borrowed')->withInput();
-                }
-            } else {
-                return Redirect::route('order.get.list.control')->with('error',
-                    'Cannot borrow more book because you are borrowing 3 books')->withInput();
-            }
-        }
     }
+
+    public function checkNewMember(string $phone_number){
+        return DB::table('member')
+            ->where('member.phone_number', $phone_number)
+            ->select('member.id as id')->first();
+    }
+
+    public function createNewMember($request){
+        $newMember = new Member();
+        try {
+            $newMember->address = $request->input('address');
+            $newMember->phone_number = $request->input('phone_number');
+            $newMember->full_name = $request->input('full_name');
+            $newMember->save();
+        }catch (\Exception $e){
+            DB::rollBack();
+            // Log the error
+            Log::error('Error updating data: ' . $e->getMessage());
+        }
+        return $newMember;
+    }
+
+
 
     public function getListBookCalendar()
     {

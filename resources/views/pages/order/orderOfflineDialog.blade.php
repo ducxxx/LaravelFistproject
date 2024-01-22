@@ -49,13 +49,10 @@
                                                         class="ant-input ant-input css-12jzuas" type="text"
                                                         name="search_member">
                                                 </div>
-                                                <button id="searchButton" type="button" class="btn btn-primary btn-sm">Search</button>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" name="newMember" type="checkbox" id="newMember">
-                                                    <label class="form-check-label" for="flexCheckDefault">
-                                                        New Member
-                                                    </label>
-                                                </div>
+                                                <button id="searchButton" type="button" class="btn btn-primary btn-sm mr-2">Search</button>
+                                            </div>
+                                            <div class="ant-row ant-form-item-row css-12jzuas" style="width: 100%;display: block;padding-left: 125px;">
+                                                <span id="message-show" class="mr-2" style="color: red"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -65,19 +62,30 @@
                                             $('#searchButton').on('click', function () {
                                                 // Get the phone number from the input field
                                                 var phoneNumber = $('#control-ref-search-member').val();
-
                                                 // Make an AJAX request to the API endpoint
-                                                $.ajax({
+                                                if(phoneNumber){
+                                                    $.ajax({
                                                     url: '/member/search/' + phoneNumber,
                                                     type: 'GET',
                                                     success: function (data) {
-                                                        // Handle the API response here
-                                                        $('#control-ref_full_name').val(data.full_name).prop('disabled', true);
-                                                        $('#ref_full_name').val(data.full_name)
-                                                        $('#ref_phone_number').val(data.phone_number)
-                                                        $('#control-ref_phone_number').val(data.phone_number)
-                                                            .prop('disabled', true);
-                                                        $('#control-ref_address').val(data.address);
+                                                        if (data) {
+                                                            // Handle the API response here
+                                                            $('#control-ref_full_name').val(data.full_name).
+                                                            prop('disabled', true);
+                                                            $('#ref_full_name').val(data.full_name)
+                                                            $('#ref_phone_number').val(data.phone_number)
+                                                            $('#control-ref_phone_number').val(data.phone_number)
+                                                                .prop('disabled', true);
+                                                            $('#control-ref_address').val(data.address);
+                                                            $('#message-show').text('');
+                                                        } else {
+                                                            $('#control-ref_address').val('');
+                                                            $('#control-ref_phone_number').val(phoneNumber);
+                                                            $('#ref_phone_number').val(phoneNumber);
+                                                            $('#message-show').text('Phone Number not exist,' +
+                                                                ' please input name and address');
+                                                            $('#control-ref_full_name').val('').prop('disabled', false);
+                                                        }
                                                     },
                                                     error: function (error) {
                                                         // Handle errors here
@@ -87,13 +95,9 @@
                                                         $('#newMember').prop('checked', false);
                                                     }
                                                 });
-                                            });
-                                            $('#newMember').on('change', function () {
-                                                // Enable or disable the input field based on the checkbox state
-                                                $('#control-ref-search-member').val('');
-                                                $('#control-ref_full_name').val('').prop('disabled', !this.checked);
-                                                $('#control-ref_phone_number').val('').prop('disabled', !this.checked);
-                                                $('#control-ref_address').val('');
+                                                }else{
+                                                    $('#message-show').text('Please input Phone Number');
+                                                }
                                             });
                                         });
                                     </script>
@@ -105,9 +109,10 @@
                                             <div class="ant-col ant-col-16 ant-form-item-control css-12jzuas">
                                                 <div class="ant-form-item-control-input">
                                                     <div class="ant-form-item-control-input-content">
-                                                        <input id="ref_full_name" type="hidden" name="full_name" value="" >
+                                                        <input id="ref_full_name" type="hidden" name="full_name"
+                                                               value="" >
                                                         <input
-                                                            id="control-ref_full_name" aria-required="true" disabled=""
+                                                            id="control-ref_full_name" aria-required="true"
                                                             class="ant-input css-12jzuas" type="text"
                                                             name="full_name" value=""></div>
                                                 </div>
@@ -125,7 +130,7 @@
                                                         <input id="ref_phone_number" type="hidden" name="phone_number"
                                                                value="" >
                                                         <input
-                                                            id="control-ref_phone_number" aria-required="true" disabled=""
+                                                            id="control-ref_phone_number" aria-required="true"
                                                             class="ant-input css-12jzuas" type="text"
                                                             name="phone_number" value=""></div>
                                                 </div>
