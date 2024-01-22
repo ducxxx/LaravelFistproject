@@ -52,29 +52,15 @@ class OrderController extends Controller
      */
     public function create(Request $request)
     {
-        $user = DB::table('users')
-            ->where('id', Auth::id())
-            ->select('users.*')
-            ->first();
-        $order = $this->orderService->createOrder($request, $user);
-        if ($order == 2) {
+        $user = $this->orderService->getUser();
+        $dataCheck = $this->orderService->createOrder($request,$user);
+        if ($dataCheck['isBorrow']==true){
             Session::flash('success', 'Create order success');
-            return Redirect::route('order.get.list', ['user_id' => ($user->id)])->withInput();
+            return Redirect::route('order.get.list.control')->withInput();
+        }else{
+            dd($dataCheck);
+            return back();
         }
-        if ($order == 0) {
-            Session::flash('Error', 'You can borrow max 3 books');
-            return Redirect::route('club.book', ['club_id' => session('club_id')])->with('error', 'You can borrow max 3 books')->withInput();
-        }
-        if ($order == 1) {
-            return Redirect::route('club.book', ['club_id' => session('club_id')])->with('error', 'Cannot borrow more book because you are borrowing 3 books')->withInput();
-        }
-        if ($order == 3) {
-            return Redirect::route('club.book', ['club_id' => session('club_id')])->with('error', 'You can borrow max 3 books you borrowed')->withInput();
-        }
-        if ($order==4){
-            return Redirect::route('club.book', ['club_id' => session('club_id')])->with('error', 'You must verify account ')->withInput();
-        }
-        return back();
     }
 
     /**

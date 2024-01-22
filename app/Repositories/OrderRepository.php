@@ -19,14 +19,14 @@ class OrderRepository
      * @param $member
      * @return Order|\Illuminate\Http\RedirectResponse
      */
-    public function create($request, $member)
+    public function create($request, $memberId)
     {
         $bookOrders = json_decode($request->clubBook);
         $countOrders = DB::table('order')
             ->join('order_detail', 'order.id', '=', 'order_detail.order_id')
             ->join('member', 'order.member_id', '=', 'member.id')
             ->join('club_book', 'order_detail.club_book_id', '=', 'club_book.id')
-            ->where('member.id', $member->id)
+            ->where('member.id',$memberId)
             ->where(function ($query) {
                 $query->where('order_detail.order_status', 0)
                     ->orWhere('order_detail.order_status', 1)
@@ -39,7 +39,7 @@ class OrderRepository
             ->join('order_detail', 'order.id', '=', 'order_detail.order_id')
             ->join('member', 'order.member_id', '=', 'member.id')
             ->join('club_book', 'order_detail.club_book_id', '=', 'club_book.id')
-            ->where('member.id', $member->id)
+            ->where('member.id', $memberId)
             ->where(function ($query) {
                 $query->where('order_detail.order_status', 0)
                     ->orWhere('order_detail.order_status', 1);
@@ -53,7 +53,7 @@ class OrderRepository
             if ($countOrders < 3) {
                 if ((count($bookOrders) + $booksBorrowing) <= 3) {
                     $newOrder = new Order();
-                    $newOrder->member_id = $member->id;
+                    $newOrder->member_id = $memberId;
                     $newOrder->club_id = $bookOrders[0]->club_id;
                     $newOrder->order_date = $request->input('order_date');
                     $newOrder->due_date = $request->input('due_date');
@@ -156,6 +156,14 @@ class OrderRepository
         return $order_detail;
     }
 
+    public function getUser()
+    {
+        return DB::table('users')
+            ->where('id', Auth::id())
+            ->select('users.*')
+            ->first();
+    }
+
     public function orderOfflineCreate($request, $member)
     {
         $bookOrders = $request->input('club_book_ids');
@@ -175,6 +183,37 @@ class OrderRepository
                     'return_date' => null,
                     'overdue_day_count' => 0,
                     'order_status' => 1,
+                    'note' => $request->input('note'),
+                ];
+                $newOrderDetailList[] = $newOrderDetail;
+            }
+            OrderDetail::insert($newOrderDetailList);
+        }catch (\Exception $e){
+            DB::rollBack();
+            // Log the error
+            Log::error('Error updating data: ' . $e->getMessage());
+        }
+    }
+
+    public function orderOnlineCreate($request, $member)
+    {
+        $bookOrders = json_decode($request->clubBook);
+        try {
+            $newOrder = new Order();
+            $newOrder->member_id = $member;
+            $newOrder->club_id = $bookOrders[0]->club_id;
+            $newOrder->order_date = $request->input('order_date');
+            $newOrder->due_date = $request->input('due_date');
+            $newOrder->save();
+
+            $newOrderDetailList = [];
+            foreach ($bookOrders as $bookOrder) {
+                $newOrderDetail = [
+                    'order_id' => $newOrder->id,
+                    'club_book_id' => $bookOrder->id,
+                    'return_date' => null,
+                    'overdue_day_count' => 0,
+                    'order_status' => 0,
                     'note' => $request->input('note'),
                 ];
                 $newOrderDetailList[] = $newOrderDetail;
@@ -230,8 +269,9 @@ class OrderRepository
         return $newMember;
     }
 
-
-
+    /**
+     * @return \Illuminate\Support\Collection
+     */
     public function getListBookCalendar()
     {
         $bookList = DB::table('order_detail')
@@ -245,5 +285,36 @@ class OrderRepository
                 'order_detail.order_status as order_status')
             ->get();
         return $bookList;
+    }
+
+    public function checkUserMember($userId){
+        return DB::table('member')
+            ->where('member.user_id', $userId)
+            ->select('member.id as id')
+            ->first();
+    }
+
+    /**
+     * @param $request
+     * @param $user
+     * @return Member|void
+     */
+    public function createNewMemberForOrderOnline($request, $user){
+        $newMember = new Member();
+        try {
+            $newMember->user_id = $user->id;
+            $newMember->address = $request->input('address');
+            $newMember->phone_number = $request->input('phone_number');
+            $newMember->full_name = $request->input('full_name');
+            $newMember->birth_date = optional($user->birth_date)->format('Y-m-d');
+            $newMember->email = $user->email;
+            $newMember->save();
+            return $newMember;
+        }catch (\Exception $e){
+            DB::rollBack();
+            // Log the error
+            Log::error('Error updating data: ' . $e->getMessage());
+        }
+        return $newMember->id;
     }
 }

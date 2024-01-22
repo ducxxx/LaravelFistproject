@@ -16,6 +16,7 @@ class OrderService
 {
     private $orderRepository;
     private $orderDetailRepository;
+    const BOOK_MAX_BORROW = 3;
 
     public function __construct(OrderRepository $orderRepository, OrderDetailRepository $orderDetailRepository)
     {
@@ -25,33 +26,48 @@ class OrderService
 
     /**
      * @param $request
-     * @return \App\Models\Order|\Illuminate\Http\RedirectResponse
+     * @param $user
+     * @return array|int
      */
     public function createOrder($request, $user)
     {
-        $member = DB::table('member')
-            ->where('member.user_id', $user->id)
-            ->select('member.*')
-            ->first();
+        $clubBookIds = json_decode($request->clubBook);
+        $phoneNumber = $request->input('phone_number');
+        $response = ['isBorrow' => false, 'message' => ''];
+
+        // validation can't borrow
+        if (count($clubBookIds) > self::BOOK_MAX_BORROW) {
+            $response['message'] = 'Can Not Borrow, You Borrowing Max 3 books';
+        }
+        $memberId = $this->orderRepository->checkUserMember($user->id);
         if ($user->is_active == User::ACTIVE) {
-            if ($member) {
-                $order = $this->orderRepository->create($request, $member);
-                return $order;
+            if (!$memberId) {
+                $memberId = $this->orderRepository->createNewMemberForOrderOnline($request, $user);
+            }
+            $countBookBorrowing = $this->orderRepository->countBookBorrowing($memberId);
+            if ($countBookBorrowing < self::BOOK_MAX_BORROW) {
+                if (count($clubBookIds) + $countBookBorrowing <= self::BOOK_MAX_BORROW) {
+                    $checkBook = $this->checkCurrentCountBook($clubBookIds);
+                    if ($checkBook['isBorrow'] == true) {
+                        $this->orderRepository->orderOnlineCreate($request, $memberId);
+                        $response['isBorrow'] = true;
+                        $response['message'] = 'Borrowing success';
+                    } else {
+                        $response['isBorrow'] = $checkBook['isBorrow'];
+                        $response['message'] = $checkBook['message'];
+                    }
+                } else {
+                    $response['message'] = 'Can Not Borrow ' .
+                        count($clubBookIds) . ' Book, You Borrow Max 3 books but Now you are borrowing ' .
+                        $countBookBorrowing . ' books';
+                }
             } else {
-                $newMember = new Member();
-                $newMember->user_id = $user->id;
-                $newMember->address = $request->input('address');
-                $newMember->phone_number = $request->input('phone_number');
-                $newMember->full_name = $request->input('full_name');
-                $newMember->birth_date = optional($user->birth_date)->format('Y-m-d');
-                $newMember->email = $user->email;
-                $newMember->save();
-                $order = $this->orderRepository->create($request, $newMember);
-                return $order;
+                $response['message'] = 'Can Not Borrow, You Borrowing 3 books';
             }
         } else {
-            return 4;
+            $response['message'] = 'You must verify account';
         }
+        return $response;
     }
 
     public function getClubBookName($clubBookId)
@@ -79,7 +95,15 @@ class OrderService
         return $this->orderRepository->orderReturn($id);
     }
 
-    const BOOK_MAX_BORROW = 3;
+    public function getUser()
+    {
+        return $this->orderRepository->getUser();
+    }
+
+    /**
+     * @param $request
+     * @return array
+     */
     public function orderOfflineCreate($request)
     {
         $clubBookIds = $request->input('club_book_ids');
