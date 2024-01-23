@@ -82,7 +82,7 @@
     @if(session('error') && ! $errors->has('username'))
         <!-- Show a specific error message only if it's not related to the username field -->
         <div class="alert alert-danger">
-            <p style="color: red;">Username or password incorrect</p>
+            <p style="color: red;">{{session('error')}}</p>
         </div>
     @endif
     <p>Don't have an account? <a href="{{ route('register') }}">Register here</a></p>

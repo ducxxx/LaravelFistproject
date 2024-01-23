@@ -179,6 +179,16 @@ class OrderService
         }
     }
 
+    public function getClubBookId($clubBookIds)
+    {
+        $clubBookIds = json_decode($clubBookIds);
+        $listClubBookIds = [];
+        foreach ($clubBookIds as $bookId) {
+            $listClubBookIds[] = $bookId->id;
+        }
+        return $listClubBookIds;
+    }
+
     private function checkCurrentCountBookOnline($bookIds)
     {
         $message = '';

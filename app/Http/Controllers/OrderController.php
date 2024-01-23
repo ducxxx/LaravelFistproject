@@ -7,6 +7,7 @@ use App\Models\Member;
 use App\Services\OrderService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -58,8 +59,10 @@ class OrderController extends Controller
             Session::flash('success', 'Create order success');
             return Redirect::route('order.get.list.control')->withInput();
         }else{
-            dd($dataCheck);
-            return back();
+            $clubBookIds =$this->orderService->getClubBookId($request->clubBook);
+            $clubBookName = $this->orderService->getClubBookName($clubBookIds);
+            session(['errors' => $dataCheck['message']]);
+            return view('pages.order.orderDialog', compact('clubBookName'));
         }
     }
 
