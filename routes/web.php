@@ -78,6 +78,7 @@ Route::middleware(['checkLogin'])->group(function () {
     Route::get('/order/list', [OrderController::class, 'showOrderList'])->name('order.list');
     Route::get('/order/get/list/{user_id}', [OrderController::class, 'getOrderByUserId'])->name('order.get.list');
     Route::any('/order/dialog', [OrderController::class, 'showOrderDialog'])->name('order.dialog');
+    Route::post('/order/check', [OrderController::class, 'checkOrderOnline'])->name('order.check');
 
     // User permissions Staff
     Route::middleware(['checkStaff'])->group(function () {
@@ -114,6 +115,8 @@ Route::middleware(['checkLogin'])->group(function () {
             ->name('order.offline.dialog');
         Route::post('/order/offline/create', [OrderController::class, 'orderOfflineCreate'])
             ->name('order.offline.create');
+        Route::post('/order/offline/check', [OrderController::class, 'checkOrderOffline'])
+            ->name('order.offline.check');
         Route::get('/report', [OrderController::class, 'reportPage'])->name('report.page');
     });
 });

@@ -66,6 +66,16 @@ class OrderController extends Controller
         }
     }
 
+    public function checkOrderOnline(Request $request)
+    {
+        $user = $this->orderService->getUser();
+        $dataCheck = $this->orderService->checkOrderOnline($request,$user);
+        if ($dataCheck['isBorrow']==false){
+            Session::flash('error',$dataCheck['message']);
+        }
+        return $dataCheck;
+    }
+
     /**
      * @param $userId
      * @return View|JsonResponse
@@ -143,9 +153,16 @@ class OrderController extends Controller
             Session::flash('success', 'Create order success');
             return Redirect::route('order.get.list.control')->withInput();
         }else{
-            dd($dataCheck);
             return back();
         }
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function checkOrderOffline(Request $request){
+        return $this->orderService->orderOfflineCreate($request);
     }
 
     /**

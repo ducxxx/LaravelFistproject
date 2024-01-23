@@ -105,20 +105,43 @@
                                 d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path></svg></span></span><span>Order</span>
             </button>
             <script>
-                $(document).ready(function () {
                     $('#orderButton').on('click', function () {
+                        var selectedValues = [];
+                        var csrfToken = $('meta[name="csrf-token"]').attr('content');
+                        // Use :checked selector to find selected checkboxes
+                        $('input[name="order[]"]:checked').each(function() {
+                            // Push the value of each selected checkbox into the array
+                            selectedValues.push($(this).val());
+                        });
                         @if(Auth::user()->is_active === 1)
-                        $('#formOrderDialog').submit()
+                            $.ajax({
+                            url: '{{ route("order.check") }}',
+                            type: 'POST',
+                            data: {
+                                orders: selectedValues,
+                            },
+                            headers: {
+                                'X-CSRF-TOKEN': csrfToken
+                            },
+                            success: function (orderResponse) {
+                                if (orderResponse['isBorrow']==false){
+                                    location.reload();
+                                }else{
+                                    $('#formOrderDialog').submit()
+                                }
+                            },
+                            error: function (orderError) {
+                                // console.log(data);
+                                console.error(orderError);
+                                // Handle errors from the order check route
+                            }
+                        });
+                        // $('#formOrderDialog').submit()
                         @else
-{{--                        @php--}}
-{{--                            Session::flash('Error', 'You must verify account');--}}
-{{--                        @endphp--}}
                         $('#verifyModal').modal('show');
                         $('#control_message').html('Please verify gmail before order').css('color', 'red');
-
                         @endif
                     });
-                });
             </script>
             <div class="sc-gxYJeL iVyfZn">
                 <div class="ant-table-wrapper css-12jzuas">
@@ -206,29 +229,19 @@
                                                 });
                                             });
                                         </script>
-                                        <script>
-                                            $(document).ready(function(){
-                                                $('.check:checkbox').click(function(){
-                                                    if ($('.check:checkbox').is(":checked"))
-                                                    {
-                                                        $('.cb-element').attr('checked','checked');
-                                                    }else
-                                                    {
-                                                        $('.cb-element').removeAttr('checked');
-                                                    }
-                                                });
-                                                {{--$('#orderButton').click(function() {--}}
-                                                {{--    clubBookId = "";--}}
-                                                {{--    $(".cb-element:checked").each(function () {--}}
-                                                {{--        clubBookId += $(this).val() + " ";--}}
-                                                {{--    });--}}
-                                                {{--    if (!$(this).prop('disabled')) {--}}
-                                                {{--        // Redirect to the "/order/dialog" route--}}
-                                                {{--        window.location.href = '{{ route('order.dialog') }}';--}}
-                                                {{--    }--}}
-                                                {{--});--}}
-                                            })
-                                        </script>
+{{--                                        <script>--}}
+{{--                                            $(document).ready(function(){--}}
+{{--                                                $('.check:checkbox').click(function(){--}}
+{{--                                                    if ($('.check:checkbox').is(":checked"))--}}
+{{--                                                    {--}}
+{{--                                                        $('.cb-element').attr('checked','checked');--}}
+{{--                                                    }else--}}
+{{--                                                    {--}}
+{{--                                                        $('.cb-element').removeAttr('checked');--}}
+{{--                                                    }--}}
+{{--                                                });--}}
+{{--                                            })--}}
+{{--                                        </script>--}}
                                     </div>
                                 </div>
                             </div>

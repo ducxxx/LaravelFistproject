@@ -33,7 +33,7 @@
                         </div>
                         <div class="ant-modal-body">
                             <div class="sc-iVCKna jTcnru">
-                                <form method="POST" action="{{ route('order.offline.create') }}" id="control-ref" class="ant-form ant-form-horizontal css-12jzuas">
+                                <form method="POST" action="{{ route('order.offline.create') }}" id="Order-offline-form" class="ant-form ant-form-horizontal css-12jzuas">
                                     @csrf
                                     <div class="ant-form-item css-12jzuas">
                                         <div class="ant-row ant-form-item-row css-12jzuas">
@@ -273,6 +273,9 @@
                                                     </select>
                                                 </div>
                                             </div>
+                                            <div class="ant-row ant-form-item-row css-12jzuas" style="width: 100%;display: block;padding-left: 125px;">
+                                                <span id="message-error" class="mr-2" style="color: red"></span>
+                                            </div>
                                         </div>
                                     </div>
                                     <script>
@@ -300,16 +303,6 @@
                                                     }
                                                 });
                                             });
-                                            // $('#multiple-checkboxes').multiselect({
-                                            //     includeSelectAllOption: true,
-                                            //     enableFiltering: true,
-                                            //     onChange: function () {
-                                            //         // Update the hidden input with the selected book IDs
-                                            //         var selectedBooks = $('#multiple-checkboxes').val();
-                                            //         console.log(selectedBooks);
-                                            //         $('#control-ref_club_book_id').val(selectedBooks);
-                                            //     }
-                                            // });
                                         });
                                     </script>
                                     <div class="ant-form-item css-12jzuas">
@@ -328,8 +321,34 @@
                                     </div>
                                     <div class="ant-modal-footer">
                                         <button id="cancelButton" type="button" class="ant-btn css-12jzuas ant-btn-default" onclick="goBack()"><span>Cancel</span></button>
-                                        <button id="submitButton" type="submit" class="ant-btn css-12jzuas ant-btn-primary"><span>Submit</span></button>
+                                        <button id="submitButton" type="button" class="ant-btn css-12jzuas ant-btn-primary"><span>Submit</span></button>
                                     </div>
+                                    <script>
+                                        $('#submitButton').on('click', function () {
+                                            var csrfToken = $('meta[name="csrf-token"]').attr('content');
+                                                $.ajax({
+                                                url: '{{ route("order.offline.check") }}',
+                                                type: 'POST',
+                                                data: {
+                                                    club_book_ids: $('#multiple-checkboxes').val(),
+                                                    phone_number: $('#ref_phone_number').val(),
+                                                },
+                                                headers: {
+                                                    'X-CSRF-TOKEN': csrfToken
+                                                },
+                                                success: function (orderResponse) {
+                                                    if (orderResponse['isBorrow']==false){
+                                                        $('#message-error').text(orderResponse['message']);
+                                                    }else{
+                                                        $('#Order-offline-form').submit();
+                                                    }
+                                                },
+                                                error: function (orderError) {
+                                                    console.error(orderError);
+                                                }
+                                            });
+                                        });
+                                    </script>
                                 </form>
                             </div>
                         </div>

@@ -71,6 +71,47 @@ class OrderService
         return $response;
     }
 
+    public function checkOrderOnline($request, $user){
+        $clubBookIds = $request->input('orders');
+        $response = ['isBorrow' => false, 'message' => ''];
+
+        // validation can't borrow
+        if (count($clubBookIds) > self::BOOK_MAX_BORROW) {
+            $response['message'] = 'Can Not Borrow, You Borrowing Max 3 books';
+            return $response;
+        }
+        $memberId = $this->orderRepository->checkUserMember($user->id);
+        if ($user->is_active == User::ACTIVE) {
+            if (!$memberId) {
+                $response['isBorrow'] = true;
+                return $response;
+            }
+            $memberId = $memberId->id;
+            $countBookBorrowing = $this->orderRepository->countBookBorrowing($memberId);
+            if ($countBookBorrowing < self::BOOK_MAX_BORROW) {
+                if (count($clubBookIds) + $countBookBorrowing <= self::BOOK_MAX_BORROW) {
+                    $checkBook = $this->checkCurrentCountBook($clubBookIds);
+                    if ($checkBook['isBorrow'] == true) {
+                        $response['isBorrow'] = true;
+                        return $response;
+                    } else {
+                        $response['isBorrow'] = $checkBook['isBorrow'];
+                        $response['message'] = $checkBook['message'];
+                    }
+                } else {
+                    $response['message'] = 'Can Not Borrow ' .
+                        count($clubBookIds) . ' Book, You Borrow Max 3 books but Now you are borrowing ' .
+                        $countBookBorrowing . ' books';
+                }
+            } else {
+                $response['message'] = 'Can Not Borrow, You Borrowing 3 books';
+            }
+        } else {
+            $response['message'] = 'You must verify account';
+        }
+        return $response;
+    }
+
     public function getClubBookName($clubBookId)
     {
         return $this->orderRepository->getClubBookName($clubBookId);
@@ -154,6 +195,53 @@ class OrderService
             }
         }
 
+        return $response;
+    }
+
+    public function checkOrderOffline($request){
+        $clubBookIds = $request->input('club_book_ids');
+        $phoneNumber = $request->input('phone_number');
+        $response = ['isBorrow' => false, 'message' => ''];
+
+        // validation can't borrow
+        if (count($clubBookIds) > self::BOOK_MAX_BORROW) {
+            $response['message'] = 'Can Not Borrow, You Borrowing Max 3 books';
+            return $response;
+        }
+
+        $checkExistPhoneNumber = $this->orderRepository->checkNewMember($phoneNumber);
+        // check new member
+        if ($checkExistPhoneNumber) {
+            $countBookBorrowing = $this->orderRepository->countBookBorrowing($checkExistPhoneNumber->id);
+            if ($countBookBorrowing < self::BOOK_MAX_BORROW) {
+                if (count($clubBookIds) + $countBookBorrowing <= self::BOOK_MAX_BORROW) {
+                    $checkBook = $this->checkCurrentCountBook($clubBookIds);
+                    if ($checkBook['isBorrow'] == true) {
+                        $response['isBorrow'] = true;
+                        return $response;
+                    } else {
+                        $response['isBorrow'] = $checkBook['isBorrow'];
+                        $response['message'] = $checkBook['message'];
+                    }
+                } else {
+                    $response['message'] = 'Can Not Borrow ' .
+                        count($clubBookIds) . ' Book, You Borrow Max 3 books but Now you are borrowing ' .
+                        $countBookBorrowing . ' books';
+                }
+            } else {
+                $response['message'] = 'Can Not Borrow, You Borrowing 3 books';
+            }
+            return $response;
+        } else {
+            $checkBook = $this->checkCurrentCountBook($clubBookIds);
+            if ($checkBook['isBorrow'] == true) {
+                $response['isBorrow'] = true;
+                return $response;
+            } else {
+                $response['isBorrow'] = $checkBook['isBorrow'];
+                $response['message'] = $checkBook['message'];
+            }
+        }
         return $response;
     }
 
