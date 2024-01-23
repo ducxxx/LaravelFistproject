@@ -32,22 +32,23 @@ class OrderService
     public function createOrder($request, $user)
     {
         $clubBookIds = json_decode($request->clubBook);
-        $phoneNumber = $request->input('phone_number');
         $response = ['isBorrow' => false, 'message' => ''];
 
         // validation can't borrow
         if (count($clubBookIds) > self::BOOK_MAX_BORROW) {
             $response['message'] = 'Can Not Borrow, You Borrowing Max 3 books';
+            return $response;
         }
         $memberId = $this->orderRepository->checkUserMember($user->id);
         if ($user->is_active == User::ACTIVE) {
             if (!$memberId) {
                 $memberId = $this->orderRepository->createNewMemberForOrderOnline($request, $user);
             }
+            $memberId = $memberId->id;
             $countBookBorrowing = $this->orderRepository->countBookBorrowing($memberId);
             if ($countBookBorrowing < self::BOOK_MAX_BORROW) {
                 if (count($clubBookIds) + $countBookBorrowing <= self::BOOK_MAX_BORROW) {
-                    $checkBook = $this->checkCurrentCountBook($clubBookIds);
+                    $checkBook = $this->checkCurrentCountBookOnline($clubBookIds);
                     if ($checkBook['isBorrow'] == true) {
                         $this->orderRepository->orderOnlineCreate($request, $memberId);
                         $response['isBorrow'] = true;
@@ -165,6 +166,24 @@ class OrderService
         $message = '';
         foreach ($bookIds as $bookId) {
             $current_count = $this->orderRepository->currentCountBook($bookId);
+            if ($current_count->current_count <= 0) {
+                $message = $message . ' ' . $current_count->book_name . ',';
+            }
+        }
+        if ($message == '') {
+            return ['isBorrow' => true, 'message' => $message];
+        } else {
+            $message = $message . ' do not have in club';
+            return ['isBorrow' => false,
+                'message' => $message];
+        }
+    }
+
+    private function checkCurrentCountBookOnline($bookIds)
+    {
+        $message = '';
+        foreach ($bookIds as $bookId) {
+            $current_count = $this->orderRepository->currentCountBook($bookId->id);
             if ($current_count->current_count <= 0) {
                 $message = $message . ' ' . $current_count->book_name . ',';
             }
