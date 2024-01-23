@@ -337,10 +337,10 @@
                                                     'X-CSRF-TOKEN': csrfToken
                                                 },
                                                 success: function (orderResponse) {
-                                                    if (orderResponse['isBorrow']==false){
-                                                        $('#message-error').text(orderResponse['message']);
-                                                    }else{
+                                                    if (orderResponse['isBorrow']){
                                                         $('#Order-offline-form').submit();
+                                                    }else{
+                                                        $('#message-error').text(orderResponse['message']);
                                                     }
                                                 },
                                                 error: function (orderError) {

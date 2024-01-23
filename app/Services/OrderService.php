@@ -198,6 +198,10 @@ class OrderService
         return $response;
     }
 
+    /**
+     * @param $request
+     * @return array
+     */
     public function checkOrderOffline($request){
         $clubBookIds = $request->input('club_book_ids');
         $phoneNumber = $request->input('phone_number');
