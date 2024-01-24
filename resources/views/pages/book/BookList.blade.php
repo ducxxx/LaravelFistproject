@@ -165,19 +165,23 @@
                                                 </th>
                                                 <th class="ant-table-cell" scope="col">Category</th>
                                                 <th class="ant-table-cell" scope="col">Author</th>
+                                                <th class="ant-table-cell" scope="col">Current Count</th>
                                             </tr>
                                             </thead>
                                             <tbody class="ant-table-tbody">
                                             @forelse ($clubBooks as $index => $clubBook)
                                                 <tr class="ant-table-row ant-table-row-level-{{ $index % 2 }}">
                                                     <td class="ant-table-cell ant-table-selection-column"><label
-                                                            class="ant-checkbox-wrapper css-12jzuas"><span
-                                                                class="ant-checkbox css-12jzuas"><input
-                                                                    class="cb-element" type="checkbox" name="order[]" value="{{ $clubBook->id }}"></span></label></td>
+                                                            class="ant-checkbox-wrapper css-12jzuas">
+                                                            <span class="ant-checkbox css-12jzuas">
+                                                                <input class="cb-element" type="checkbox" name="order[]"
+                                                                       value="{{ $clubBook->id }}"
+                                                                    {{ $clubBook->current_count == 0 ? 'disabled' : '' }}></span></label></td>
                                                     <td class="ant-table-cell">{{ $index + 1 }}</td>
                                                     <td class="ant-table-cell">{{ $clubBook->book_name }}</td>
                                                     <td class="ant-table-cell">{{ $clubBook->category_name }}</td>
                                                     <td class="ant-table-cell">{{ $clubBook->author_name}}</td>
+                                                    <td class="ant-table-cell">{{ $clubBook->current_count}}</td>
                                                 </tr>
                                             @empty
                                                 <tr>
@@ -229,19 +233,6 @@
                                                 });
                                             });
                                         </script>
-{{--                                        <script>--}}
-{{--                                            $(document).ready(function(){--}}
-{{--                                                $('.check:checkbox').click(function(){--}}
-{{--                                                    if ($('.check:checkbox').is(":checked"))--}}
-{{--                                                    {--}}
-{{--                                                        $('.cb-element').attr('checked','checked');--}}
-{{--                                                    }else--}}
-{{--                                                    {--}}
-{{--                                                        $('.cb-element').removeAttr('checked');--}}
-{{--                                                    }--}}
-{{--                                                });--}}
-{{--                                            })--}}
-{{--                                        </script>--}}
                                     </div>
                                 </div>
                             </div>
