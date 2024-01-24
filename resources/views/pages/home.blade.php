@@ -121,9 +121,9 @@
                         </div>
                         <div class="ant-card-body"><p>Chúng mình là thư viện cộng đồng cho mượn sách
                                 miễn phí, chỉ đặt cọc niềm tin 💚</p>
-                            <p>Address: Số 107, khu tập thể A5, ngõ 128C Đại La</p>
+                            <p>Address: Số 12, ngõ 18, Doãn Kế Thiện, Cầu Giấy-Hà Nội</p>
                             <p>Open time: 8h30 - 22h mỗi ngày</p>
-                            <p>Contact: 0962188248</p><a href="https://www.facebook.com/dfreebook"
+                            <p>Contact: 0986.689.024</p><a href="https://www.facebook.com/dfreebook"
                                                          target="_blank" rel="noopener noreferrer">https://www.facebook.com/dfreebook</a>
                         </div>
                     </div>

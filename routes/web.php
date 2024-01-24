@@ -38,6 +38,11 @@ Route::post('/login', [AuthController::class, 'login'])->name('user.login');
 // Forgot password management
 Route::get('/forgot-password', [AuthController::class, 'showLinkRequestForm'])->name('password.request');
 Route::post('/forgot-password', [AuthController::class, 'sendResetLinkEmail'])->name('password.email');
+Route::get('/forgot-password/confirm', [AuthController::class, 'showConfirmPasswordForm'])
+    ->name('password.confirm.form');
+Route::post('/send-email/forget-password', [EmailController::class, 'sendEmailForgetPasswordWithCode'])
+    ->name('sendEmailForgetPasswordWithCode');
+Route::post('/change-new-password/{email}', [EmailController::class, 'changeNewPassword'])->name('password.new.change');
 
 Route::middleware(['auth'])->group(function () {
     // profile route
@@ -60,7 +65,8 @@ Route::middleware(['checkLogin'])->group(function () {
     // ClubBook
     Route::get('/club/books/{club_id}', [ClubBookController::class, 'getBookClubsByClubId'])->name('club.book');
     Route::get('/club/books/page', [ClubBookController::class, 'showBookListPage'])->name('club.book.page');
-    Route::get('/club/book/search/{club_id}/{book_name}', [ClubBookController::class, 'searchClubBooksByName'])->name('club.book.search');
+    Route::get('/club/book/search/{club_id}/{book_name}', [ClubBookController::class, 'searchClubBooksByName'])
+        ->name('club.book.search');
 
     // book
     Route::get('/book/star/{book_id}', [BookVoteController::class, 'bookStarById'])->name('book.star');
@@ -72,6 +78,7 @@ Route::middleware(['checkLogin'])->group(function () {
     Route::get('/order/list', [OrderController::class, 'showOrderList'])->name('order.list');
     Route::get('/order/get/list/{user_id}', [OrderController::class, 'getOrderByUserId'])->name('order.get.list');
     Route::any('/order/dialog', [OrderController::class, 'showOrderDialog'])->name('order.dialog');
+    Route::post('/order/check', [OrderController::class, 'checkOrderOnline'])->name('order.check');
 
     // User permissions Staff
     Route::middleware(['checkStaff'])->group(function () {
@@ -87,21 +94,29 @@ Route::middleware(['checkLogin'])->group(function () {
         // Member management
         Route::get('/member/detail/{id}', [MemberController::class, 'memberDetail'])->name('member.detail');
         Route::put('/member/update/{id}', [MemberController::class, 'updateMemberDetail'])->name('member.update');
-        Route::get('/member/search/{phone_number}', [MemberController::class, 'getMemberByPhoneNumber'])->name('member.search.phone');
+        Route::get('/member/search/{phone_number}', [MemberController::class, 'getMemberByPhoneNumber'])
+            ->name('member.search.phone');
 
         // Club book
         Route::get('/club/book/list', [ClubBookController::class, 'getListBook'])->name('book.get.list');
-        Route::get('/club/book/detail/{id}', [ClubBookController::class, 'getClubBookDetail'])->name('club.book.detail');
-        Route::any('/club/book/update/{id}', [ClubBookController::class, 'updateClubBookDetail'])->name('club.book.update');
+        Route::get('/club/book/detail/{id}', [ClubBookController::class, 'getClubBookDetail'])
+            ->name('club.book.detail');
+        Route::any('/club/book/update/{id}', [ClubBookController::class, 'updateClubBookDetail'])
+            ->name('club.book.update');
         Route::get('/club/book/add/form', [ClubBookController::class, 'bookAddForm'])->name('book.add.form');
         Route::post('/club/book/add', [ClubBookController::class, 'addNewBook'])->name('book.add');
-        Route::get('/club/book/{club_id}', [ClubBookController::class, 'getClubBookByClubId'])->name('club.book.by.clubId');
+        Route::get('/club/book/{club_id}', [ClubBookController::class, 'getClubBookByClubId'])
+            ->name('club.book.by.clubId');
 
         // Order Book
         Route::get('/order/confirm/{id}', [OrderController::class, 'orderConfirm'])->name('order.confirm');
         Route::get('/order/return/{id}', [OrderController::class, 'orderReturn'])->name('order.return');
-        Route::post('/order/offline/dialog', [OrderController::class, 'orderOfflineDialog'])->name('order.offline.dialog');
-        Route::post('/order/offline/create', [OrderController::class, 'orderOfflineCreate'])->name('order.offline.create');
+        Route::post('/order/offline/dialog', [OrderController::class, 'orderOfflineDialog'])
+            ->name('order.offline.dialog');
+        Route::post('/order/offline/create', [OrderController::class, 'orderOfflineCreate'])
+            ->name('order.offline.create');
+        Route::post('/order/offline/check', [OrderController::class, 'checkOrderOffline'])
+            ->name('order.offline.check');
         Route::get('/report', [OrderController::class, 'reportPage'])->name('report.page');
     });
 });

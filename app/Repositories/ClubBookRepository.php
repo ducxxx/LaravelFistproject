@@ -22,7 +22,8 @@ class ClubBookRepository
             ->join('author', 'book.author_id', '=', 'author.id')
             ->join('category', 'book.category_id', '=', 'category.id')
             ->where('club_book.club_id', $club_id)
-            ->select('club_book.*', 'book.name as book_name', 'author.name as author_name', 'category.name as category_name')
+            ->select('club_book.*', 'book.name as book_name',
+                'author.name as author_name', 'category.name as category_name')
             ->get();
     }
 

@@ -54,30 +54,32 @@
 </head>
 <body>
 <div>
-    <h2>Forget Password</h2>
+    <h2>Confirm Forget Password</h2>
     @include("includes-back.flash.flash")
-    <form method="POST" action="{{ route('sendEmailForgetPasswordWithCode')}}">
+    <form method="POST" action="{{ route('password.new.change', ["email" => $email]) }}">
         @csrf
 
         <div class="form-group row">
-            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
-
             <div class="col-md-6">
-                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autofocus>
 
-                @error('email')
-                <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
+                <label for="Code">Code:</label>
+                <input type="text" id="code" name="code" value="{{ $errors->has('code') ? '' : old('code') }}" {{ $errors->has('code') ? ' autofocus' : '' }} class="@error('code') error-input @enderror">
+                @error('code')
+                <p style="color: red;">{{ $message }}</p>
                 @enderror
-            </div>
-        </div>
 
-        <div class="form-group row mb-0">
-            <div class="col-md-6 offset-md-4">
-                <button id="sendCodeButton" type="submit" class="btn btn-primary">
-                    {{ __('Send Code To Email') }}
-                </button>
+                <label for="password">New Password:</label>
+                <input type="password" id="password" name="password" value="{{ $errors->has('password') ? '' : old('password') }}" {{ $errors->has('password') ? ' autofocus' : '' }} class="@error('password') error-input @enderror">
+                @error('password')
+                <p style="color: red;">{{ $message }}</p>
+                @enderror
+
+                <label for="confirm_password">Re-enter password:</label>
+                <input type="password" id="confirm_password" name="confirm_password" value="{{ $errors->has('confirm_password') ? '' : old('confirm_password') }}" {{ $errors->has('confirm_password') ? ' autofocus' : '' }} class="@error('confirm_password') error-input @enderror">
+                @error('confirm_password')
+                <p style="color: red;">{{ $message }}</p>
+                @enderror
+                <button type="submit" >Submit</button>
             </div>
         </div>
     </form>

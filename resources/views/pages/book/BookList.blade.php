@@ -93,7 +93,7 @@
                 });
             });
         </script>
-        <form method="POST" action="{{ route('order.dialog') }}">
+        <form id="formOrderDialog" method="POST" action="{{ route('order.dialog') }}">
             @csrf
             <button id="orderButton" type="button" class="ant-btn css-12jzuas ant-btn-primary"><span
                     class="ant-btn-icon"><span role="img" aria-label="plus-circle"
@@ -105,20 +105,43 @@
                                 d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path></svg></span></span><span>Order</span>
             </button>
             <script>
-                $(document).ready(function () {
                     $('#orderButton').on('click', function () {
+                        var selectedValues = [];
+                        var csrfToken = $('meta[name="csrf-token"]').attr('content');
+                        // Use :checked selector to find selected checkboxes
+                        $('input[name="order[]"]:checked').each(function() {
+                            // Push the value of each selected checkbox into the array
+                            selectedValues.push($(this).val());
+                        });
                         @if(Auth::user()->is_active === 1)
-                        $('#formOrder').submit()
+                            $.ajax({
+                            url: '{{ route("order.check") }}',
+                            type: 'POST',
+                            data: {
+                                orders: selectedValues,
+                            },
+                            headers: {
+                                'X-CSRF-TOKEN': csrfToken
+                            },
+                            success: function (orderResponse) {
+                                if (orderResponse['isBorrow']==false){
+                                    location.reload();
+                                }else{
+                                    $('#formOrderDialog').submit()
+                                }
+                            },
+                            error: function (orderError) {
+                                // console.log(data);
+                                console.error(orderError);
+                                // Handle errors from the order check route
+                            }
+                        });
+                        // $('#formOrderDialog').submit()
                         @else
-{{--                        @php--}}
-{{--                            Session::flash('Error', 'You must verify account');--}}
-{{--                        @endphp--}}
                         $('#verifyModal').modal('show');
                         $('#control_message').html('Please verify gmail before order').css('color', 'red');
-
                         @endif
                     });
-                });
             </script>
             <div class="sc-gxYJeL iVyfZn">
                 <div class="ant-table-wrapper css-12jzuas">
@@ -142,19 +165,23 @@
                                                 </th>
                                                 <th class="ant-table-cell" scope="col">Category</th>
                                                 <th class="ant-table-cell" scope="col">Author</th>
+                                                <th class="ant-table-cell" scope="col">Current Count</th>
                                             </tr>
                                             </thead>
                                             <tbody class="ant-table-tbody">
                                             @forelse ($clubBooks as $index => $clubBook)
                                                 <tr class="ant-table-row ant-table-row-level-{{ $index % 2 }}">
                                                     <td class="ant-table-cell ant-table-selection-column"><label
-                                                            class="ant-checkbox-wrapper css-12jzuas"><span
-                                                                class="ant-checkbox css-12jzuas"><input
-                                                                    class="cb-element" type="checkbox" name="order[]" value="{{ $clubBook->id }}"></span></label></td>
+                                                            class="ant-checkbox-wrapper css-12jzuas">
+                                                            <span class="ant-checkbox css-12jzuas">
+                                                                <input class="cb-element" type="checkbox" name="order[]"
+                                                                       value="{{ $clubBook->id }}"
+                                                                    {{ $clubBook->current_count == 0 ? 'disabled' : '' }}></span></label></td>
                                                     <td class="ant-table-cell">{{ $index + 1 }}</td>
                                                     <td class="ant-table-cell">{{ $clubBook->book_name }}</td>
                                                     <td class="ant-table-cell">{{ $clubBook->category_name }}</td>
                                                     <td class="ant-table-cell">{{ $clubBook->author_name}}</td>
+                                                    <td class="ant-table-cell">{{ $clubBook->current_count}}</td>
                                                 </tr>
                                             @empty
                                                 <tr>
@@ -206,57 +233,9 @@
                                                 });
                                             });
                                         </script>
-                                        <script>
-                                            $(document).ready(function(){
-                                                $('.check:checkbox').click(function(){
-                                                    if ($('.check:checkbox').is(":checked"))
-                                                    {
-                                                        $('.cb-element').attr('checked','checked');
-                                                    }else
-                                                    {
-                                                        $('.cb-element').removeAttr('checked');
-                                                    }
-                                                });
-                                                {{--$('#orderButton').click(function() {--}}
-                                                {{--    clubBookId = "";--}}
-                                                {{--    $(".cb-element:checked").each(function () {--}}
-                                                {{--        clubBookId += $(this).val() + " ";--}}
-                                                {{--    });--}}
-                                                {{--    if (!$(this).prop('disabled')) {--}}
-                                                {{--        // Redirect to the "/order/dialog" route--}}
-                                                {{--        window.location.href = '{{ route('order.dialog') }}';--}}
-                                                {{--    }--}}
-                                                {{--});--}}
-                                            })
-                                        </script>
                                     </div>
                                 </div>
                             </div>
-                            <ul class="ant-pagination ant-table-pagination ant-table-pagination-right css-12jzuas">
-                                <li title="Previous Page" class="ant-pagination-prev ant-pagination-disabled"
-                                    aria-disabled="true">
-                                    <button class="ant-pagination-item-link" type="button" tabindex="-1"
-                                            disabled=""><span role="img" aria-label="left"
-                                                              class="anticon anticon-left"><svg
-                                                viewBox="64 64 896 896" focusable="false" data-icon="left"
-                                                width="1em" height="1em" fill="currentColor" aria-hidden="true"><path
-                                                    d="M724 218.3V141c0-6.7-7.7-10.4-12.9-6.3L260.3 486.8a31.86 31.86 0 000 50.3l450.8 352.1c5.3 4.1 12.9.4 12.9-6.3v-77.3c0-4.9-2.3-9.6-6.1-12.6l-360-281 360-281.1c3.8-3 6.1-7.7 6.1-12.6z"></path></svg></span>
-                                    </button>
-                                </li>
-                                <li title="1"
-                                    class="ant-pagination-item ant-pagination-item-1 ant-pagination-item-active"
-                                    tabindex="0"><a rel="nofollow">1</a></li>
-                                <li title="Next Page" class="ant-pagination-next ant-pagination-disabled"
-                                    aria-disabled="true">
-                                    <button class="ant-pagination-item-link" type="button" tabindex="-1"
-                                            disabled=""><span role="img" aria-label="right"
-                                                              class="anticon anticon-right"><svg
-                                                viewBox="64 64 896 896" focusable="false" data-icon="right"
-                                                width="1em" height="1em" fill="currentColor" aria-hidden="true"><path
-                                                    d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"></path></svg></span>
-                                    </button>
-                                </li>
-                            </ul>
                         </div>
                     </div>
                 </div>

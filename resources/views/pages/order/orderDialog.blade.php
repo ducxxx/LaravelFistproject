@@ -111,6 +111,7 @@
                                             // Set the value of the input field
                                             $('#control-ref_order_date').val(formattedDate);
                                             $('#request_order_date').val(formattedDate);
+
                                         });
                                     </script>
                                     <div class="ant-form-item css-12jzuas">
@@ -169,11 +170,18 @@
                                                                            value="{{$clubBookName}}" >
                                                                     <ul class="ant-list-items">
                                                                         @foreach($clubBookName as $clubBook)
-                                                                            <div class="ant-list-item-meta-content">
-                                                                                <h4 class="ant-list-item-meta-title">
-                                                                                    <p>{{$clubBook->name}}</p>
-                                                                                </h4>
+{{--                                                                            <div class="ant-list-item-meta-content">--}}
+{{--                                                                                <h4 class="ant-list-item-meta-title">--}}
+{{--                                                                                    <p style="font-size: 20px;--}}
+{{--                                                                                    font-family: initial;">--}}
+{{--                                                                                        {{$clubBook->name}}</p>--}}
+{{--                                                                                </h4>--}}
 
+{{--                                                                            </div>--}}
+                                                                            <div class="ant-form-item-label css-12jzuas">
+                                                                                <p style="font-size: 20px;
+                                                                                    font-family: initial;">
+                                                                                        {{$clubBook->name . ", "}}</p>
                                                                             </div>
                                                                         @endforeach
 
@@ -186,6 +194,11 @@
                                             </div>
                                         </div>
                                     </div>
+                                    @if(session('errors'))
+                                        <div class="ant-row ant-form-item-row css-12jzuas" style="width: 100%;display: block;padding-left: 125px;">
+                                            <span id="message-show" class="mr-2" style="color: red">{{session('errors')}}</span>
+                                        </div>
+                                    @endif
                                     <div class="ant-form-item css-12jzuas">
                                         <div class="ant-row ant-form-item-row css-12jzuas">
                                             <div class="ant-col ant-col-4 ant-form-item-label css-12jzuas"><label

@@ -7,6 +7,7 @@ use App\Models\Member;
 use App\Services\OrderService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -52,29 +53,27 @@ class OrderController extends Controller
      */
     public function create(Request $request)
     {
-        $user = DB::table('users')
-            ->where('id', Auth::id())
-            ->select('users.*')
-            ->first();
-        $order = $this->orderService->createOrder($request, $user);
-        if ($order == 2) {
+        $user = $this->orderService->getUser();
+        $dataCheck = $this->orderService->createOrder($request,$user);
+        if ($dataCheck['isBorrow']==true){
             Session::flash('success', 'Create order success');
-            return Redirect::route('order.get.list', ['user_id' => ($user->id)])->withInput();
+            return Redirect::route('order.get.list.control')->withInput();
+        }else{
+            $clubBookIds =$this->orderService->getClubBookId($request->clubBook);
+            $clubBookName = $this->orderService->getClubBookName($clubBookIds);
+            session(['errors' => $dataCheck['message']]);
+            return view('pages.order.orderDialog', compact('clubBookName'));
         }
-        if ($order == 0) {
-            Session::flash('Error', 'You can borrow max 3 books');
-            return Redirect::route('club.book', ['club_id' => session('club_id')])->with('error', 'You can borrow max 3 books')->withInput();
+    }
+
+    public function checkOrderOnline(Request $request)
+    {
+        $user = $this->orderService->getUser();
+        $dataCheck = $this->orderService->checkOrderOnline($request,$user);
+        if ($dataCheck['isBorrow']==false){
+            Session::flash('error',$dataCheck['message']);
         }
-        if ($order == 1) {
-            return Redirect::route('club.book', ['club_id' => session('club_id')])->with('error', 'Cannot borrow more book because you are borrowing 3 books')->withInput();
-        }
-        if ($order == 3) {
-            return Redirect::route('club.book', ['club_id' => session('club_id')])->with('error', 'You can borrow max 3 books you borrowed')->withInput();
-        }
-        if ($order==4){
-            return Redirect::route('club.book', ['club_id' => session('club_id')])->with('error', 'You must verify account ')->withInput();
-        }
-        return back();
+        return $dataCheck;
     }
 
     /**
@@ -149,6 +148,20 @@ class OrderController extends Controller
      */
     public function orderOfflineCreate(Request $request)
     {
+        $dataCheck = $this->orderService->orderOfflineCreate($request);
+        if ($dataCheck['isBorrow']==true){
+            Session::flash('success', 'Create order success');
+            return Redirect::route('order.get.list.control')->withInput();
+        }else{
+            return back();
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function checkOrderOffline(Request $request){
         return $this->orderService->orderOfflineCreate($request);
     }
 
