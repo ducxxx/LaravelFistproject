@@ -52,7 +52,7 @@ class AuthController extends Controller
     /**
      * @return View
      */
-    public function showLogoutForm()
+    public function showLogoutForm(): View
     {
         return view('logout');
     }
@@ -95,7 +95,7 @@ class AuthController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function logout(Request $request)
     {
@@ -107,7 +107,7 @@ class AuthController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return mixed
      */
     public function changePassword(Request $request)
     {
@@ -124,7 +124,6 @@ class AuthController extends Controller
 
         // Check if the current password matches
         if (!Hash::check($request->current_password, $user->password)) {
-//            return response()->json(['error' => 'Current password is incorrect'], 401);
             Session::flash('error', 'Change password error');
             return redirect(route('show.change.password'))->withErrors($validator->errors())->withInput();
         }

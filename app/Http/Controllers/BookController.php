@@ -20,6 +20,7 @@ class BookController extends Controller
     }
 
     /**
+     * search book
      * @param $bookName
      */
     public function searchBooksByName($bookName)
@@ -28,6 +29,7 @@ class BookController extends Controller
     }
 
     /**
+     * get book detail
      * @param int $id
      */
     public function bookDetail(int $id)

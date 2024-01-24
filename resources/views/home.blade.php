@@ -186,8 +186,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="ant-col ant-col-6 ant-col-offset-12 css-12jzuas"
-                         style="padding-left: 12px; padding-right: 12px; text-align: end;">
+                    <div class="ant-col ant-col-6 css-12jzuas" style="padding-left: 12px; padding-right: 12px; text-align: left;">
                         <div class="ant-form-item ant-pro-query-filter-actions css-1wx4d4d css-12jzuas">
                             <div class="ant-row ant-form-item-row css-12jzuas">
                                 <div class="ant-col ant-form-item-label css-12jzuas"><label

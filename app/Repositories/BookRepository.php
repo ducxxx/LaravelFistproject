@@ -7,7 +7,6 @@ use App\Models\Book;
 
 class BookRepository
 {
-
     /**
      * @param $bookName
      * @return mixed
@@ -18,8 +17,7 @@ class BookRepository
     }
 
     /**
-     *
-     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     * get all book
      */
     public function getAllBook()
     {
@@ -27,8 +25,9 @@ class BookRepository
     }
 
     /**
+     * search book by book name
+     *
      * @param $bookName
-     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
      */
     public function searchBooksByName($bookName)
     {
@@ -38,8 +37,9 @@ class BookRepository
     }
 
     /**
+     * get book detail
+     *
      * @param int $id
-     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
      */
     public function bookDetail(int $id)
     {

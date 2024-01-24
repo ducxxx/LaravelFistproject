@@ -7,6 +7,24 @@
 @endsection
 @section("css")
     <link href="{{ asset('css/styleMutil.css') }}" rel="stylesheet" type="text/css">
+    <style>
+        #searchButton {
+            padding: 6px;
+            border-radius: 0 6px 6px 0;
+            line-height: 1;
+            border: 1px solid #4e73df;
+            color: white;
+        }
+        #searchButton:focus {
+            border: none;
+        }
+        #searchButton span {
+            color: white !important;
+        }
+        #control-ref-search-member {
+            border-radius: 6px 0 0 6px;
+        }
+    </style>
 @endsection
 @section("js")
     <script src="{{ asset('js/bootstrap-multiselect.js') }}"></script>
@@ -21,13 +39,6 @@
                     <div tabindex="0" aria-hidden="true"
                          style="width: 0px; height: 0px; overflow: hidden; outline: none;"></div>
                     <div class="ant-modal-content">
-                        <button type="button" aria-label="Close" class="ant-modal-close" onclick="goBack()"><span
-                                class="ant-modal-close-x"><span role="img" aria-label="close"
-                                                                class="anticon anticon-close ant-modal-close-icon"><svg
-                                        viewBox="64 64 896 896" focusable="false" data-icon="close" width="1em" height="1em"
-                                        fill="currentColor" aria-hidden="true"><path
-                                            d="M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z"></path></svg></span></span>
-                        </button>
                         <div class="ant-modal-header">
                             <div class="ant-modal-title" id=":rj:">Book Order</div>
                         </div>
@@ -49,7 +60,12 @@
                                                         class="ant-input ant-input css-12jzuas" type="text"
                                                         name="search_member">
                                                 </div>
-                                                <button id="searchButton" type="button" class="btn btn-primary btn-sm mr-2">Search</button>
+                                                <button id="searchButton" type="button" class="btn btn-primary btn-sm mr-2">
+                                                    <span class="icon text-white-50" style="padding: 2px;">
+                                                        <i class="fas fa-search" style="font-size: 18px;"></i>
+                                                    </span>
+                                                </button>
+{{--                                                <button id="searchButton" type="button" class="btn btn-primary btn-sm mr-2">Search</button>--}}
                                             </div>
                                             <div class="ant-row ant-form-item-row css-12jzuas" style="width: 100%;display: block;padding-left: 125px;">
                                                 <span id="message-show" class="mr-2" style="color: red"></span>

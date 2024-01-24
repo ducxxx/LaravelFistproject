@@ -10,7 +10,7 @@
         <div style="display: flex; align-items: center; justify-content: center;">
             <div style="display: flex; padding: 30px; background: rgb(255, 255, 255); border-radius: 10px; box-shadow: rgba(0, 0, 0, 0.12) 0px 5px 5px;">
                 <div class="profilepic" id="img-avatar-click">
-                    <img id="img-avatar" class="profilepic__image" src="{{ Auth::user()->avatar }}" width="150" height="150" alt="Profibild" />
+                    <img id="img-avatar" class="profilepic__image" src="{{ Auth::user()->avatar ? Auth::user()->avatar : asset('img/undraw_profile.svg') }}" width="150" height="150" alt="Profibild" />
                     <div class="profilepic__content">
                         <span class="profilepic__icon"><i class="fas fa-camera"></i></span>
                         <span class="profilepic__text">Edit Profile</span>

@@ -8902,7 +8902,7 @@ textarea:where(.css-12jzuas).ant-input {
     display: inline-flex;
     width: 100%;
     min-width: 0;
-    padding: 4px 11px;
+    padding: 6px 11px;
     color: rgba(0, 0, 0, 0.88);
     font-size: 14px;
     line-height: 1.5714285714285714;
@@ -13239,4 +13239,31 @@ html, body {
 #calendar {
     max-width: 1300px;
     margin: 40px auto;
+}
+
+.table-header {
+    -webkit-box-align: end;
+    align-items: end;
+    grid-template-columns: 1fr 100px;
+    display: grid;
+    padding-bottom: 20px;
+}
+
+#books-table > .ant-table-tbody > tr:hover {
+    cursor: pointer;
+    background: #fafafa;
+}
+
+.return-button {
+    background: #808080;
+    color: white !important;
+    border-color: #808080 !important;
+    min-width: 75px;
+}
+
+.confirm-button {
+    background: #0074cc;
+    color: white !important;
+    border-color: #0074cc !important;
+    min-width: 75px;
 }

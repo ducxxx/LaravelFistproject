@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Mail;
 
 class SendMailJob implements ShouldQueue
 {
@@ -31,7 +32,6 @@ class SendMailJob implements ShouldQueue
      */
     public function handle()
     {
-        $this->send($this->mailable);
-        //
+        Mail::to($this->mailable)->send(new \App\Mail\ForgetPassword('1234567'));
     }
 }

@@ -21,7 +21,7 @@
                                         <colgroup></colgroup>
                                         <thead class="ant-table-thead">
                                         <tr>
-                                            <th class="ant-table-cell" scope="col">No</th>
+{{--                                            <th class="ant-table-cell" scope="col">No</th>--}}
                                             <th class="ant-table-cell" scope="col">
                                                 <div class="ant-table-filter-column"><span
                                                         class="ant-table-column-title">Book Name</span>
@@ -38,7 +38,7 @@
                                         <tbody class="ant-table-tbody">
                                         @forelse ($books as $index => $book)
                                             <tr class="ant-table-row ant-table-row-level-{{ $index % 2 }}">
-                                                <td class="ant-table-cell">{{ $index + 1 }}</td>
+{{--                                                <td class="ant-table-cell">{{ $index + 1 }}</td>--}}
                                                 <td class="ant-table-cell">{{ $book->name }}</td>
                                                 <td class="ant-table-cell">{{ $book->author_name }}</td>
                                                 <td class="ant-table-cell">{{ $book->category_name }}</td>

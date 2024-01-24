@@ -27,7 +27,7 @@ class OrderRepository
             ->join('order_detail', 'order.id', '=', 'order_detail.order_id')
             ->join('member', 'order.member_id', '=', 'member.id')
             ->join('club_book', 'order_detail.club_book_id', '=', 'club_book.id')
-            ->where('member.id',$memberId)
+            ->where('member.id', $memberId)
             ->where(function ($query) {
                 $query->where('order_detail.order_status', 0)
                     ->orWhere('order_detail.order_status', 1)
@@ -126,6 +126,9 @@ class OrderRepository
             ->join('book', 'club_book.id', '=', 'book.id')
             ->select('order.*', 'order_detail.*', 'member.full_name as full_name',
                 'member.phone_number as phone_number', 'book.name as book_name')
+            ->orderBy('order_detail.order_status', 'ASC')
+            ->orderBy('order_detail.return_date', 'ASC')
+            ->orderBy('order.order_date', 'DESC')
             ->paginate(10);
     }
 
@@ -191,7 +194,7 @@ class OrderRepository
                 $newOrderDetailList[] = $newOrderDetail;
             }
             OrderDetail::insert($newOrderDetailList);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             DB::rollBack();
             // Log the error
             Log::error('Error updating data: ' . $e->getMessage());
@@ -222,21 +225,23 @@ class OrderRepository
                 $newOrderDetailList[] = $newOrderDetail;
             }
             OrderDetail::insert($newOrderDetailList);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             DB::rollBack();
             // Log the error
             Log::error('Error updating data: ' . $e->getMessage());
         }
     }
 
-    public function currentCountBook(int $club_book_id){
-        return  DB::table('club_book')
+    public function currentCountBook(int $club_book_id)
+    {
+        return DB::table('club_book')
             ->join('book', 'book.id', '=', 'club_book.book_id')
             ->where('club_book.id', $club_book_id)
             ->select('club_book.current_count as current_count', 'book.name as book_name')->first();
     }
 
-    public function countBookBorrowing(int $memberId){
+    public function countBookBorrowing(int $memberId)
+    {
         return DB::table('order')
             ->join('order_detail', 'order.id', '=', 'order_detail.order_id')
             ->join('member', 'order.member_id', '=', 'member.id')
@@ -251,20 +256,22 @@ class OrderRepository
             ->count();
     }
 
-    public function checkNewMember(string $phone_number){
+    public function checkNewMember(string $phone_number)
+    {
         return DB::table('member')
             ->where('member.phone_number', $phone_number)
             ->select('member.id as id')->first();
     }
 
-    public function createNewMember($request){
+    public function createNewMember($request)
+    {
         $newMember = new Member();
         try {
             $newMember->address = $request->input('address');
             $newMember->phone_number = $request->input('phone_number');
             $newMember->full_name = $request->input('full_name');
             $newMember->save();
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             DB::rollBack();
             // Log the error
             Log::error('Error updating data: ' . $e->getMessage());
@@ -290,7 +297,8 @@ class OrderRepository
         return $bookList;
     }
 
-    public function checkUserMember($userId){
+    public function checkUserMember($userId)
+    {
         return DB::table('member')
             ->where('member.user_id', $userId)
             ->select('member.id as id')
@@ -302,7 +310,8 @@ class OrderRepository
      * @param $user
      * @return Member|void
      */
-    public function createNewMemberForOrderOnline($request, $user){
+    public function createNewMemberForOrderOnline($request, $user)
+    {
         $newMember = new Member();
         try {
             $newMember->user_id = $user->id;
@@ -313,7 +322,7 @@ class OrderRepository
             $newMember->email = $user->email;
             $newMember->save();
             return $newMember;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             DB::rollBack();
             // Log the error
             Log::error('Error updating data: ' . $e->getMessage());
@@ -321,7 +330,8 @@ class OrderRepository
         return $newMember->id;
     }
 
-    public function getDailyMemberOutOfDate(){
+    public function getDailyMemberOutOfDate()
+    {
         $today = Carbon::now()->toDateString();
         $memberOutDate = DB::table('order_detail')
             ->join('order', 'order.id', '=', 'order_detail.order_id')
@@ -329,15 +339,16 @@ class OrderRepository
             ->join('club_book', 'order_detail.club_book_id', '=', 'club_book.id')
             ->join('book', 'club_book.book_id', '=', 'book.id')
             ->join('club', 'order.club_id', '=', 'club.id')
-            ->whereDate('order.due_date','<=',$today)
-            ->whereIn('order_detail.order_status',[1,3])
+            ->whereDate('order.due_date', '<=', $today)
+            ->whereIn('order_detail.order_status', [1, 3])
             ->select('member.id as member_id', 'member.email as member_email', 'order.id as order_id'
-                ,'order.due_date as due_date', 'book.name as book_name', 'order_detail.order_status')
+                , 'order.due_date as due_date', 'book.name as book_name', 'order_detail.order_status')
             ->get();
         return $memberOutDate;
     }
 
-    public function updateOverDueOrder($orderId){
+    public function updateOverDueOrder($orderId)
+    {
         DB::table('order_detail')
             ->whereIn('order_id', $orderId)
             ->update(['order_status' => 3]);

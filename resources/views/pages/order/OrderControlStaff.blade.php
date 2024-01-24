@@ -29,7 +29,7 @@
                                             <colgroup></colgroup>
                                             <thead class="ant-table-thead">
                                             <tr>
-                                                <th class="ant-table-cell" scope="col">No</th>
+                                                <th class="ant-table-cell" scope="col">ID</th>
                                                 <th class="ant-table-cell" scope="col">
                                                     <div class="ant-table-filter-column"><span
                                                             class="ant-table-column-title">Book Name</span>
@@ -49,21 +49,21 @@
                                             <tbody class="ant-table-tbody">
                                             @forelse ($orders as $index => $order)
                                                 <tr class="ant-table-row ant-table-row-level-{{ $index % 2 }}">
-                                                    <td class="ant-table-cell">{{ $index + 1 }}</td>
+                                                    <td class="ant-table-cell">{{ $order->id }}</td>
                                                     <td class="ant-table-cell">{{ $order->book_name }}</td>
                                                     <td class="ant-table-cell">{{ $order->full_name }}</td>
                                                     <td class="ant-table-cell">{{ $order->phone_number }}</td>
                                                     <td class="ant-table-cell">
-                                                        @if($order->order_status == 0)
+                                                        @if($order->order_status == \App\Models\Order::ORDER_STATUS_PENDING)
                                                             Pending
                                                         @endif
-                                                        @if($order->order_status ==1)
+                                                        @if($order->order_status == \App\Models\Order::ORDER_STATUS_CREATED)
                                                             Created
                                                         @endif
-                                                        @if($order->order_status ==2)
+                                                        @if($order->order_status == \App\Models\Order::ORDER_STATUS_RETURN)
                                                             Return
                                                         @endif
-                                                        @if($order->order_status ==3)
+                                                        @if($order->order_status == \App\Models\Order::ORDER_STATUS_OVER_DUA_DATE)
                                                             OverDue
                                                         @endif
                                                     </td>
@@ -76,13 +76,14 @@
                                                     </td>
                                                     <td class="ant-table-cell">{{ $order->overdue_day_count }}</td>
                                                     <td class="ant-table-cell">
-                                                        <div class="ant-space css-12jzuas ant-space-horizontal ant-space-align-center"
-                                                             style="gap: 8px;">
+                                                        <div class="ant-space css-12jzuas ant-space-horizontal ant-space-align-center" style="gap: 8px;">
                                                             <div class="ant-space-item">
-                                                                <button type="button" class="confirm-button btn btn-outline-primary mr-2" value="{{$order->id}}" data-toggle="modal" data-target="#confirmModal"
-                                                                        @if ($order->order_status != 0) disabled @endif>Confirm</button>
-                                                                <button type="button" class="return-button btn btn-outline-primary" value="{{$order->id}}" data-toggle="modal" data-target="#returnModal"
-                                                                        @if ($order->order_status == 0 || $order->order_status == 2) disabled @endif>Return</button>
+                                                            @if ($order->order_status == \App\Models\Order::ORDER_STATUS_PENDING)
+                                                                <button type="button" class="confirm-button btn btn-outline-primary mr-2" value="{{$order->id}}" data-toggle="modal" data-target="#confirmModal">Confirm</button>
+                                                            @endif
+                                                            @if ($order->order_status != \App\Models\Order::ORDER_STATUS_PENDING && $order->order_status != \App\Models\Order::ORDER_STATUS_RETURN)
+                                                                <button type="button" class="return-button btn btn-outline-primary" value="{{$order->id}}" data-toggle="modal" data-target="#returnModal">Return</button>
+                                                            @endif
                                                             </div>
                                                         </div>
                                                     </td>
