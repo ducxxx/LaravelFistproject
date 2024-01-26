@@ -9,6 +9,7 @@ use App\Repositories\OrderRepository;
 use App\Repositories\OrderDetailRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 
@@ -51,6 +52,7 @@ class OrderService
                     $checkBook = $this->checkCurrentCountBookOnline($clubBookIds);
                     if ($checkBook['isBorrow'] == true) {
                         $this->orderRepository->orderOnlineCreate($request, $memberId);
+                        Mail::to('ducnmhe@gmail.com')->send(new \App\Mail\NewOrderCreate());
                         $response['isBorrow'] = true;
                         $response['message'] = 'Borrowing success';
                     } else {
@@ -302,5 +304,10 @@ class OrderService
     public function getListBookCalendar()
     {
         return $this->orderRepository->getListBookCalendar();
+    }
+
+    public function getDailyMemberOutOfDate()
+    {
+        return $this->orderRepository->getDailyMemberOutOfDate();
     }
 }

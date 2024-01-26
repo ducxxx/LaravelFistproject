@@ -9,10 +9,10 @@ class ClubRepository
 {
 
     /**
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     * @return \Illuminate\Support\Collection
      */
     public function getAllClubs()
     {
-        return DB::table('club')->paginate(2);
+        return DB::table('club')->get();
     }
 }

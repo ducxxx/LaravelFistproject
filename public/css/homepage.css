@@ -13267,3 +13267,9 @@ html, body {
     border-color: #0074cc !important;
     min-width: 75px;
 }
+
+@media (min-width: 576px)
+.col-sm-12 {
+    flex: 0 0 100%;
+    max-width: 100%;
+}

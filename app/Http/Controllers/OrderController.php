@@ -190,4 +190,10 @@ class OrderController extends Controller
         return $this->orderService->getListBookCalendar();
     }
 
+    public function getDailyMemberOutOfDate()
+    {
+        $output = $this->orderService->getDailyMemberOutOfDate();
+        return  $output;
+    }
+
 }

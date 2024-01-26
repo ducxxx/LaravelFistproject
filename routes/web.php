@@ -44,6 +44,8 @@ Route::post('/send-email/forget-password', [EmailController::class, 'sendEmailFo
     ->name('sendEmailForgetPasswordWithCode');
 Route::post('/change-new-password/{email}', [EmailController::class, 'changeNewPassword'])->name('password.new.change');
 
+Route::get('/daily-out-date', [OrderController::class, 'getDailyMemberOutOfDate'])->name('order.out.date');
+
 Route::middleware(['auth'])->group(function () {
     // profile route
     Route::get('/my-profile', [UserController::class, 'viewMyProfile'])->name('user.profile');
