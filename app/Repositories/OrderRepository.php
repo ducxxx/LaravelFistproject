@@ -330,27 +330,49 @@ class OrderRepository
         return $newMember->id;
     }
 
+    /**
+     * @return array
+     */
     public function getDailyMemberOutOfDate()
     {
         $today = Carbon::now()->toDateString();
         $memberOutDate = DB::table('order_detail')
             ->join('order', 'order.id', '=', 'order_detail.order_id')
-            ->join('member', 'order.member_id', '=', 'member.id')
             ->join('club_book', 'order_detail.club_book_id', '=', 'club_book.id')
             ->join('book', 'club_book.book_id', '=', 'book.id')
-            ->join('club', 'order.club_id', '=', 'club.id')
+            ->join('member', 'order.member_id', '=', 'member.id')
             ->whereDate('order.due_date', '<=', $today)
             ->whereIn('order_detail.order_status', [1, 3])
-            ->select('member.id as member_id', 'member.email as member_email', 'order.id as order_id'
-                , 'order.due_date as due_date', 'book.name as book_name', 'order_detail.order_status')
-            ->get();
-        return $memberOutDate;
+            ->select('member.email as member_email', 'book.name as book_name')
+            ->get()->groupBy('member_email');
+        $output = $memberOutDate->map(function ($group) {
+            $memberEmail = $group->first()->member_email;
+            $bookList = $group->pluck('book_name')->toArray();
+
+            return [
+                'member_email' => $memberEmail,
+                'list_book' => $bookList,
+            ];
+        })->values()->toArray();
+        return $output;
     }
 
-    public function updateOverDueOrder($orderId)
+    public function updateOverDueOrder($memberMail)
     {
+        $today = Carbon::now()->toDateString();
+        $orderId = DB::table('order_detail')
+            ->join('order', 'order.id', '=', 'order_detail.order_id')
+            ->join('member', 'order.member_id', '=', 'member.id')
+            ->whereIn('member.email', $memberMail)
+            ->whereDate('order.due_date', '<=', $today)
+            ->where('order_detail.order_status', '=', 1)
+            ->select('order.id')
+            ->get();
+
+        $orderId = $orderId->pluck('id')->toArray();
         DB::table('order_detail')
+            ->where('order_detail.order_status', '=', 1)
             ->whereIn('order_id', $orderId)
-            ->update(['order_status' => 3]);
+            ->update(['order_status' => '3']);
     }
 }

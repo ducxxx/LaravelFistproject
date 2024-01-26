@@ -8,20 +8,23 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class SendMailJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    protected $mailable;
+    protected $memberMailable;
+    protected $listBooks;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($mailable)
+    public function __construct($memberMailable, $listBooks)
     {
-        $this->mailable = $mailable;
+        $this->memberMailable = $memberMailable;
+        $this->listBooks = $listBooks;
         //
     }
 
@@ -32,6 +35,7 @@ class SendMailJob implements ShouldQueue
      */
     public function handle()
     {
-        Mail::to($this->mailable)->send(new \App\Mail\ForgetPassword('1234567'));
+        $message = "Please return the following books for club DFbook: " . implode(', ', $this->listBooks);
+        Mail::to($this->memberMailable)->send(new \App\Mail\OverDueMail($message));
     }
 }

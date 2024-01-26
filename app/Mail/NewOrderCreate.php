@@ -7,18 +7,17 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class YourMailableName extends Mailable
+class NewOrderCreate extends Mailable
 {
     use Queueable, SerializesModels;
-    public $member;
+
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($member)
+    public function __construct()
     {
-        $this->member = $member;
         //
     }
 
@@ -29,7 +28,6 @@ class YourMailableName extends Mailable
      */
     public function build()
     {
-        $member = $this->member;
-        return $this->view('pages.mail.OverDueEmail', compact('member'));
+        return $this->view('pages.mail.createNewOrderNotification');
     }
 }

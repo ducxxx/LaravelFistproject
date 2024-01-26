@@ -42,28 +42,16 @@ class SendEmails extends Command
      */
     public function handle()
     {
-//        $listMember = $this->orderRepository->getDailyMemberOutOfDate();
-//        $listOrderIdUpdate = [];
-//        foreach ($listMember as $member){
-//            if ($member->order_status == 1) {
-//                $listOrderIdUpdate[] = $member->order_id;
-//            }
-//            $mailable = new YourMailableName($member);
-//
-//            // Dispatch the job for each email
-//            dispatch(new SendMailJob($mailable->to($member->member_email)));
-//        }
-//        $this->orderRepository->updateOverDueOrder($listOrderIdUpdate);
-//        $this->info('Emails dispatched successfully.');
-//        return 0;
-
         // Lấy danh sách người nhận và nội dung email
-        $emailss = ['luantb@gmail.com', 'luantb2@gmail.com'];
+        $listMemberMails = $this->orderRepository->getDailyMemberOutOfDate();
         // Dispatch job để gửi email cho mỗi người nhận
-        foreach ($emailss as $email) {
-            SendMailJob::dispatch($email)->onQueue('email');
-        }
+        $listMails = [];
+        foreach ($listMemberMails as $member) {
 
+            SendMailJob::dispatch($member['member_email'],$member['list_book'])->onQueue('email');
+            $listMails[] = $member['member_email'];
+        }
+        $this->orderRepository->updateOverDueOrder($listMails);
         $this->info('emails sent successfully!');
     }
 }

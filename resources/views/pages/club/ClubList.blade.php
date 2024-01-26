@@ -6,51 +6,66 @@
     <title>Club List</title>
 @endsection
 @section("body")
-<main class="ant-layout-content css-12jzuas" style="padding: 24px; overflow: auto;">
-    <div class="sc-gxYJeL iVyfZn">
-        <div class="ant-table-wrapper css-12jzuas">
-            <div class="ant-spin-nested-loading css-12jzuas">
-                <div class="ant-spin-container">
-                    <div class="ant-table">
-                        <div class="ant-table-container">
-                            <div class="ant-table-content">
-                                <table style="table-layout: auto;">
-                                    <colgroup></colgroup>
-                                    <thead class="ant-table-thead">
-                                    <tr>
-                                        <th class="ant-table-cell" scope="col">No</th>
-                                        <th class="ant-table-cell" scope="col">
-                                            <div class="ant-table-filter-column"><span
-                                                    class="ant-table-column-title">Name</span>
-                                            </div>
-                                        </th>
-                                        <th class="ant-table-cell" scope="col">Description</th>
-                                        <th class="ant-table-cell" scope="col">Action</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody class="ant-table-tbody">
-                                    @forelse ($clubs as $index => $club)
-                                        <tr class="ant-table-row ant-table-row-level-{{ $index % 2 }}">
-                                            <td class="ant-table-cell">{{ $index + 1 }}</td>
-                                            <td class="ant-table-cell">{{ $club->name }}</td>
-                                            <td class="ant-table-cell">{{ $club->address }}</td>
-                                            <td class="ant-table-cell">{{ $club->description }}</td>
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="4">No clubs found</td>
-                                        </tr>
-                                    @endforelse
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+    <main class="ant-layout-content css-12jzuas" style="padding: 24px; overflow: auto;">
+        <div class="sc-gxYJeL iVyfZn">
+            <div class="card shadow mb-4" style="width: 1320px">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">CLUBS LIST</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                            <tr>
+                                <th style="width: 190px">Name</th>
+                                <th style="width: 150px">Address</th>
+                                <th>Description</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @forelse ($clubs as $index => $club)
+                                <tr>
+                                    <td>{{ $club->name }}</td>
+                                    <td>{{ $club->address }}</td>
+                                    <td>{{ $club->description }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4">No clubs found</td>
+                                </tr>
+                            @endforelse
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
-        <br>
-        {{ $clubs->links() }}
-    </div>
-</main>
+    </main>
+@endsection
+
+@section('js')
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script>
+
+    <!-- Page level plugins -->
+    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#dataTable').DataTable({
+            searching: true, // Enable searching
+             "dom": '<"top"f>rt<"bottom"p>',
+        });
+            // $('div.dataTables_filter input').css('text-align', 'left');
+        });
+    </script>
+
+    <!-- Page level custom scripts -->
 @endsection
