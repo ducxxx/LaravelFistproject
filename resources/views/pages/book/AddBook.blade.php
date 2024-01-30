@@ -139,12 +139,10 @@
                     <script>
                         document.addEventListener('DOMContentLoaded', function () {
                             var cancelButton = document.getElementById('cancelButton');
-
                             cancelButton.addEventListener('click', function () {
-                                location.reload();
+                                window.history.back();
                             });
                         });
-
                     </script>
                 </form>
             </div>

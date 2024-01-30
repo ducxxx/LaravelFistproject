@@ -16,76 +16,8 @@ use function Sodium\add;
 class OrderRepository
 {
     /**
-     * @param $request
-     * @param $member
-     * @return Order|\Illuminate\Http\RedirectResponse
-     */
-    public function create($request, $memberId)
-    {
-        $bookOrders = json_decode($request->clubBook);
-        $countOrders = DB::table('order')
-            ->join('order_detail', 'order.id', '=', 'order_detail.order_id')
-            ->join('member', 'order.member_id', '=', 'member.id')
-            ->join('club_book', 'order_detail.club_book_id', '=', 'club_book.id')
-            ->where('member.id', $memberId)
-            ->where(function ($query) {
-                $query->where('order_detail.order_status', 0)
-                    ->orWhere('order_detail.order_status', 1)
-                    ->orWhere('order_detail.order_status', 3);
-            })
-            ->select('order.*', 'order_detail.*')
-            ->count();
-
-        $booksBorrowing = DB::table('order')
-            ->join('order_detail', 'order.id', '=', 'order_detail.order_id')
-            ->join('member', 'order.member_id', '=', 'member.id')
-            ->join('club_book', 'order_detail.club_book_id', '=', 'club_book.id')
-            ->where('member.id', $memberId)
-            ->where(function ($query) {
-                $query->where('order_detail.order_status', 0)
-                    ->orWhere('order_detail.order_status', 1);
-            })
-            ->select('order.*', 'order_detail.*')
-            ->count();
-
-        if (count($bookOrders) > 3) {
-            return 0; //can borrow max 3 book
-        } else {
-            if ($countOrders < 3) {
-                if ((count($bookOrders) + $booksBorrowing) <= 3) {
-                    $newOrder = new Order();
-                    $newOrder->member_id = $memberId;
-                    $newOrder->club_id = $bookOrders[0]->club_id;
-                    $newOrder->order_date = $request->input('order_date');
-                    $newOrder->due_date = $request->input('due_date');
-                    $newOrder->save();
-
-                    $newOrderDetailList = [];
-                    foreach ($bookOrders as $bookOrder) {
-                        $newOrderDetail = [
-                            'order_id' => $newOrder->id,
-                            'club_book_id' => $bookOrder->id,
-                            'return_date' => null,
-                            'overdue_day_count' => 0,
-                            'order_status' => 0,
-                            'note' => $request->input('note'),
-                        ];
-                        $newOrderDetailList[] = $newOrderDetail;
-                    }
-                    OrderDetail::insert($newOrderDetailList);
-                    return 2; //borrow success
-                } else {
-                    return 3; //please return book
-                }
-            } else {
-                return 1; //you borrowed 3 book please return books
-            }
-        }
-    }
-
-    /**
      * @param $userId
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     * @return \Illuminate\Support\Collection
      */
     public function getOrderByUserId($userId)
     {
@@ -97,7 +29,7 @@ class OrderRepository
             ->where('member.user_id', $userId)
             ->select('order.*', 'order_detail.*', 'member.full_name as full_name',
                 'member.phone_number as phone_number', 'book.name as book_name')
-            ->paginate(10);
+            ->get();
     }
 
     /**
@@ -196,8 +128,7 @@ class OrderRepository
             OrderDetail::insert($newOrderDetailList);
         } catch (\Exception $e) {
             DB::rollBack();
-            // Log the error
-            Log::error('Error updating data: ' . $e->getMessage());
+            Log::error('Error create data: ' . $e->getMessage());
         }
     }
 

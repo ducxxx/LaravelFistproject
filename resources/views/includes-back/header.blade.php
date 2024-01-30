@@ -217,7 +217,8 @@
                                             if (response.message === 'Verify successfully.') {
                                                 // Update the content of the label with success message
                                                 // $('#control_message').html('Verification Successful!');
-                                                $('#control_message').html('Verification Successful!').css('color', 'green');
+                                                $('#control_message').html('Verification Successful!')
+                                                    .css('color', 'green');
                                                 location.reload();
                                             } else {
                                                 // Update the content of the label with error message

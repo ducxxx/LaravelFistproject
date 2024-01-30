@@ -45,8 +45,7 @@ class ClubBookRepository
     }
 
     /**
-     * @function Get all Book in table book
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     * @return \Illuminate\Support\Collection
      */
     public function getListBook()
     {
@@ -55,9 +54,10 @@ class ClubBookRepository
             ->join('club', 'club_book.club_id', '=', 'club.id')
             ->join('author', 'book.author_id', '=', 'author.id')
             ->join('category', 'book.category_id', '=', 'category.id')
-            ->select('book.*', 'club.name as club_name', 'author.name as author_name', 'category.name as category_name',
-                'club_book.init_count as init_count', 'club_book.current_count as current_count', 'club_book.id as club_book_id')
-            ->paginate(10);
+            ->select('book.*', 'club.name as club_name', 'author.name as author_name',
+                'category.name as category_name', 'club_book.init_count as init_count',
+                'club_book.current_count as current_count', 'club_book.id as club_book_id')
+            ->get();
     }
 
     /**
