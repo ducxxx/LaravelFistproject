@@ -47,7 +47,7 @@ class OrderRepository
 
 
     /**
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     * @return \Illuminate\Support\Collection
      */
     public function getOrderList()
     {
@@ -61,7 +61,7 @@ class OrderRepository
             ->orderBy('order_detail.order_status', 'ASC')
             ->orderBy('order_detail.return_date', 'ASC')
             ->orderBy('order.order_date', 'DESC')
-            ->paginate(10);
+            ->get();
     }
 
     /**
