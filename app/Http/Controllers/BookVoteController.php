@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\BookVoteService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 
@@ -16,37 +17,44 @@ class BookVoteController extends Controller
     }
 
     /**
-     * @param $book_id
+     * @param $bookId
+     * @return View|mixed
      */
-    public function bookStarById($book_id)
+    public function bookStarById($bookId)
     {
-        $book = $this->bookVoteService->bookStarById($book_id);
-        $checkComment = $this->bookVoteService->checkComment($book_id);
-        $bookDetail = $this->bookVoteService->bookDetail($book_id);
+        $userId = Auth::id();
+        $book = $this->bookVoteService->bookStarById($bookId);
+        $checkComment = $this->bookVoteService->checkComment($bookId, $userId);
+        $bookDetail = $this->bookVoteService->bookDetail($bookId);
+
         return view('pages.book.BookVote', compact('book', 'checkComment', 'bookDetail'));
     }
 
     /**
-     * @param $book_id
+     * @param $bookId
+     * @return \Illuminate\Support\Collection
      */
-    public function bookCommentByBookId($book_id)
+    public function bookCommentByBookId($bookId)
     {
-        return $this->bookVoteService->bookCommentByBookId($book_id);
+        return $this->bookVoteService->bookCommentByBookId($bookId);
     }
 
     /**
      * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function createBookVote(Request $request)
     {
-        $book_vote = $this->bookVoteService->createBookVote($request);
-        if (isset($book_vote) && $book_vote->book_comment) {
+        $dataBook = $request->all();
+        $userId = Auth::id();
+        $bookVote = $this->bookVoteService->createBookVote($dataBook, $userId);
+        if ($bookVote) {
             Session::flash('success', 'Comment success');
-            return Redirect::route('book.star', ['book_id' => $request->input('book_id')]);
         } else {
             Session::flash('error', 'Comment Fail');
-            return Redirect::route('book.star', ['book_id' => $request->input('book_id')]);
         }
+
+        return Redirect::route('book.star', ['book_id' => $dataBook['book_id']]);
     }
 
 }

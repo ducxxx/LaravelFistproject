@@ -7,34 +7,40 @@ use Illuminate\Support\Facades\DB;
 
 class MemberRepository
 {
-
+    const PER_PAGE = 10;
     /**
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function getAllMembers()
     {
-        return DB::table('member')->paginate(10);
+        return DB::table('member')->paginate(self::PER_PAGE);
     }
 
     /**
      * @param int $id
-     * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Query\Builder|object|null
+     * @return object|null
      */
     public function getClubMemberDetail(int $id)
     {
-        $clubMemberDetail = DB::table('member')
+        return DB::table('member')
+            ->select('member.*') // TODO: liệt kê những column được dùng
             ->where('member.id', $id)
-            ->select('member.*')
             ->first();
-        return $clubMemberDetail;
     }
 
+    /**
+     * @param $phoneNumber
+     * @return object|null
+     */
     public function getMemberByPhoneNumber($phoneNumber)
     {
-        $clubMemberDetail = DB::table('member')
+        return DB::table('member')
+            ->select(
+                'member.phone_number',
+                'member.full_name',
+                'member.address'
+            )
             ->where('member.phone_number', $phoneNumber)
-            ->select('member.phone_number', 'member.full_name','member.address' )
             ->first();
-        return $clubMemberDetail;
     }
 }
