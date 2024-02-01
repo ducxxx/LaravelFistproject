@@ -15,10 +15,10 @@ class ClubBookService
     }
 
     /**
-     * @param $clubId
+     * @param $club_id
      * @return mixed
      */
-    public function getClubBooksByClubId($clubId)
+    public function getClubBooksByClubId($club_id) // TODO: khai báo đúng chuẩn $club_id => $clubId
     {
         return $this->clubBookRepository->getClubBooksByClubId($club_id);
     }
@@ -34,23 +34,35 @@ class ClubBookService
     /**
      * @param $clubId
      * @param $bookName
-     * @return \Illuminate\Support\Collection
+     * @return mixed
      */
     public function searchClubBooksByName($clubId, $bookName)
     {
         return $this->clubBookRepository->searchClubBooksByName($clubId,$bookName);
     }
 
+    /**
+     * @return mixed
+     */
     public function getListBook()
     {
         return $this->clubBookRepository->getListBook();
     }
 
+    /**
+     * @param $id
+     * @return object|null
+     */
     public function getClubBookDetail($id)
     {
         return $this->clubBookRepository->getClubBookDetail($id);
     }
 
+    /**
+     * @param $id
+     * @param $request
+     * @return object|null
+     */
     public function updateClubBookDetail($id , $request)
     {
         return $this->clubBookRepository->updateClubBookDetail($id, $request);
@@ -61,8 +73,8 @@ class ClubBookService
         return $this->clubBookRepository->addNewBook($request);
     }
 
-    public function getClubBookByClubId($club_id)
+    public function getClubBookByClubId($club_id) // TODO: khai báo đúng chuẩn $club_id => $clubId
     {
-        return $this->clubBookRepository->getClubBookByClubId($clubId);
+        return $this->clubBookRepository->getClubBookByClubId($club_id);
     }
 }

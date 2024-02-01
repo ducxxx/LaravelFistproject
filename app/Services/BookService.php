@@ -14,7 +14,7 @@ class BookService
     }
 
     /**
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     * @return mixed
      */
     public function getAllBook()
     {
@@ -23,7 +23,7 @@ class BookService
 
     /**
      * @param $bookName
-     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     * @return mixed
      */
     public function searchBooksByName($bookName)
     {
@@ -32,7 +32,7 @@ class BookService
 
     /**
      * @param int $id
-     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     * @return mixed
      */
     public function bookDetail(int $id)
     {

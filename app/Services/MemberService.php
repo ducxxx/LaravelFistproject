@@ -17,7 +17,7 @@ class MemberService
     }
 
     /**
-     * @return \App\Models\Club[]|\Illuminate\Database\Eloquent\Collection
+     * @return mixed
      */
     public function getAllClubMember()
     {
@@ -26,13 +26,17 @@ class MemberService
 
     /**
      * @param int $id
-     * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Query\Builder|object|null
+     * @return object|null
      */
     public function getClubMemberDetail(int $id)
     {
         return $this->memberRepository->getClubMemberDetail($id);
     }
 
+    /**
+     * @param $phoneNumber
+     * @return object|null
+     */
     public function getMemberByPhoneNumber($phoneNumber)
     {
         return $this->memberRepository->getMemberByPhoneNumber($phoneNumber);

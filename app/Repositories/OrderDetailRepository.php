@@ -6,7 +6,6 @@ use App\Models\OrderDetail;
 
 class OrderDetailRepository
 {
-
     /**
      * @param array $data
      * @return mixed
@@ -15,5 +14,4 @@ class OrderDetailRepository
     {
         return OrderDetail::create($data);
     }
-
 }

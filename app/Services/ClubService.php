@@ -16,7 +16,7 @@ class ClubService
     }
 
     /**
-     * @return \App\Models\Club[]|\Illuminate\Database\Eloquent\Collection
+     * @return mixed
      */
     public function getAllClubs()
     {

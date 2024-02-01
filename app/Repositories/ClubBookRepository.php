@@ -19,18 +19,15 @@ class ClubBookRepository
     {
         return DB::table('club_book')
             ->select(
-                'club_book.id', // TODO: liệt kê những trường đang dùng, không liệt kê all
+                'club_book.*', // TODO: liệt kê những trường đang dùng, không liệt kê all
                 'book.name as book_name',
                 'author.name as author_name',
-                'category.name as category_name',
-                'club_book.current_count',
+                'category.name as category_name'
             )
             ->join('book', 'club_book.book_id', '=', 'book.id')
             ->join('author', 'book.author_id', '=', 'author.id')
             ->join('category', 'book.category_id', '=', 'category.id')
             ->where('club_book.club_id', $club_id)
-            ->select('club_book.*', 'book.name as book_name',
-                'author.name as author_name', 'category.name as category_name')
             ->get();
     }
 
@@ -181,18 +178,13 @@ class ClubBookRepository
     public function getClubBookByClubId($club_id)
     {
         return DB::table('club_book')
-            ->select(
-                'club_book.*', // TODO: liệt kê những trường đang dùng, không liệt kê all
-                'club.name as club_name',
-                'book.name as book_name',
-                'author.name as author_name',
-                'category.name as category_name'
-            )
             ->join('book', 'club_book.book_id', '=', 'book.id')
             ->join('author', 'book.author_id', '=', 'author.id')
             ->join('category', 'book.category_id', '=', 'category.id')
             ->join('club', 'club_book.club_id', '=', 'club.id')
             ->where('club_book.club_id', $club_id)
+            ->select('club_book.*', 'club.name as club_name', 'book.name as book_name',
+                'author.name as author_name', 'category.name as category_name')
             ->get();
     }
 }

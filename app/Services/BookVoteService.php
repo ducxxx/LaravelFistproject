@@ -8,47 +8,61 @@ class BookVoteService
 {
     private $bookVoteRepository;
 
+    /**
+     * BookVoteService constructor.
+     * @param BookVoteRepository $bookVoteRepository
+     */
     public function __construct(BookVoteRepository $bookVoteRepository)
     {
         $this->bookVoteRepository = $bookVoteRepository;
     }
 
     /**
-     * @param int $book_id
+     * @param int $bookId
      * @return \Illuminate\Support\Collection
      */
-    public function bookStarById(int $book_id)
+    public function bookStarById(int $bookId)
     {
-        $book_star = $this->bookVoteRepository->bookStarById($book_id);
-        $check_commnet = $this->bookVoteRepository->checkComment(auth()->id(),$book_id);
-        return $this->bookVoteRepository->bookStarById($book_id);
-    }
-
-    public function checkComment(int $book_id)
-    {
-        return $this->bookVoteRepository->checkComment(auth()->id(),$book_id);
-    }
-
-    public function bookDetail(int $book_id)
-    {
-        return $this->bookVoteRepository->bookDetail($book_id);
+        //$book_star = $this->bookVoteRepository->bookStarById($book_id);
+        //$check_commnet = $this->bookVoteRepository->checkComment(auth()->id(),$book_id);
+        return $this->bookVoteRepository->bookStarById($bookId);
     }
 
     /**
-     * @param int $book_id
-     * @return \Illuminate\Support\Collection
+     * @param int $bookId
+     * @param int $userId
+     * @return bool
      */
-    public function bookCommentByBookId(int $book_id)
+    public function checkComment(int $bookId, int $userId)
     {
-        return $this->bookVoteRepository->bookCommentByBookId($book_id);
+        return $this->bookVoteRepository->checkComment($userId, $bookId);
     }
 
     /**
-     * create vote
-     * @param $request
+     * @param int $bookId
+     * @return object|null
      */
-    public function createBookVote($request)
+    public function bookDetail(int $bookId)
     {
-        return $this->bookVoteRepository->createBookVote($request);
+        return $this->bookVoteRepository->bookDetail($bookId);
+    }
+
+    /**
+     * @param int $bookId
+     * @return \Illuminate\Support\Collection
+     */
+    public function bookCommentByBookId(int $bookId)
+    {
+        return $this->bookVoteRepository->bookCommentByBookId($bookId);
+    }
+
+    /**
+     * @param $dataVote
+     * @param $userId
+     * @return bool
+     */
+    public function createBookVote($dataVote, $userId)
+    {
+        return $this->bookVoteRepository->createBookVote($dataVote, $userId);
     }
 }
