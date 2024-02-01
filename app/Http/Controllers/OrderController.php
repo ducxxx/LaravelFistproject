@@ -53,11 +53,12 @@ class OrderController extends Controller
      */
     public function create(Request $request)
     {
-        $user = $this->orderService->getUser();
+        $userId = Auth::id();
+        $user = $this->orderService->getUser($userId);
         $dataCheck = $this->orderService->createOrder($request,$user);
         if ($dataCheck['isBorrow']==true){
             Session::flash('success', 'Create order success');
-            return Redirect::route('order.get.list.control')->withInput();
+            return Redirect::route('order.get.list', ['user_id' => $user->id])->withInput();
         }else{
             $clubBookIds =$this->orderService->getClubBookId($request->clubBook);
             $clubBookName = $this->orderService->getClubBookName($clubBookIds);
@@ -66,9 +67,14 @@ class OrderController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return array
+     */
     public function checkOrderOnline(Request $request)
     {
-        $user = $this->orderService->getUser();
+        $userId = Auth::id();
+        $user = $this->orderService->getUser($userId);
         $dataCheck = $this->orderService->checkOrderOnline($request,$user);
         if ($dataCheck['isBorrow']==false){
             Session::flash('error',$dataCheck['message']);
@@ -190,10 +196,12 @@ class OrderController extends Controller
         return $this->orderService->getListBookCalendar();
     }
 
+    /**
+     * @return array
+     */
     public function getDailyMemberOutOfDate()
     {
-        $output = $this->orderService->getDailyMemberOutOfDate();
-        return  $output;
+        return $this->orderService->getDailyMemberOutOfDate();
     }
 
 }

@@ -10,14 +10,6 @@
 <main class="ant-layout-content css-12jzuas" style="padding: 24px; overflow: auto;">
     <div class="sc-dicizt jgZVwD">
         <div class="club">
-            <div class="carousel-title">
-                <h2 class="ant-typography css-12jzuas" style="margin: 0px;"><a href="{{ route('club.book', ['club_id' => 5]) }}" rel="noopener noreferrer"
-                                                                               style="text-decoration: none;">D
-                        Free Book Test</a>
-                     <path
-                                    d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"></path></svg></span></span>
-                </h2>
-            </div>
             <section style="margin: 20px 0px;">
                 <div class="react-multi-carousel-list carousel-container " dir="ltr">
                     <ul class="react-multi-carousel-track "

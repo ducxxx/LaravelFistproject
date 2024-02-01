@@ -17,85 +17,17 @@ class OrderRepository
 {
     const PER_PAGE = 10;
     /**
-     * @param $request
-     * @param $member
-     * @return Order|\Illuminate\Http\RedirectResponse
-     */
-    public function create($request, $memberId)
-    {
-        $bookOrders = json_decode($request->clubBook);
-        $countOrders = DB::table('order')
-            ->join('order_detail', 'order.id', '=', 'order_detail.order_id')
-            ->join('member', 'order.member_id', '=', 'member.id')
-            ->join('club_book', 'order_detail.club_book_id', '=', 'club_book.id')
-            ->where('member.id', $memberId)
-            ->where(function ($query) {
-                $query->where('order_detail.order_status', 0)
-                    ->orWhere('order_detail.order_status', 1)
-                    ->orWhere('order_detail.order_status', 3);
-            })
-            // TODO: count thỳ không cần check select
-            ->select('order.*', 'order_detail.*')
-            ->count();
-
-        $booksBorrowing = DB::table('order')
-            ->join('order_detail', 'order.id', '=', 'order_detail.order_id')
-            ->join('member', 'order.member_id', '=', 'member.id')
-            ->join('club_book', 'order_detail.club_book_id', '=', 'club_book.id')
-            ->where('member.id', $memberId)
-            ->where(function ($query) {
-                $query->where('order_detail.order_status', 0)
-                    ->orWhere('order_detail.order_status', 1);
-            })
-            // TODO: count thỳ không cần check select
-            ->select('order.*', 'order_detail.*')
-            ->count();
-
-        // TODO: chuyển các phần hardcode sang const
-        if (count($bookOrders) > 3) {
-            return 0; //can borrow max 3 book
-        } else {
-            if ($countOrders < 3) {
-                if ((count($bookOrders) + $booksBorrowing) <= 3) {
-                    // TODO: không dùng request input để lấy dữ liệu
-                    // TODO: chuyển hàm create order sang dùng insertGetId
-                    $newOrder = new Order();
-                    $newOrder->member_id = $memberId;
-                    $newOrder->club_id = $bookOrders[0]->club_id;
-                    $newOrder->order_date = $request->input('order_date');
-                    $newOrder->due_date = $request->input('due_date');
-                    $newOrder->save();
-
-                    $newOrderDetailList = [];
-                    foreach ($bookOrders as $bookOrder) {
-                        $newOrderDetail = [
-                            'order_id' => $newOrder->id,
-                            'club_book_id' => $bookOrder->id,
-                            'return_date' => null,
-                            'overdue_day_count' => 0,
-                            'order_status' => 0,
-                            'note' => $request->input('note'),
-                        ];
-                        $newOrderDetailList[] = $newOrderDetail;
-                    }
-                    OrderDetail::insert($newOrderDetailList);
-                    return 2; //borrow success
-                } else {
-                    return 3; //please return book
-                }
-            } else {
-                return 1; //you borrowed 3 book please return books
-            }
-        }
-    }
-
-    /**
      * @param $userId
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     * @return \Illuminate\Support\Collection
      */
     public function getOrderByUserId($userId)
     {
-        return DB::table('order')
+        return DB::table('order_detail')
+            ->join('order', 'order.id', '=', 'order_detail.order_id')
+            ->join('member', 'order.member_id', '=', 'member.id')
+            ->join('club_book', 'order_detail.club_book_id', '=', 'club_book.id')
+            ->join('book', 'club_book.book_id', '=', 'book.id')
+            ->where('member.user_id', $userId)
             ->select(
                 'order.*',
                 'order_detail.*',
@@ -103,12 +35,7 @@ class OrderRepository
                 'member.phone_number as phone_number',
                 'book.name as book_name'
             )
-            ->join('order_detail', 'order.id', '=', 'order_detail.order_id')
-            ->join('member', 'order.member_id', '=', 'member.id')
-            ->join('club_book', 'order_detail.club_book_id', '=', 'club_book.id')
-            ->join('book', 'club_book.id', '=', 'book.id')
-            ->where('member.user_id', $userId)
-            ->paginate(self::PER_PAGE);
+            ->get();
     }
 
     /**
@@ -130,7 +57,7 @@ class OrderRepository
 
 
     /**
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     * @return \Illuminate\Support\Collection
      */
     public function getOrderList()
     {
@@ -145,11 +72,13 @@ class OrderRepository
             ->join('order_detail', 'order.id', '=', 'order_detail.order_id')
             ->join('member', 'order.member_id', '=', 'member.id')
             ->join('club_book', 'order_detail.club_book_id', '=', 'club_book.id')
-            ->join('book', 'club_book.id', '=', 'book.id')
+            ->join('book', 'club_book.book_id', '=', 'book.id')
+            ->select('order.*', 'order_detail.*', 'member.full_name as full_name',
+                'member.phone_number as phone_number', 'book.name as book_name')
             ->orderBy('order_detail.order_status', 'ASC')
             ->orderBy('order_detail.return_date', 'ASC')
             ->orderBy('order.order_date', 'DESC')
-            ->paginate(self::PER_PAGE);
+            ->get();
     }
 
     /**
@@ -158,13 +87,8 @@ class OrderRepository
      */
     public function orderConfirm(int $id)
     {
-        // TODO: chuyển sang dùng hàm OrderDetail::where('id', $id)->update([])
-        $order_detail = OrderDetail::where('id', $id)->first();
-        if ($order_detail) {
-            $order_detail->order_status = 1;
-            $order_detail->save();
-        }
-        return $order_detail;
+        return OrderDetail::where('id', $id)->update([
+            'order_status' => Order::ORDER_STATUS_CREATED,]);
     }
 
     /**
@@ -173,35 +97,29 @@ class OrderRepository
      */
     public function orderReturn(int $id)
     {
-        // TODO: chuyển sang dùng hàm OrderDetail::where('id', $id)->update([])
-        $order_detail = OrderDetail::where('id', $id)->first();
-        $return_day = date('Y-m-d'); // todo: chuyển sang dùng Carbon::now()->format('Y-m-d')
-        if ($order_detail) {
-            $order_detail->order_status = 2;
-            $order_detail->return_date = $return_day;
-            $order_detail->save();
-        }
-        return $order_detail;
+        $return_day = Carbon::now()->format('Y-m-d');
+        return OrderDetail::where('id', $id)->update([
+            'order_status' => Order::ORDER_STATUS_RETURN,
+            'return_date' => $return_day,]);
     }
 
-    public function getUser()
+    public function getUser($userId)
     {
         return DB::table('users')
-            ->where('id', Auth::id())  // TODO: truyền userId = Auth::id() từ controller
+            ->where('id', $userId)
             ->select('users.*')
             ->first();
     }
 
-    public function orderOfflineCreate($request, $member)
+    public function orderOfflineCreate($order, $member)
     {
-        // TODO: không dùng request input để lấy dữ liệu
-        $bookOrders = $request->input('club_book_ids');
+        $bookOrders = $order['club_book_ids'];
         try {
             $newOrder = new Order();
             $newOrder->member_id = $member;
-            $newOrder->club_id = $request->input('clubId');
-            $newOrder->order_date = $request->input('order_date');
-            $newOrder->due_date = $request->input('due_date');
+            $newOrder->club_id = $order['clubId'];
+            $newOrder->order_date = $order['order_date'];
+            $newOrder->due_date = $order['due_date'];
             $newOrder->save();
 
             $newOrderDetailList = [];
@@ -212,7 +130,7 @@ class OrderRepository
                     'return_date' => null,
                     'overdue_day_count' => 0,
                     'order_status' => 1,
-                    'note' => $request->input('note'),
+                    'note' => $order['note'],
                 ];
                 $newOrderDetailList[] = $newOrderDetail;
             }
@@ -220,32 +138,29 @@ class OrderRepository
         } catch (\Exception $e) {
             DB::rollBack();
             // Log the error
-            Log::error('Error updating data: ' . $e->getMessage());
+            Log::error('Error create data: ' . $e->getMessage());
         }
     }
 
-    public function orderOnlineCreate($request, $member)
+    public function orderOnlineCreate($order, $member)
     {
-        $bookOrders = json_decode($request->clubBook);
+        $bookOrders = json_decode($order['clubBook']);
         try {
-            // TODO: chuyển sang dùng hàm insertGetId
-            // TODO: không dùng request input để lấy dữ liệu
-            $newOrder = new Order();
-            $newOrder->member_id = $member;
-            $newOrder->club_id = $bookOrders[0]->club_id;
-            $newOrder->order_date = $request->input('order_date');
-            $newOrder->due_date = $request->input('due_date');
-            $newOrder->save();
-
+            $newOrderId = DB::table('order')->insertGetId([
+                'member_id' => $member,
+                'club_id' => $bookOrders[0]->club_id,
+                'order_date' => $order['order_date'],
+                'due_date' => $order['due_date'],
+                ]);
             $newOrderDetailList = [];
             foreach ($bookOrders as $bookOrder) {
                 $newOrderDetail = [
-                    'order_id' => $newOrder->id,
+                    'order_id' => $newOrderId,
                     'club_book_id' => $bookOrder->id,
                     'return_date' => null,
                     'overdue_day_count' => 0,
                     'order_status' => 0,
-                    'note' => $request->input('note'), // TODO: không dùng request input để lấy dữ liệu
+                    'note' => $order['note'],
                 ];
                 $newOrderDetailList[] = $newOrderDetail;
             }
@@ -279,9 +194,9 @@ class OrderRepository
             ->join('club_book', 'order_detail.club_book_id', '=', 'club_book.id')
             ->where('member.id', $memberId)
             ->where(function ($query) {
-                $query->where('order_detail.order_status', 0) // TODO: chuyển các phần hardcode sang const
-                    ->orWhere('order_detail.order_status', 1) // TODO: chuyển các phần hardcode sang const
-                    ->orWhere('order_detail.order_status', 3); // TODO: chuyển các phần hardcode sang const
+                $query->where('order_detail.order_status', Order::ORDER_STATUS_PENDING)
+                    ->orWhere('order_detail.order_status', Order::ORDER_STATUS_CREATED)
+                    ->orWhere('order_detail.order_status', Order::ORDER_STATUS_OVER_DUA_DATE);
             })
             ->count();
     }
@@ -294,14 +209,13 @@ class OrderRepository
             ->first();
     }
 
-    public function createNewMember($request)
+    public function createNewMember($member)
     {
         $newMember = new Member();
         try {
-            // TODO: không dùng request input để lấy dữ liệu
-            $newMember->address = $request->input('address');
-            $newMember->phone_number = $request->input('phone_number');
-            $newMember->full_name = $request->input('full_name');
+            $newMember->address = $member['address'];
+            $newMember->phone_number = $member['phone_number'];
+            $newMember->full_name = $member['full_name'];
             $newMember->save();
         } catch (\Exception $e) {
             DB::rollBack();
@@ -341,24 +255,21 @@ class OrderRepository
      * @param $user
      * @return Member|void
      */
-    public function createNewMemberForOrderOnline($request, $user)
+    public function createNewMemberForOrderOnline($member, $user)
     {
-        // TODO: không dùng request input để lấy dữ liệu
         $newMember = new Member();
         try {
             $newMember->user_id = $user->id;
-            $newMember->address = $request->input('address');
-            $newMember->phone_number = $request->input('phone_number');
-            $newMember->full_name = $request->input('full_name');
-            // TODO: dùng Carbon::parse()->format('Y-m-d')
-            $newMember->birth_date = optional($user->birth_date)->format('Y-m-d');
+            $newMember->address = $member['address'];
+            $newMember->phone_number = $member['phone_number'];
+            $newMember->full_name = $member['full_name'];
+            $newMember->birth_date = optional(Carbon::parse($user->birth_date))->format('Y-m-d');
             $newMember->email = $user->email;
             $newMember->save();
             return $newMember;
         } catch (\Exception $e) {
             DB::rollBack();
-            // Log the error
-            Log::error('Error updating data: ' . $e->getMessage());
+            Log::error('Error create data: ' . $e->getMessage());
         }
         return $newMember->id;
     }
@@ -375,7 +286,8 @@ class OrderRepository
             ->join('book', 'club_book.book_id', '=', 'book.id')
             ->join('member', 'order.member_id', '=', 'member.id')
             ->whereDate('order.due_date', '<=', $today)
-            ->whereIn('order_detail.order_status', [1, 3]) // TODO: chuyển các phần hardcode sang const
+            ->whereIn('order_detail.order_status',
+                [Order::ORDER_STATUS_CREATED, Order::ORDER_STATUS_OVER_DUA_DATE])
             ->select('member.email as member_email', 'book.name as book_name')
             ->groupBy('member_email')
             ->get();
@@ -401,14 +313,14 @@ class OrderRepository
             ->join('member', 'order.member_id', '=', 'member.id')
             ->whereIn('member.email', $memberMail)
             ->whereDate('order.due_date', '<=', $today)
-            ->where('order_detail.order_status', '=', 1) // TODO: chuyển các phần hardcode sang const
+            ->where('order_detail.order_status', '=', Order::ORDER_STATUS_CREATED)
             ->select('order.id')
             ->get();
 
         $orderId = $orderId->pluck('id')->toArray();
         return DB::table('order_detail')
-            ->where('order_detail.order_status', '=', 1) // TODO: chuyển các phần hardcode sang const
+            ->where('order_detail.order_status', '=', Order::ORDER_STATUS_CREATED)
             ->whereIn('order_id', $orderId)
-            ->update(['order_status' => '3']); // TODO: chuyển các phần hardcode sang const
+            ->update(['order_status' => Order::ORDER_STATUS_OVER_DUA_DATE]);
     }
 }

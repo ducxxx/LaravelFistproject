@@ -23,17 +23,13 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @forelse ($clubs as $index => $club)
+                            @foreach($clubs as $index => $club)
                                 <tr>
                                     <td>{{ $club->name }}</td>
                                     <td>{{ $club->address }}</td>
                                     <td>{{ $club->description }}</td>
                                 </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="4">No clubs found</td>
-                                </tr>
-                            @endforelse
+                            @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -44,28 +40,15 @@
 @endsection
 
 @section('js')
-    <!-- Bootstrap core JavaScript-->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Core plugin JavaScript-->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-
-    <!-- Custom scripts for all pages-->
-    <script src="js/sb-admin-2.min.js"></script>
-
-    <!-- Page level plugins -->
-    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
-    <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="{{ asset('vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+    <script src="{{ asset('vendor/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
     <script>
         $(document).ready(function () {
             $('#dataTable').DataTable({
             searching: true, // Enable searching
              "dom": '<"top"f>rt<"bottom"p>',
-        });
-            // $('div.dataTables_filter input').css('text-align', 'left');
+            });
         });
     </script>
-
-    <!-- Page level custom scripts -->
 @endsection

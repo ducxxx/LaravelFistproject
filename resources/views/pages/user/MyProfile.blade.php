@@ -149,13 +149,16 @@
                                                 style="margin-right: 10px;"><span>Submit</span>
                                         </button>
                                         <button  type="button" class="ant-btn css-12jzuas ant-btn-default"
-                                                fdprocessedid="g5id65"><span>Cancel</span></button>
+                                                fdprocessedid="g5id65" onclick="goBack()"><span>Cancel</span></button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <script>
+                        function goBack() {
+                            window.history.back();
+                        }
                         document.addEventListener('DOMContentLoaded', function () {
                             var cancelButton = document.getElementById('cancelButton');
                             var updateButton = document.getElementById('updateButton');

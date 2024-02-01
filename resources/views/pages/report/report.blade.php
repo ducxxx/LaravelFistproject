@@ -43,7 +43,7 @@
                 backgroundColor: "#bb1a32",
                 hoverBackgroundColor: "#bb1a32",
                 borderColor: "#bb1a32",
-                data: [9, 16, 8, 20, 25, 5, 9, 16, 8, 20, 25, 5],
+                data: [9, 16, 8, 20, 25, 5, 9, 16, 8, 20, 25, 50],
             }
         ]
         // Bar Chart Example
