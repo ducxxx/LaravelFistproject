@@ -86,7 +86,8 @@ class ClubBookController extends Controller
      */
     public function updateClubBookDetail(Request $request, $id)
     {
-        $book = $this->clubBookService->updateClubBookDetail($id, $request);
+        $bookUpdate = $request->all();
+        $book = $this->clubBookService->updateClubBookDetail($id, $bookUpdate);
         if ($book) {
             return redirect()->route('club.book.detail', ['id' => $id])->with('success',"Update Book success");
         }
@@ -110,7 +111,13 @@ class ClubBookController extends Controller
      */
     public function addNewBook(Request $request)
     {
-        return $this->clubBookService->addNewBook( $request);
+        $newBook = $request->all();
+        $responseAddNewBook = $this->clubBookService->addNewBook($newBook);
+        if ($responseAddNewBook){
+            return redirect()->route('book.get.list')->with("success", "Add Book Success");
+        }else{
+            return redirect()->route('book.get.list')->with("error", "Book is exist please search in list");
+        }
     }
 
     /**

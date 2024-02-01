@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Club;
 use App\Models\ClubBook;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ClubBookRepository
 {
@@ -18,8 +19,8 @@ class ClubBookRepository
     public function getClubBooksByClubId($club_id)
     {
         return DB::table('club_book')
-            ->select(
-                'club_book.*', // TODO: liệt kê những trường đang dùng, không liệt kê all
+            ->select('club_book.id',
+                'club_book.current_count',
                 'book.name as book_name',
                 'author.name as author_name',
                 'category.name as category_name'
@@ -40,7 +41,7 @@ class ClubBookRepository
     {
         return DB::table('club_book')
             ->select(
-                'club_book.*', // TODO: liệt kê những trường đang dùng, không liệt kê all
+                'club_book.id',
                 'book.name as book_name',
                 'author.name as author_name',
                 'category.name as category_name'
@@ -55,13 +56,13 @@ class ClubBookRepository
 
     /**
      * @function Get all Book in table book
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     * @return \Illuminate\Support\Collection
      */
     public function getListBook()
     {
         return DB::table('book')
-            ->select(
-                'book.*', // TODO: liệt kê những trường đang dùng, không liệt kê all
+            ->select('book.id',
+                'book.name',
                 'club.name as club_name',
                 'author.name as author_name',
                 'category.name as category_name',
@@ -73,7 +74,7 @@ class ClubBookRepository
             ->join('club', 'club_book.club_id', '=', 'club.id')
             ->join('author', 'book.author_id', '=', 'author.id')
             ->join('category', 'book.category_id', '=', 'category.id')
-            ->paginate(10);
+            ->get();
     }
 
     /**
@@ -83,8 +84,9 @@ class ClubBookRepository
     public function getClubBookDetail($id)
     {
         return DB::table('club_book')
-            ->select(
-                'club_book.*', // TODO: liệt kê những trường đang dùng, không liệt kê all
+            ->select('club_book.id',
+                'club_book.init_count',
+                'club_book.current_count',
                 'club.name as club_name',
                 'book.name as book_name',
                 'author.name as author_name',
@@ -103,71 +105,50 @@ class ClubBookRepository
      * @param $request
      * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Query\Builder|object|null
      */
-    public function updateClubBookDetail($id, $request)
+    public function updateClubBookDetail($id, $bookUpdate)
     {
-        // TODO: thay thế bằng hàm ClubBook::where('id', $id)->update([data ưpdate])
-        $clubBook = ClubBook::find($id);
-        if ($clubBook) {
-            $clubBook->init_count = $request->input('initCount');
-            $clubBook->current_count = $request->input('currentCount');
-            $clubBook->save();
+        try {
+            return ClubBook::where('id', $id)->update([
+                'init_count' => $bookUpdate['initCount'],
+                'current_count' => $bookUpdate['currentCount'],]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error update data: ' . $e->getMessage());
         }
-
-        return $clubBook;
+        return null;
     }
 
     /**
      * @param $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return bool
      */
-    public function addNewBook($request)
+    public function addNewBook($newBook)
     {
-        $book = Book::where('name', $request->input('bookName'))->first();
+        $book = Book::where('name', $newBook['bookName'])->first();
         if ($book) {
-            // TODO: chuyển redirect về controller
-            return redirect()->route('book.get.list')->with("error", "book is exist please search in list");
+            return false;
         } else {
-            $author = Author::where('name', $request->input('authorName'))->first();
-            //$authorId = 0;
+            $author = Author::where('name', $newBook['authorName'])->first();
             if ($author) {
                 $authorId = $author->id;
             } else {
-                // TODO: chuyển thành hàm insertGetId
-                $newAuthor = new Author();
-                $newAuthor->name = $request->input('authorName');
-                $newAuthor->save();
-                $authorId = $newAuthor->id;
+                $authorId = DB::table('author')->insertGetId(['name' => $newBook['authorName']]);
             }
-            $category = Category::where('name', $request->input('categoryName'))->first();
-            //$categoryId = 0;
+            $category = Category::where('name', $newBook['categoryName'])->first();
             if ($category) {
                 $categoryId = $category->id;
             } else {
-                // TODO: chuyển thành hàm insertGetId
-                $newCategory = new Category();
-                $newCategory->name = $request->input('categoryName');
-                $newCategory->save();
-                $categoryId = $newCategory->id;
+                $categoryId = DB::table('category')->insertGetId(['name' => $newBook['categoryName'],]);
             }
-
-            // TODO: không dùng request input trong repository tham khảo BookVoteController::createBookVote
-            $newBook = new Book();
-            $newBook->name = $request->input('bookName');
-            $newBook->category_id = $categoryId;
-            $newBook->author_id = $authorId;
-            $newBook->save();
-
-            // TODO: chuyển thành hàm insert - không dùng request input để lấy dữ liệu
-            $newClubBook = new ClubBook();
-            $newClubBook->book_id = $newBook->id;
-            $newClubBook->club_id = $request->input('clubId');
-            $newClubBook->code = "A1-" . (string)$newBook->id;
-            $newClubBook->init_count = $request->input('initCount');
-            $newClubBook->current_count = $request->input('currentCount');
-            $newClubBook->save();
-
-            // TODO: chuyển redirect về controller
-            return redirect()->route('book.get.list')->with("success", "add Book success");
+            $newBookId = DB::table('book')->insertGetId(['name' => $newBook['bookName'],
+                'category_id' => $categoryId,
+                'author_id' => $authorId,]);
+            DB::table('club_book')->insert(['book_id' => $newBookId,
+                'club_id' => $newBook['clubId'],
+                'code' => "A1-" . (string)$newBookId,
+                'init_count' => $newBook['initCount'],
+                'current_count' => $newBook['currentCount'],]);
+            return true;
         }
     }
 
@@ -183,8 +164,7 @@ class ClubBookRepository
             ->join('category', 'book.category_id', '=', 'category.id')
             ->join('club', 'club_book.club_id', '=', 'club.id')
             ->where('club_book.club_id', $club_id)
-            ->select('club_book.*', 'club.name as club_name', 'book.name as book_name',
-                'author.name as author_name', 'category.name as category_name')
+            ->select('club_book.id', 'book.name as book_name')
             ->get();
     }
 }

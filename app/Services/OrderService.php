@@ -43,7 +43,7 @@ class OrderService
         $memberId = $this->orderRepository->checkUserMember($user->id);
         if ($user->is_active == User::ACTIVE) {
             if (!$memberId) {
-                $memberId = $this->orderRepository->createNewMemberForOrderOnline($request, $user);
+                $memberId = $this->orderRepository->createNewMemberForOrderOnline($request->all(), $user);
             }
             $memberId = $memberId->id;
             $countBookBorrowing = $this->orderRepository->countBookBorrowing($memberId);
@@ -51,7 +51,7 @@ class OrderService
                 if (count($clubBookIds) + $countBookBorrowing <= self::BOOK_MAX_BORROW) {
                     $checkBook = $this->checkCurrentCountBookOnline($clubBookIds);
                     if ($checkBook['isBorrow'] == true) {
-                        $this->orderRepository->orderOnlineCreate($request, $memberId);
+                        $this->orderRepository->orderOnlineCreate($request->all(), $memberId);
                         Mail::to('ducnmhe@gmail.com')->send(new \App\Mail\NewOrderCreate());
                         $response['isBorrow'] = true;
                         $response['message'] = 'Borrowing success';
@@ -139,9 +139,9 @@ class OrderService
         return $this->orderRepository->orderReturn($id);
     }
 
-    public function getUser()
+    public function getUser($userId)
     {
-        return $this->orderRepository->getUser();
+        return $this->orderRepository->getUser($userId);
     }
 
     /**
@@ -168,7 +168,7 @@ class OrderService
                 if (count($clubBookIds) + $countBookBorrowing <= self::BOOK_MAX_BORROW) {
                     $checkBook = $this->checkCurrentCountBook($clubBookIds);
                     if ($checkBook['isBorrow'] == true) {
-                        $this->orderRepository->orderOfflineCreate($request, $checkExistPhoneNumber->id);
+                        $this->orderRepository->orderOfflineCreate($request->all(), $checkExistPhoneNumber->id);
                         $response['isBorrow'] = true;
                         $response['message'] = 'Borrowing success';
                     } else {
@@ -185,10 +185,10 @@ class OrderService
             }
 
         } else {
-            $newMember = $this->orderRepository->createNewMember($request);
+            $newMember = $this->orderRepository->createNewMember($request->all());
             $checkBook = $this->checkCurrentCountBook($clubBookIds);
             if ($checkBook['isBorrow'] == true) {
-                $this->orderRepository->orderOfflineCreate($request, $newMember->id);
+                $this->orderRepository->orderOfflineCreate($request->all(), $newMember->id);
                 $response['isBorrow'] = true;
                 $response['message'] = 'Borrowing success';
             } else {

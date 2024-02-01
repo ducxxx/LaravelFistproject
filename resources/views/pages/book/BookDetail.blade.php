@@ -111,8 +111,9 @@
                                         <button type="submit" class="ant-btn css-12jzuas ant-btn-primary"
                                                 style="margin-right: 10px;"><span>Submit</span>
                                         </button>
-                                        <button type="button" id="cancelButton" class="ant-btn css-12jzuas ant-btn-default"
-                                                 fdprocessedid="g5id65"><span>Cancel</span>
+                                        <button type="button" id="cancelButton"
+                                                class="ant-btn css-12jzuas ant-btn-default" fdprocessedid="g5id65">
+                                            <span>Cancel</span>
                                         </button>
                                     </div>
                                 </div>

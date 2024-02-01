@@ -18,9 +18,9 @@ class ClubBookService
      * @param $club_id
      * @return mixed
      */
-    public function getClubBooksByClubId($club_id) // TODO: khai báo đúng chuẩn $club_id => $clubId
+    public function getClubBooksByClubId($clubId)
     {
-        return $this->clubBookRepository->getClubBooksByClubId($club_id);
+        return $this->clubBookRepository->getClubBooksByClubId($clubId);
     }
 
     /**
@@ -63,18 +63,18 @@ class ClubBookService
      * @param $request
      * @return object|null
      */
-    public function updateClubBookDetail($id , $request)
+    public function updateClubBookDetail($id , $bookUpdate)
     {
-        return $this->clubBookRepository->updateClubBookDetail($id, $request);
+        return $this->clubBookRepository->updateClubBookDetail($id, $bookUpdate);
     }
 
-    public function addNewBook($request)
+    public function addNewBook($newBook)
     {
-        return $this->clubBookRepository->addNewBook($request);
+        return $this->clubBookRepository->addNewBook($newBook);
     }
 
-    public function getClubBookByClubId($club_id) // TODO: khai báo đúng chuẩn $club_id => $clubId
+    public function getClubBookByClubId($clubId)
     {
-        return $this->clubBookRepository->getClubBookByClubId($club_id);
+        return $this->clubBookRepository->getClubBookByClubId($clubId);
     }
 }

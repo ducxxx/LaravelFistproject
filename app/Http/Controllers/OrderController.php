@@ -53,7 +53,8 @@ class OrderController extends Controller
      */
     public function create(Request $request)
     {
-        $user = $this->orderService->getUser();
+        $userId = Auth::id();
+        $user = $this->orderService->getUser($userId);
         $dataCheck = $this->orderService->createOrder($request,$user);
         if ($dataCheck['isBorrow']==true){
             Session::flash('success', 'Create order success');
@@ -72,7 +73,8 @@ class OrderController extends Controller
      */
     public function checkOrderOnline(Request $request)
     {
-        $user = $this->orderService->getUser();
+        $userId = Auth::id();
+        $user = $this->orderService->getUser($userId);
         $dataCheck = $this->orderService->checkOrderOnline($request,$user);
         if ($dataCheck['isBorrow']==false){
             Session::flash('error',$dataCheck['message']);
