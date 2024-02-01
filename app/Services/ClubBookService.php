@@ -15,10 +15,10 @@ class ClubBookService
     }
 
     /**
-     * @param $club_id
-     * @return \Illuminate\Support\Collection
+     * @param $clubId
+     * @return mixed
      */
-    public function getClubBooksByClubId($club_id)
+    public function getClubBooksByClubId($clubId)
     {
         return $this->clubBookRepository->getClubBooksByClubId($club_id);
     }
@@ -63,6 +63,6 @@ class ClubBookService
 
     public function getClubBookByClubId($club_id)
     {
-        return $this->clubBookRepository->getClubBookByClubId($club_id);
+        return $this->clubBookRepository->getClubBookByClubId($clubId);
     }
 }
