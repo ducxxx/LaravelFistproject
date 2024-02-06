@@ -18,6 +18,7 @@ class OrderService
     private $orderRepository;
     private $orderDetailRepository;
     const BOOK_MAX_BORROW = 3;
+    const STAFF_EMAIL = 'ducnmhe@gmail.com';
 
     /**
      * OrderService constructor.
@@ -30,58 +31,9 @@ class OrderService
         $this->orderDetailRepository = $orderDetailRepository;
     }
 
-//    /**
-//     * @param $request
-//     * @param $user
-//     * @return array|int
-//     */
-//    public function createOrder($request, $user)
-//    {
-//        $clubBookIds = json_decode($request->clubBook);
-//        $response = ['isBorrow' => false, 'message' => ''];
-//
-//        // validation can't borrow
-//        if (count($clubBookIds) > self::BOOK_MAX_BORROW) {
-//            $response['message'] = 'Can Not Borrow, You Borrowing Max 3 books';
-//            return $response;
-//        }
-//
-//        if ($user->is_active == User::ACTIVE) {
-//            $memberId = $this->orderRepository->checkUserMember($user->id);
-//            if (!$memberId) {
-//                $memberId = $this->orderRepository->createNewMemberForOrderOnline($request->all(), $user);
-//            }
-//            $memberId = $memberId->id;
-//            $countBookBorrowing = $this->orderRepository->countBookBorrowing($memberId);
-//            if ($countBookBorrowing < self::BOOK_MAX_BORROW) {
-//                if (count($clubBookIds) + $countBookBorrowing <= self::BOOK_MAX_BORROW) {
-//                    $checkBook = $this->checkCurrentCountBookOnline($clubBookIds);
-//                    if ($checkBook['isBorrow'] == true) {
-//                        $this->orderRepository->orderOnlineCreate($request->all(), $memberId);
-//                        Mail::to('ducnmhe@gmail.com')->send(new \App\Mail\NewOrderCreate());
-//                        $response['isBorrow'] = true;
-//                        $response['message'] = 'Borrowing success';
-//                    } else {
-//                        $response['isBorrow'] = $checkBook['isBorrow'];
-//                        $response['message'] = $checkBook['message'];
-//                    }
-//                } else {
-//                    $response['message'] = 'Can Not Borrow ' .
-//                        count($clubBookIds) . ' Book, You Borrow Max 3 books but Now you are borrowing ' .
-//                        $countBookBorrowing . ' books';
-//                }
-//            } else {
-//                $response['message'] = 'Can Not Borrow, You Borrowing 3 books';
-//            }
-//        } else {
-//            $response['message'] = 'You must verify account';
-//        }
-//        return $response;
-//    }
-
-    public function createOrder($request, $user)
+    public function createOrder($newOrder, $user)
     {
-        $clubBookIds = json_decode($request->clubBook);
+        $clubBookIds = json_decode($newOrder['clubBook']);
         $response = ['isBorrow' => false, 'message' => ''];
 
         // validation can't borrow
@@ -98,7 +50,7 @@ class OrderService
 
         $memberId = $this->orderRepository->checkUserMember($user->id);
         if (!$memberId) {
-            $memberId = $this->orderRepository->createNewMemberForOrderOnline($request->all(), $user);
+            $memberId = $this->orderRepository->createNewMemberForOrderOnline($newOrder, $user);
         }
 
         $memberId = $memberId->id;
@@ -115,9 +67,8 @@ class OrderService
 
         $checkBook = $this->checkCurrentCountBookOnline($clubBookIds);
         if ($checkBook['isBorrow']) {
-            $this->orderRepository->orderOnlineCreate($request->all(), $memberId);
-            // TODO : đang hardcode email
-            Mail::to('ducnmhe@gmail.com')->send(new \App\Mail\NewOrderCreate());
+            $this->orderRepository->orderOnlineCreate($newOrder, $memberId);
+            Mail::to(self::STAFF_EMAIL)->send(new \App\Mail\NewOrderCreate());
             $response['isBorrow'] = true;
             $response['message'] = 'Borrowing success';
         } else {
@@ -128,57 +79,14 @@ class OrderService
         return $response;
     }
 
-
-//    public function checkOrderOnline($request, $user){
-//        $clubBookIds = $request->input('orders');
-//        $response = ['isBorrow' => false, 'message' => ''];
-//
-//        // validation can't borrow
-//        if (count($clubBookIds) > self::BOOK_MAX_BORROW) {
-//            $response['message'] = 'Can Not Borrow, You Borrowing Max 3 books';
-//            return $response;
-//        }
-//        $memberId = $this->orderRepository->checkUserMember($user->id);
-//        if ($user->is_active == User::ACTIVE) {
-//            if (!$memberId) {
-//                $response['isBorrow'] = true;
-//                return $response;
-//            }
-//            $memberId = $memberId->id;
-//            $countBookBorrowing = $this->orderRepository->countBookBorrowing($memberId);
-//            if ($countBookBorrowing < self::BOOK_MAX_BORROW) {
-//                if (count($clubBookIds) + $countBookBorrowing <= self::BOOK_MAX_BORROW) {
-//                    $checkBook = $this->checkCurrentCountBook($clubBookIds);
-//                    if ($checkBook['isBorrow'] == true) {
-//                        $response['isBorrow'] = true;
-//                        return $response;
-//                    } else {
-//                        $response['isBorrow'] = $checkBook['isBorrow'];
-//                        $response['message'] = $checkBook['message'];
-//                    }
-//                } else {
-//                    $response['message'] = 'Can Not Borrow ' .
-//                        count($clubBookIds) . ' Book, You Borrow Max 3 books but Now you are borrowing ' .
-//                        $countBookBorrowing . ' books';
-//                }
-//            } else {
-//                $response['message'] = 'Can Not Borrow, You Borrowing 3 books';
-//            }
-//        } else {
-//            $response['message'] = 'You must verify account';
-//        }
-//        return $response;
-//    }
-
     /**
      * @param $request
      * @param $user
      * @return array
      */
-    public function checkOrderOnline($request, $user)
+    public function checkOrderOnline($checkOrder, $user)
     {
-        // TODO: chuyển request input sang controller
-        $clubBookIds = $request->input('orders');
+        $clubBookIds = $checkOrder['orders'];
         $response = ['isBorrow' => false, 'message' => ''];
 
         // Validation can't borrow
@@ -276,71 +184,14 @@ class OrderService
         return $this->orderRepository->getUser($userId);
     }
 
-//    /**
-//     * @param $request
-//     * @return array
-//     */
-//    public function orderOfflineCreate($request)
-//    {
-//        $clubBookIds = $request->input('club_book_ids');
-//        $phoneNumber = $request->input('phone_number');
-//        $response = ['isBorrow' => false, 'message' => ''];
-//
-//        // validation can't borrow
-//        if (count($clubBookIds) > self::BOOK_MAX_BORROW) {
-//            $response['message'] = 'Can Not Borrow, You Borrowing Max 3 books';
-//            return $response;
-//        }
-//
-//        $checkExistPhoneNumber = $this->orderRepository->checkNewMember($phoneNumber);
-//        // check new member
-//        if ($checkExistPhoneNumber) {
-//            $countBookBorrowing = $this->orderRepository->countBookBorrowing($checkExistPhoneNumber->id);
-//            if ($countBookBorrowing < self::BOOK_MAX_BORROW) {
-//                if (count($clubBookIds) + $countBookBorrowing <= self::BOOK_MAX_BORROW) {
-//                    $checkBook = $this->checkCurrentCountBook($clubBookIds);
-//                    if ($checkBook['isBorrow'] == true) {
-//                        $this->orderRepository->orderOfflineCreate($request->all(), $checkExistPhoneNumber->id);
-//                        $response['isBorrow'] = true;
-//                        $response['message'] = 'Borrowing success';
-//                    } else {
-//                        $response['isBorrow'] = $checkBook['isBorrow'];
-//                        $response['message'] = $checkBook['message'];
-//                    }
-//                } else {
-//                    $response['message'] = 'Can Not Borrow ' .
-//                        count($clubBookIds) . ' Book, You Borrow Max 3 books but Now you are borrowing ' .
-//                        $countBookBorrowing . ' books';
-//                }
-//            } else {
-//                $response['message'] = 'Can Not Borrow, You Borrowing 3 books';
-//            }
-//
-//        } else {
-//            $newMember = $this->orderRepository->createNewMember($request->all());
-//            $checkBook = $this->checkCurrentCountBook($clubBookIds);
-//            if ($checkBook['isBorrow'] == true) {
-//                $this->orderRepository->orderOfflineCreate($request->all(), $newMember->id);
-//                $response['isBorrow'] = true;
-//                $response['message'] = 'Borrowing success';
-//            } else {
-//                $response['isBorrow'] = $checkBook['isBorrow'];
-//                $response['message'] = $checkBook['message'];
-//            }
-//        }
-//
-//        return $response;
-//    }
-
     /**
      * @param $request
      * @return array
      */
-    public function orderOfflineCreate($request)
+    public function orderOfflineCreate($orderCreate)
     {
-        // TODO: chuyển request input sang controller
-        $clubBookIds = $request->input('club_book_ids');
-        $phoneNumber = $request->input('phone_number');
+        $clubBookIds = $orderCreate['club_book_ids'];
+        $phoneNumber = $orderCreate['phone_number'];
         $response = ['isBorrow' => false, 'message' => ''];
 
         // Validation can't borrow
@@ -362,7 +213,7 @@ class OrderService
             } else {
                 $checkBook = $this->checkCurrentCountBook($clubBookIds);
                 if ($checkBook['isBorrow']) {
-                    $this->orderRepository->orderOfflineCreate($request->all(), $checkExistPhoneNumber->id);
+                    $this->orderRepository->orderOfflineCreate($orderCreate, $checkExistPhoneNumber->id);
                     $response['isBorrow'] = true;
                     $response['message'] = 'Borrowing success';
                 } else {
@@ -371,10 +222,10 @@ class OrderService
                 }
             }
         } else {
-            $newMember = $this->orderRepository->createNewMember($request->all());
+            $newMember = $this->orderRepository->createNewMember($orderCreate);
             $checkBook = $this->checkCurrentCountBook($clubBookIds);
             if ($checkBook['isBorrow']) {
-                $this->orderRepository->orderOfflineCreate($request->all(), $newMember->id);
+                $this->orderRepository->orderOfflineCreate($orderCreate, $newMember->id);
                 $response['isBorrow'] = true;
                 $response['message'] = 'Borrowing success';
             } else {
@@ -385,108 +236,6 @@ class OrderService
 
         return $response;
     }
-
-
-//    /**
-//     * @param $request
-//     * @return array
-//     */
-//    public function checkOrderOffline($request){
-//        $clubBookIds = $request->input('club_book_ids');
-//        $phoneNumber = $request->input('phone_number');
-//        $response = ['isBorrow' => false, 'message' => ''];
-//
-//        // validation can't borrow
-//        if (count($clubBookIds) > self::BOOK_MAX_BORROW) {
-//            $response['message'] = 'Can Not Borrow, You Borrowing Max 3 books';
-//            return $response;
-//        }
-//
-//        $checkExistPhoneNumber = $this->orderRepository->checkNewMember($phoneNumber);
-//        // check new member
-//        if ($checkExistPhoneNumber) {
-//            $countBookBorrowing = $this->orderRepository->countBookBorrowing($checkExistPhoneNumber->id);
-//            if ($countBookBorrowing < self::BOOK_MAX_BORROW) {
-//                if (count($clubBookIds) + $countBookBorrowing <= self::BOOK_MAX_BORROW) {
-//                    $checkBook = $this->checkCurrentCountBook($clubBookIds);
-//                    if ($checkBook['isBorrow'] == true) {
-//                        $response['isBorrow'] = true;
-//                        return $response;
-//                    } else {
-//                        $response['isBorrow'] = $checkBook['isBorrow'];
-//                        $response['message'] = $checkBook['message'];
-//                    }
-//                } else {
-//                    $response['message'] = 'Can Not Borrow ' .
-//                        count($clubBookIds) . ' Book, You Borrow Max 3 books but Now you are borrowing ' .
-//                        $countBookBorrowing . ' books';
-//                }
-//            } else {
-//                $response['message'] = 'Can Not Borrow, You Borrowing 3 books';
-//            }
-//            return $response;
-//        } else {
-//            $checkBook = $this->checkCurrentCountBook($clubBookIds);
-//            if ($checkBook['isBorrow'] == true) {
-//                $response['isBorrow'] = true;
-//                return $response;
-//            } else {
-//                $response['isBorrow'] = $checkBook['isBorrow'];
-//                $response['message'] = $checkBook['message'];
-//            }
-//        }
-//        return $response;
-//    }
-
-    /**
-     * @param $request
-     * @return array
-     */
-    public function checkOrderOffline($request)
-    {
-        // TODO: chuyển request input sang controller
-        $clubBookIds = $request->input('club_book_ids');
-        $phoneNumber = $request->input('phone_number');
-        $response = ['isBorrow' => false, 'message' => ''];
-
-        // Validation can't borrow
-        if (count($clubBookIds) > self::BOOK_MAX_BORROW) {
-            $response['message'] = 'Can Not Borrow, You Borrowing Max 3 books';
-            return $response;
-        }
-
-        $checkExistPhoneNumber = $this->orderRepository->checkNewMember($phoneNumber);
-        // Check new member
-        if ($checkExistPhoneNumber) {
-            $countBookBorrowing = $this->orderRepository->countBookBorrowing($checkExistPhoneNumber->id);
-            if ($countBookBorrowing >= self::BOOK_MAX_BORROW) {
-                $response['message'] = 'Can Not Borrow, You Borrowing 3 books';
-            } elseif (count($clubBookIds) + $countBookBorrowing > self::BOOK_MAX_BORROW) {
-                $response['message'] = 'Can Not Borrow ' .
-                    count($clubBookIds) . ' Book, You Borrow Max 3 books but Now you are borrowing ' .
-                    $countBookBorrowing . ' books';
-            } else {
-                $checkBook = $this->checkCurrentCountBook($clubBookIds);
-                if ($checkBook['isBorrow']) {
-                    $response['isBorrow'] = true;
-                } else {
-                    $response['isBorrow'] = $checkBook['isBorrow'];
-                    $response['message'] = $checkBook['message'];
-                }
-            }
-        } else {
-            $checkBook = $this->checkCurrentCountBook($clubBookIds);
-            if ($checkBook['isBorrow']) {
-                $response['isBorrow'] = true;
-            } else {
-                $response['isBorrow'] = $checkBook['isBorrow'];
-                $response['message'] = $checkBook['message'];
-            }
-        }
-
-        return $response;
-    }
-
     /**
      * @param $bookIds
      * @return array

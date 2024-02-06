@@ -17,6 +17,9 @@ class User extends Authenticatable
 
     protected $table = 'users';
     const  ACTIVE = 1;
+    const VERIFY_SUCCESS = 0;
+    const VERIFY_EXPIRED_CODE = 1;
+    const VERIFY_WRONG_CODE = 2;
 
     protected $fillable = [
         'password',
