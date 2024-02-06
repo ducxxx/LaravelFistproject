@@ -25,9 +25,10 @@ class EmailController extends Controller
     public function sendEmailWithCode()
     {
         // Generate a random 6-digit code
+        $userId = auth()->id();
         $code = $this->emailService->generateRandomString();
         // update code DB
-        $this->emailService->updateOtpCode($code);
+        $this->emailService->updateOtpCode($code, $userId);
         // send email code verify
         Mail::to(auth()->user()->email)->send(new \App\Mail\VerificationCodeMail($code));
 
@@ -41,11 +42,12 @@ class EmailController extends Controller
      */
     public function verifyCode(string $code)
     {
+        $userId = auth()->id();
         // Generate a random 6-digit code
-        $save_code = $this->emailService->verifyCode($code);
+        $save_code = $this->emailService->verifyCode($code, $userId);
         $message = '';
         if ($save_code == 0) {
-            $this->emailService->acticeUser();
+            $this->emailService->acticeUser($userId);
             Session::flash('success', 'Verify successfully.');
             $message = 'Verify successfully.';
         } else if ($save_code == 1) {
@@ -97,7 +99,6 @@ class EmailController extends Controller
             return view('auth.forgetPassword');
         } else if ($save_code == 2) {
             Session::flash('error', 'Code incorrect');
-//            back();
             return view('auth.confirmFormgetPassword', compact('email'));
         } else {
             $message = 'Change Password Error.';

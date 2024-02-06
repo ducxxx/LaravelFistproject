@@ -14,12 +14,10 @@ class EmailRepository
     /**
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function updateOtpCode(string $code)
+    public function updateOtpCode(string $code, $userID)
     {
-        // TODO: truyền userId = Auth::id() từ controller
-        $user = User::where('id', auth()->id())->first();
+        $user = User::where('id', $userID)->first();
         $user->otp_code = $code;
-        // TODO: xử dụng hàm thời gian Carbon::now()->addMinute(5)->format('Y-m-d H:i:s')
         $currentDateTime = new DateTime(); // Get the current date and time
         $currentDateTime->modify('+5 minutes'); // Add 5 minutes
 
@@ -32,10 +30,9 @@ class EmailRepository
     /**
      * @return mixed
      */
-    public function getUser()
+    public function getUser($userId)
     {
-        // TODO: truyền userId = Auth::id() từ controller
-        return User::where('id', auth()->id())->first();
+        return User::where('id',$userId)->first();
     }
 
     /**
@@ -55,7 +52,6 @@ class EmailRepository
     public function updatePassword($code, $user)
     {
         $user->forget_password_code = $code;
-        // TODO: xử dụng hàm thời gian Carbon::now()->addMinute(5)->format('Y-m-d H:i:s')
         $currentDateTime = new DateTime(); // Get the current date and time
         $currentDateTime->modify('+5 minutes'); // Add 5 minutes
 

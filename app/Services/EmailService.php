@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\User;
 use App\Repositories\EmailRepository;
 use DateTime;
 use Illuminate\Support\Facades\Auth;
@@ -17,12 +18,8 @@ class EmailService
 
     function generateRandomString() {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $randomString = '';
-
-        // TODO: dùng hàm random 8 kí tự chứ không dùng vòng for
-        for ($i = 0; $i < 8; $i++) {
-            $randomString .= $characters[rand(0, strlen($characters) - 1)];
-        }
+        $shuffledString = str_shuffle($characters);
+        $randomString = substr($shuffledString, 0, 8);
 
         return $randomString;
     }
@@ -31,35 +28,30 @@ class EmailService
      * @param string $code
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function updateOtpCode(string $code)
+    public function updateOtpCode(string $code, $userId)
     {
-        return $this->emailRepository->updateOtpCode($code);
+        return $this->emailRepository->updateOtpCode($code, $userId);
     }
 
-    public function verifyCode(string $code)
+    public function verifyCode(string $code, $userId)
     {
-        $user = $this->emailRepository->getUser();
+        $user = $this->emailRepository->getUser($userId);
         if ($user->otp_code == $code){
-            // TODO: xử dụng hàm thời gian Carbon::now()->format('Y-m-d H:i:s')
             $currentDateTime = new DateTime(); // Get the current date and time
             $currentDateTime = $currentDateTime->format('Y-m-d H:i:s');
             if ($currentDateTime <= $user->limit_time_verify){
-                // TODO: chuyển các phần hardcode sang const
-                return 0; //success
+                return User::VERIFY_SUCCESS; //success
             }else{
-                // TODO: chuyển các phần hardcode sang const
-                return 1; //het thoi gian nhap code
+                return User::VERIFY_EXPIRED_CODE; //het thoi gian nhap code
             }
         }else{
-            // TODO: chuyển các phần hardcode sang const
-            return 2; //sai code
+            return User::VERIFY_WRONG_CODE; //sai code
         }
     }
-    public function acticeUser()
+    public function acticeUser($userId)
     {
-        $user = $this->emailRepository->getUser();
-        // TODO: chuyển các phần hardcode sang const
-        $user->is_active =1;
+        $user = $this->emailRepository->getUser($userId);
+        $user->is_active =User::ACTIVE;
         $user->save();
     }
 
@@ -76,19 +68,15 @@ class EmailService
     {
         $user = $this->emailRepository->getUserByEmail($email);
         if ($user->forget_password_code == $code){
-            // TODO: xử dụng hàm thời gian Carbon::now()->format('Y-m-d H:i:s')
             $currentDateTime = new DateTime(); // Get the current date and time
             $currentDateTime = $currentDateTime->format('Y-m-d H:i:s');
             if ($currentDateTime <= $user->limit_time_forget_password){
-                // TODO: chuyển các phần hardcode sang const
-                return 0; //success
+                return User::VERIFY_SUCCESS;
             }else{
-                // TODO: chuyển các phần hardcode sang const
-                return 1; //het thoi gian nhap code
+                return User::VERIFY_EXPIRED_CODE;
             }
         }else{
-            // TODO: chuyển các phần hardcode sang const
-            return 2; //sai code
+            return User::VERIFY_WRONG_CODE;
         }
     }
     public function changePassword($email, $password)

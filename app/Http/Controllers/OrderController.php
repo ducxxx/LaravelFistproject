@@ -55,7 +55,8 @@ class OrderController extends Controller
     {
         $userId = Auth::id();
         $user = $this->orderService->getUser($userId);
-        $dataCheck = $this->orderService->createOrder($request,$user);
+        $newOrder = $request->all();
+        $dataCheck = $this->orderService->createOrder($newOrder,$user);
         if ($dataCheck['isBorrow']==true){
             Session::flash('success', 'Create order success');
             return Redirect::route('order.get.list', ['user_id' => $user->id])->withInput();
@@ -75,7 +76,8 @@ class OrderController extends Controller
     {
         $userId = Auth::id();
         $user = $this->orderService->getUser($userId);
-        $dataCheck = $this->orderService->checkOrderOnline($request,$user);
+        $checkOrder = $request->all();
+        $dataCheck = $this->orderService->checkOrderOnline($checkOrder,$user);
         if ($dataCheck['isBorrow']==false){
             Session::flash('error',$dataCheck['message']);
         }
@@ -154,7 +156,8 @@ class OrderController extends Controller
      */
     public function orderOfflineCreate(Request $request)
     {
-        $dataCheck = $this->orderService->orderOfflineCreate($request);
+        $orderCreate = $request->all();
+        $dataCheck = $this->orderService->orderOfflineCreate($orderCreate);
         if ($dataCheck['isBorrow']==true){
             Session::flash('success', 'Create order success');
             return Redirect::route('order.get.list.control')->withInput();
@@ -168,7 +171,8 @@ class OrderController extends Controller
      * @return array
      */
     public function checkOrderOffline(Request $request){
-        return $this->orderService->orderOfflineCreate($request);
+        $orderCreate = $request->all();
+        return $this->orderService->orderOfflineCreate($orderCreate);
     }
 
     /**

@@ -47,7 +47,6 @@ class SendEmails extends Command
         // Dispatch job để gửi email cho mỗi người nhận
         $listMails = [];
         foreach ($listMemberMails as $member) {
-
             SendMailJob::dispatch($member['member_email'],$member['list_book'])->onQueue('email');
             $listMails[] = $member['member_email'];
         }

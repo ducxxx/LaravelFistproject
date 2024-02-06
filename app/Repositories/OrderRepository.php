@@ -289,8 +289,8 @@ class OrderRepository
             ->whereIn('order_detail.order_status',
                 [Order::ORDER_STATUS_CREATED, Order::ORDER_STATUS_OVER_DUA_DATE])
             ->select('member.email as member_email', 'book.name as book_name')
-            ->groupBy('member_email')
-            ->get();
+            ->get()
+            ->groupBy('member_email');
 
         return $memberOutDate->map(function ($group) {
             $memberEmail = $group->first()->member_email;
@@ -316,7 +316,10 @@ class OrderRepository
             ->where('order_detail.order_status', '=', Order::ORDER_STATUS_CREATED)
             ->select('order.id')
             ->get();
-
+        DB::table('order_detail')
+            ->join('order', 'order.id', '=', 'order_detail.order_id')
+            ->where('order_detail.order_status', '=', Order::ORDER_STATUS_OVER_DUA_DATE)
+            ->update(['overdue_day_count' => DB::raw("DATEDIFF('$today', `order`.`due_date`)")]);
         $orderId = $orderId->pluck('id')->toArray();
         return DB::table('order_detail')
             ->where('order_detail.order_status', '=', Order::ORDER_STATUS_CREATED)
