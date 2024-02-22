@@ -33,8 +33,7 @@ class OrderController extends Controller
 
     /**
      * @param Request $request
-     * @return View|RedirectResponse
-     *
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
     public function showOrderDialog(Request $request)
     {
@@ -49,7 +48,7 @@ class OrderController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
     public function create(Request $request)
     {
@@ -86,7 +85,7 @@ class OrderController extends Controller
 
     /**
      * @param $userId
-     * @return View|JsonResponse
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function getOrderByUserId($userId)
     {
@@ -113,7 +112,7 @@ class OrderController extends Controller
 
     /**
      * @param int $id
-     * @return RedirectResponse
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function orderConfirm(int $id)
     {
@@ -127,7 +126,7 @@ class OrderController extends Controller
 
     /**
      * @param int $id
-     * @return RedirectResponse
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function orderReturn(int $id)
     {
