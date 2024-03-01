@@ -45,19 +45,17 @@ class EmailController extends Controller
         $userId = auth()->id();
         // Generate a random 6-digit code
         $save_code = $this->emailService->verifyCode($code, $userId);
-        $message = '';
-        if ($save_code == 0) {
+        if ($save_code == User::VERIFY_SUCCESS) {
             $this->emailService->acticeUser($userId);
             Session::flash('success', 'Verify successfully.');
             $message = 'Verify successfully.';
-        } else if ($save_code == 1) {
+        } else if ($save_code == User::VERIFY_EXPIRED_CODE) {
             $message = 'Please send code again, code expired.';
-        } else if ($save_code == 2) {
+        } else if ($save_code == User::VERIFY_WRONG_CODE) {
             $message = 'Code incorrect, verify fail';
         } else {
             $message = 'Verify Error.';
         }
-
         return response()->json(['message' => $message]);
     }
 
@@ -89,15 +87,14 @@ class EmailController extends Controller
     {
         // Generate a random 6-digit code
         $save_code = $this->emailService->changeNewPassword($email, $request->input('code'));
-        $message = '';
-        if ($save_code == 0) {
+        if ($save_code == User::VERIFY_SUCCESS) {
             $this->emailService->changePassword($email, $request->input('password'));
             Session::flash('success', 'Change password successfully.');
             return redirect(route('login'));
-        } else if ($save_code == 1) {
+        } else if ($save_code == User::VERIFY_EXPIRED_CODE) {
             Session::flash('error', 'Please send code again, code expired');
             return view('auth.forgetPassword');
-        } else if ($save_code == 2) {
+        } else if ($save_code == User::VERIFY_WRONG_CODE) {
             Session::flash('error', 'Code incorrect');
             return view('auth.confirmFormgetPassword', compact('email'));
         } else {

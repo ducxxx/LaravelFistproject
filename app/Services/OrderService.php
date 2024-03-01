@@ -61,7 +61,8 @@ class OrderService
         }
 
         if (count($clubBookIds) + $countBookBorrowing > self::BOOK_MAX_BORROW) {
-            $response['message'] = 'Can Not Borrow ' . count($clubBookIds) . ' Book, You Borrow Max 3 books but Now you are borrowing ' . $countBookBorrowing . ' books';
+            $response['message'] = 'Can Not Borrow ' . count($clubBookIds) .
+                ' Book, You Borrow Max 3 books but Now you are borrowing ' . $countBookBorrowing . ' books';
             return $response;
         }
 

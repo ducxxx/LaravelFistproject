@@ -1,1 +1,1 @@
-<p>please check Order, Have New Order</p>
+<p>Please check Order, Have New Order</p>

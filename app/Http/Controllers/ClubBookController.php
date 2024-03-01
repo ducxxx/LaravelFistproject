@@ -67,7 +67,7 @@ class ClubBookController extends Controller
 
     /**
      * @param int $id
-     * @return View
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function getClubBookDetail(int $id)
     {
@@ -82,7 +82,7 @@ class ClubBookController extends Controller
     /**
      * @param Request $request
      * @param $id
-     * @return View
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
     public function updateClubBookDetail(Request $request, $id)
     {
@@ -96,7 +96,7 @@ class ClubBookController extends Controller
     }
 
     /**
-     * @return View
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function bookAddForm()
     {
