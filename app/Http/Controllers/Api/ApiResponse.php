@@ -2,17 +2,38 @@
 
 namespace App\Http\Controllers\Api;
 
+
 class ApiResponse
 {
-    public function RESPONSE_STATUS_CODE_405()
+    /**
+     * @param $message
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function errorMethodNotAllowed($message = null)
     {
-        return response()->json(['status_code' => '405', 'message' => 'Method Not Allowed'],405);
+        if (!$message){
+            $message = 'Method Not Allowed';
+        }
+        return response()->json(['status_code' => '405', 'message' => $message],405);
     }
-    public function RESPONSE_STATUS_CODE_400()
+
+    /**
+     * @param $message
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function errorBadRequest($message = null)
     {
-        return response()->json(['status_code' => '400', 'message: ' => 'Bad Request'],400);
+        if (!$message){
+            $message = 'Bad Request';
+        }
+        return response()->json(['status_code' => '400', 'message' => $message],400);
     }
-    public function RESPONSE_STATUS_CODE_200($data)
+
+    /**
+     * @param $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function successfullResponse($data)
     {
         return response()->json(['status_code' => '200','message' => 'Successfully', 'data' => $data]);
     }

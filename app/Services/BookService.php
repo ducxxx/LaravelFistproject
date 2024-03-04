@@ -41,6 +41,10 @@ class BookService
         return $this->bookRepository->bookDetail($id);
     }
 
+    /**
+     * @param string $year_month
+     * @return \Illuminate\Support\Collection
+     */
     public function topBorrowingBooks(string $year_month)
     {
         // Get list of orders borrowing books in the specified month

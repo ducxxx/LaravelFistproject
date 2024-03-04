@@ -50,6 +50,11 @@ class BookRepository
             ->get();
     }
 
+    /**
+     * @param $year
+     * @param $month
+     * @return \Illuminate\Support\Collection
+     */
     public function topBorrowingBooks($year, $month)
     {
         return DB::table('order_detail')
