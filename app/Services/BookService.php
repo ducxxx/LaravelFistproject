@@ -48,24 +48,6 @@ class BookService
         if ($top_books->isEmpty()) {
             return ['status_code' => '200','message' => 'Successfully', 'data' => []];
         }
-
-//        $book_ids = $top_books->pluck('book_id')->toArray();
-//
-//        // Get information of top borrowing books
-//        $books_info = Book::whereIn('id', $book_ids)->get();
-//
-//        if ($books_info->isEmpty()) {
-//            return ['status_code' => '500','message' => 'Internal Server Error'];
-//        }
-//
-//        $response_data = $books_info->map(function ($book) {
-//            return [
-//                'id' => $book->id,
-//                'title' => $book->title,
-//                'author' => $book->author,
-//            ];
-//        });
-
         return ['status_code' => '200','message' => 'Successfully', 'data' => $top_books];
     }
 
