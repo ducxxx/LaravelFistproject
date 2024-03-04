@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Api;
 class ApiResponse
 {
     /**
+     * error response when call incorrect method
      * @param $message
      * @return \Illuminate\Http\JsonResponse
      */
@@ -18,6 +19,7 @@ class ApiResponse
     }
 
     /**
+     *  error response when call incorrect request
      * @param $message
      * @return \Illuminate\Http\JsonResponse
      */
@@ -30,6 +32,7 @@ class ApiResponse
     }
 
     /**
+     * successfully response
      * @param $data
      * @return \Illuminate\Http\JsonResponse
      */

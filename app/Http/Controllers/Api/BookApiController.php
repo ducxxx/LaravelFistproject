@@ -18,6 +18,7 @@ class BookApiController extends Controller
     }
 
     /**
+     * api get top 3 most borrowed books of the month
      * @param Request $request
      * @param $year_month
      * @return \Illuminate\Http\JsonResponse
