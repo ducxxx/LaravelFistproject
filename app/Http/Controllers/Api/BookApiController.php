@@ -41,10 +41,8 @@ class BookApiController extends Controller
             }
             return $this->apiResponse->errorBadRequest();
         }
-        $top_books = $this->bookService->topBorrowingBooks($year_month);
-        if ($top_books->isEmpty()) {
-            return $this->apiResponse->successfullResponse([]);
-        }
-        return $this->apiResponse->successfullResponse($top_books);
+
+        $topBooks = $this->bookService->topBorrowingBooks($year_month);
+        return $this->apiResponse->successfullResponse($topBooks);
     }
 }
