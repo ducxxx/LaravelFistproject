@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Book;
 use App\Repositories\BookRepository;
 
 class BookService
@@ -38,4 +39,16 @@ class BookService
     {
         return $this->bookRepository->bookDetail($id);
     }
+
+    public function topBorrowingBooks(string $year_month)
+    {
+        // Get list of orders borrowing books in the specified month
+        $top_books = $this->bookRepository->topBorrowingBooks($year_month);
+
+        if ($top_books->isEmpty()) {
+            return ['status_code' => '200','message' => 'Successfully', 'data' => []];
+        }
+        return ['status_code' => '200','message' => 'Successfully', 'data' => $top_books];
+    }
+
 }
