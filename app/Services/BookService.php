@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Book;
 use App\Repositories\BookRepository;
+use Carbon\Carbon;
 
 class BookService
 {
@@ -43,12 +44,9 @@ class BookService
     public function topBorrowingBooks(string $year_month)
     {
         // Get list of orders borrowing books in the specified month
-        $top_books = $this->bookRepository->topBorrowingBooks($year_month);
-
-        if ($top_books->isEmpty()) {
-            return ['status_code' => '200','message' => 'Successfully', 'data' => []];
-        }
-        return ['status_code' => '200','message' => 'Successfully', 'data' => $top_books];
+        $year = Carbon::createFromFormat('Ym', $year_month)->year;
+        $month = Carbon::createFromFormat('Ym', $year_month)->month;
+        return $this->bookRepository->topBorrowingBooks($year,$month);
     }
 
 }

@@ -50,7 +50,7 @@ class BookRepository
             ->get();
     }
 
-    public function topBorrowingBooks(string $year_month)
+    public function topBorrowingBooks($year, $month)
     {
         return DB::table('order_detail')
             ->select('book.name as book_name','author.name as author_name', 'category.name as category_name',
@@ -59,8 +59,8 @@ class BookRepository
             ->join('book', 'club_book.book_id', '=', 'book.id')
             ->join('author', 'book.author_id', '=', 'author.id')
             ->join('category', 'book.category_id', '=', 'category.id')
-            ->whereYear('order_detail.created_at', substr($year_month, 0, 4))
-            ->whereMonth('order_detail.created_at', substr($year_month, 4, 2))
+            ->whereYear('order_detail.created_at', $year)
+            ->whereMonth('order_detail.created_at', $month)
             ->groupBy('club_book.book_id')
             ->orderByDesc('total')
             ->limit(3)
