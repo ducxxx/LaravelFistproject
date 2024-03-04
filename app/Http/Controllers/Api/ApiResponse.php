@@ -12,10 +12,10 @@ class ApiResponse
      */
     public function errorMethodNotAllowed($message = null)
     {
-        if (!$message){
+        if (!$message) {
             $message = 'Method Not Allowed';
         }
-        return response()->json(['status_code' => '405', 'message' => $message],405);
+        return response()->json(['status_code' => '405', 'message' => $message], 405);
     }
 
     /**
@@ -25,10 +25,10 @@ class ApiResponse
      */
     public function errorBadRequest($message = null)
     {
-        if (!$message){
+        if (!$message) {
             $message = 'Bad Request';
         }
-        return response()->json(['status_code' => '400', 'message' => $message],400);
+        return response()->json(['status_code' => '400', 'message' => $message], 400);
     }
 
     /**
@@ -38,6 +38,6 @@ class ApiResponse
      */
     public function successfullResponse($data)
     {
-        return response()->json(['status_code' => '200','message' => 'Successfully', 'data' => $data]);
+        return response()->json(['status_code' => '200', 'message' => 'Successfully', 'data' => $data]);
     }
 }
